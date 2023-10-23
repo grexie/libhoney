@@ -6,7 +6,7 @@ index 7aacff321a40c..3dbbd8f6d03c5 100644
  #include "base/trace_event/trace_event_impl.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/runtime.h"
++#include "honey/libhoney/features/runtime.h"
  #include "chrome/browser/buildflags.h"
  #include "chrome/browser/chrome_content_browser_client.h"
  #include "chrome/browser/chrome_resource_bundle_helper.h"
@@ -133,7 +133,7 @@ index f2613018d0bc3..fab49b0c14657 100644
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
  #include "cc/base/switches.h"
-+#include "honey/libhoneycomb/features/runtime.h"
++#include "honey/libhoney/features/runtime.h"
  #include "chrome/browser/about_flags.h"
  #include "chrome/browser/active_use_util.h"
  #include "chrome/browser/after_startup_task_utils.h"
@@ -204,7 +204,7 @@ index a85dd48b0c298..11944bf767f9b 100644
  #include "base/path_service.h"
  #include "base/strings/sys_string_conversions.h"
  #include "build/branding_buildflags.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #import "chrome/browser/app_controller_mac.h"
  #include "chrome/browser/apps/app_shim/app_shim_listener.h"
  #include "chrome/browser/browser_process.h"
@@ -240,7 +240,7 @@ index 267387e7e079c..48376496d4895 100644
  #include "base/values.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "chrome/browser/accessibility/accessibility_labels_service.h"
  #include "chrome/browser/accessibility/accessibility_labels_service_factory.h"
  #include "chrome/browser/after_startup_task_utils.h"
@@ -366,7 +366,7 @@ index 327282bd86785..a27fb4161b70c 100644
  #include "build/build_config.h"
  #include "build/chromecast_buildflags.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "chrome/browser/about_flags.h"
  #include "chrome/browser/accessibility/accessibility_labels_service.h"
  #include "chrome/browser/accessibility/accessibility_ui.h"
@@ -375,7 +375,7 @@ index 327282bd86785..a27fb4161b70c 100644
  #endif
  
 +#if BUILDFLAG(ENABLE_HONEYCOMB)
-+#include "honey/libhoneycomb/browser/prefs/browser_prefs.h"
++#include "honey/libhoney/browser/prefs/browser_prefs.h"
 +#endif
 +
  #if BUILDFLAG(ENABLE_EXTENSIONS)

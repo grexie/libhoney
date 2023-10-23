@@ -5,7 +5,7 @@ cmake       Contains CMake configuration files shared by all targets.
 
 include     Contains all required Honeycomb header files.
 
-libhoneycomb_dll  Contains the source code for the libhoneycomb_dll_wrapper static library
+libhoney_dll  Contains the source code for the libhoney_dll_wrapper static library
             that all applications using the Honeycomb C++ API must link against.
 
 Release     Contains the "Honeycomb.framework" and other

@@ -31,7 +31,7 @@
 // ---------------------------------------------------------------------------
 //
 // The contents of this file are only available to applications that link
-// against the libhoneycomb_dll_wrapper target.
+// against the libhoney_dll_wrapper target.
 //
 
 #ifndef HONEYCOMB_INCLUDE_SCOPED_TEMP_DIR_H_

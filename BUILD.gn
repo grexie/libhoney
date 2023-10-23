@@ -316,7 +316,7 @@ group("honey") {
   deps = [
     ":honeysimple",
     ":honeytests",
-    ":libhoneycomb_static_unittests",
+    ":libhoney_static_unittests",
   ]
 
   if (!is_linux || ozone_platform_x11) {
@@ -332,8 +332,8 @@ if (is_win) {
   # *_switches.cc duplication otherwise causes linker errors.
   static_library("chrome_elf_set") {
     sources = [
-      "libhoneycomb/common/crash_reporter_client.cc",
-      "libhoneycomb/common/crash_reporter_client.h",
+      "libhoney/common/crash_reporter_client.cc",
+      "libhoney/common/crash_reporter_client.h",
 
       # Required for crash_keys::GetChromeCrashKeys.
       # Otherwise we need to copy this array into Honeycomb, which would be difficult
@@ -345,7 +345,7 @@ if (is_win) {
     ]
 
     configs += [
-      "libhoneycomb/features:config",
+      "libhoney/features:config",
       "//build/config:precompiled_headers",
     ]
 
@@ -378,15 +378,15 @@ if (is_win) {
 # Test support targets.
 #
 
-# Source files that are linked into libhoneycomb and honey_framework and tested by
-# libhoneycomb_static_unittests. These sources provide libhoneycomb-internal functionality
+# Source files that are linked into libhoney and honey_framework and tested by
+# libhoney_static_unittests. These sources provide libhoney-internal functionality
 # that is limited in scope (e.g. utility classes/methods).
-source_set("libhoneycomb_static_unittested") {
+source_set("libhoney_static_unittested") {
   sources = [
-    "libhoneycomb/browser/devtools/devtools_util.cc",
-    "libhoneycomb/browser/devtools/devtools_util.h",
-    "libhoneycomb/browser/geometry_util.h",
-    "libhoneycomb/browser/geometry_util.cc",
+    "libhoney/browser/devtools/devtools_util.cc",
+    "libhoney/browser/devtools/devtools_util.h",
+    "libhoney/browser/geometry_util.h",
+    "libhoney/browser/geometry_util.cc",
   ]
 
   deps = [
@@ -395,49 +395,49 @@ source_set("libhoneycomb_static_unittested") {
   ]
 
   configs += [
-    "libhoneycomb/features:config",
+    "libhoney/features:config",
     "//build/config:precompiled_headers",
   ]
 }
 
-# Executable target that provides test coverage for libhoneycomb_static_unittested
+# Executable target that provides test coverage for libhoney_static_unittested
 # source files.
-test("libhoneycomb_static_unittests") {
+test("libhoney_static_unittests") {
   testonly = true
 
   sources = [
-    "libhoneycomb/browser/devtools/devtools_util_unittest.cc",
-    "libhoneycomb/browser/geometry_util_unittest.cc",
+    "libhoney/browser/devtools/devtools_util_unittest.cc",
+    "libhoney/browser/geometry_util_unittest.cc",
   ]
 
   deps = [
-    ":libhoneycomb_static_unittested",
+    ":libhoney_static_unittested",
     "//base/test:run_all_unittests",
     "//testing/gtest",
   ]
 
   configs += [
-    "libhoneycomb/features:config",
+    "libhoney/features:config",
     "//build/config:precompiled_headers",
   ]
 }
 
-# Source files that are linked into libhoneycomb and honey_framework and implement
+# Source files that are linked into libhoney and honey_framework and implement
 # interfaces exposed to honeytests via the include/test directory. These sources
 # may access Chromium/Honeycomb internals. This is defined as a separate target from
-# libhoneycomb_static to avoid introducing testonly dependencies there.
-source_set("libhoneycomb_test_support") {
+# libhoney_static to avoid introducing testonly dependencies there.
+source_set("libhoney_test_support") {
   testonly = true
 
   sources = [
-    "libhoneycomb/browser/test/test_helpers_impl.cc",
-    "libhoneycomb/browser/test/test_server_impl.cc",
-    "libhoneycomb/browser/test/test_server_impl.h",
-    "libhoneycomb/common/test/translator_test_impl.cc",
+    "libhoney/browser/test/test_helpers_impl.cc",
+    "libhoney/browser/test/test_server_impl.cc",
+    "libhoney/browser/test/test_server_impl.h",
+    "libhoney/common/test/translator_test_impl.cc",
   ]
 
   deps = [
-    ":libhoneycomb_static",
+    ":libhoney_static",
     "//net:test_support",
 
     # Support for UI input events.
@@ -447,497 +447,497 @@ source_set("libhoneycomb_test_support") {
 
 
 #
-# libhoneycomb_static target.
+# libhoney_static target.
 #
 
-source_set("libhoneycomb_static") {
+source_set("libhoney_static") {
   sources = includes_common +
             gypi_paths.autogen_cpp_includes + [
-    "libhoneycomb/browser/alloy/alloy_browser_context.cc",
-    "libhoneycomb/browser/alloy/alloy_browser_context.h",
-    "libhoneycomb/browser/alloy/alloy_browser_host_impl.cc",
-    "libhoneycomb/browser/alloy/alloy_browser_host_impl.h",
-    "libhoneycomb/browser/alloy/alloy_browser_main.cc",
-    "libhoneycomb/browser/alloy/alloy_browser_main.h",
-    "libhoneycomb/browser/alloy/alloy_content_browser_client.cc",
-    "libhoneycomb/browser/alloy/alloy_content_browser_client.h",
-    "libhoneycomb/browser/alloy/alloy_download_util.cc",
-    "libhoneycomb/browser/alloy/alloy_download_util.h",
-    "libhoneycomb/browser/alloy/alloy_web_contents_view_delegate.cc",
-    "libhoneycomb/browser/alloy/alloy_web_contents_view_delegate.h",
-    "libhoneycomb/browser/alloy/browser_platform_delegate_alloy.cc",
-    "libhoneycomb/browser/alloy/browser_platform_delegate_alloy.h",
-    "libhoneycomb/browser/alloy/dialogs/alloy_constrained_window_views_client.cc",
-    "libhoneycomb/browser/alloy/dialogs/alloy_constrained_window_views_client.h",
-    "libhoneycomb/browser/alloy/dialogs/alloy_javascript_dialog_manager_delegate.cc",
-    "libhoneycomb/browser/alloy/dialogs/alloy_javascript_dialog_manager_delegate.h",
-    "libhoneycomb/browser/alloy/dialogs/alloy_web_contents_dialog_helper.cc",
-    "libhoneycomb/browser/alloy/dialogs/alloy_web_contents_dialog_helper.h",
-    "libhoneycomb/browser/alloy/chrome_browser_process_alloy.cc",
-    "libhoneycomb/browser/alloy/chrome_browser_process_alloy.h",
-    "libhoneycomb/browser/alloy/chrome_profile_manager_alloy.cc",
-    "libhoneycomb/browser/alloy/chrome_profile_manager_alloy.h",
-    "libhoneycomb/browser/alloy/chrome_profile_alloy.cc",
-    "libhoneycomb/browser/alloy/chrome_profile_alloy.h",
-    "libhoneycomb/browser/audio_capturer.cc",
-    "libhoneycomb/browser/audio_capturer.h",
-    "libhoneycomb/browser/audio_loopback_stream_creator.cc",
-    "libhoneycomb/browser/audio_loopback_stream_creator.h",
-    "libhoneycomb/browser/browser_contents_delegate.cc",
-    "libhoneycomb/browser/browser_contents_delegate.h",
-    "libhoneycomb/browser/browser_context.cc",
-    "libhoneycomb/browser/browser_context.h",
-    "libhoneycomb/browser/browser_context_keyed_service_factories.cc",
-    "libhoneycomb/browser/browser_context_keyed_service_factories.h",
-    "libhoneycomb/browser/browser_frame.cc",
-    "libhoneycomb/browser/browser_frame.h",
-    "libhoneycomb/browser/browser_host_base.cc",
-    "libhoneycomb/browser/browser_host_base.h",
-    "libhoneycomb/browser/browser_host_create.cc",
-    "libhoneycomb/browser/browser_info.cc",
-    "libhoneycomb/browser/browser_info.h",
-    "libhoneycomb/browser/browser_info_manager.cc",
-    "libhoneycomb/browser/browser_info_manager.h",
-    "libhoneycomb/browser/browser_manager.cc",
-    "libhoneycomb/browser/browser_manager.h",
-    "libhoneycomb/browser/browser_message_loop.cc",
-    "libhoneycomb/browser/browser_message_loop.h",
-    "libhoneycomb/browser/browser_platform_delegate.cc",
-    "libhoneycomb/browser/browser_platform_delegate.h",
-    "libhoneycomb/browser/browser_platform_delegate_create.cc",
-    "libhoneycomb/browser/browser_util.cc",
-    "libhoneycomb/browser/browser_util.h",
-    "libhoneycomb/browser/certificate_query.cc",
-    "libhoneycomb/browser/certificate_query.h",
-    "libhoneycomb/browser/chrome/browser_delegate.h",
-    "libhoneycomb/browser/chrome/browser_platform_delegate_chrome.cc",
-    "libhoneycomb/browser/chrome/browser_platform_delegate_chrome.h",
-    "libhoneycomb/browser/chrome/chrome_browser_context.cc",
-    "libhoneycomb/browser/chrome/chrome_browser_context.h",
-    "libhoneycomb/browser/chrome/chrome_browser_delegate.cc",
-    "libhoneycomb/browser/chrome/chrome_browser_delegate.h",
-    "libhoneycomb/browser/chrome/chrome_browser_host_impl.cc",
-    "libhoneycomb/browser/chrome/chrome_browser_host_impl.h",
-    "libhoneycomb/browser/chrome/chrome_browser_main_extra_parts_honey.cc",
-    "libhoneycomb/browser/chrome/chrome_browser_main_extra_parts_honey.h",
-    "libhoneycomb/browser/chrome/chrome_content_browser_client_honey.cc",
-    "libhoneycomb/browser/chrome/chrome_content_browser_client_honey.h",
-    "libhoneycomb/browser/chrome/chrome_context_menu_handler.cc",
-    "libhoneycomb/browser/chrome/chrome_context_menu_handler.h",
-    "libhoneycomb/browser/chrome_crash_reporter_client_stub.cc",
-    "libhoneycomb/browser/chrome/extensions/chrome_mime_handler_view_guest_delegate_honey.cc",
-    "libhoneycomb/browser/chrome/extensions/chrome_mime_handler_view_guest_delegate_honey.h",
-    "libhoneycomb/browser/chrome/views/browser_platform_delegate_chrome_child_window.cc",
-    "libhoneycomb/browser/chrome/views/browser_platform_delegate_chrome_child_window.h",
-    "libhoneycomb/browser/chrome/views/browser_platform_delegate_chrome_views.cc",
-    "libhoneycomb/browser/chrome/views/browser_platform_delegate_chrome_views.h",
-    "libhoneycomb/browser/chrome/views/chrome_browser_frame.cc",
-    "libhoneycomb/browser/chrome/views/chrome_browser_frame.h",
-    "libhoneycomb/browser/chrome/views/chrome_browser_view.cc",
-    "libhoneycomb/browser/chrome/views/chrome_browser_view.h",
-    "libhoneycomb/browser/chrome/views/chrome_child_window.cc",
-    "libhoneycomb/browser/chrome/views/chrome_child_window.h",
-    "libhoneycomb/browser/chrome/views/chrome_views_util.cc",
-    "libhoneycomb/browser/chrome/views/chrome_views_util.h",
-    "libhoneycomb/browser/chrome/views/toolbar_view_impl.cc",
-    "libhoneycomb/browser/chrome/views/toolbar_view_impl.h",
-    "libhoneycomb/browser/chrome/views/toolbar_view_view.cc",
-    "libhoneycomb/browser/chrome/views/toolbar_view_view.h",
-    "libhoneycomb/browser/context.cc",
-    "libhoneycomb/browser/context.h",
-    "libhoneycomb/browser/context_menu_params_impl.cc",
-    "libhoneycomb/browser/context_menu_params_impl.h",
-    "libhoneycomb/browser/devtools/devtools_controller.cc",
-    "libhoneycomb/browser/devtools/devtools_controller.h",
-    "libhoneycomb/browser/devtools/devtools_file_manager.cc",
-    "libhoneycomb/browser/devtools/devtools_file_manager.h",
-    "libhoneycomb/browser/devtools/devtools_frontend.cc",
-    "libhoneycomb/browser/devtools/devtools_frontend.h",
-    "libhoneycomb/browser/devtools/devtools_manager.cc",
-    "libhoneycomb/browser/devtools/devtools_manager.h",
-    "libhoneycomb/browser/devtools/devtools_manager_delegate.cc",
-    "libhoneycomb/browser/devtools/devtools_manager_delegate.h",
-    "libhoneycomb/browser/download_item_impl.cc",
-    "libhoneycomb/browser/download_item_impl.h",
-    "libhoneycomb/browser/download_manager_delegate.cc",
-    "libhoneycomb/browser/download_manager_delegate.h",
-    "libhoneycomb/browser/extension_impl.cc",
-    "libhoneycomb/browser/extension_impl.h",
-    "libhoneycomb/browser/extensions/api/file_system/honey_file_system_delegate.cc",
-    "libhoneycomb/browser/extensions/api/file_system/honey_file_system_delegate.h",
-    "libhoneycomb/browser/extensions/api/storage/sync_value_store_cache.cc",
-    "libhoneycomb/browser/extensions/api/storage/sync_value_store_cache.h",
-    "libhoneycomb/browser/extensions/api/tabs/tabs_api.cc",
-    "libhoneycomb/browser/extensions/api/tabs/tabs_api.h",
-    "libhoneycomb/browser/extensions/alloy_extensions_util.cc",
-    "libhoneycomb/browser/extensions/alloy_extensions_util.h",
-    "libhoneycomb/browser/extensions/browser_extensions_util.cc",
-    "libhoneycomb/browser/extensions/browser_extensions_util.h",
-    "libhoneycomb/browser/extensions/browser_platform_delegate_background.cc",
-    "libhoneycomb/browser/extensions/browser_platform_delegate_background.h",
-    "libhoneycomb/browser/extensions/chrome_api_registration.cc",
-    "libhoneycomb/browser/extensions/chrome_api_registration.h",
-    "libhoneycomb/browser/extensions/component_extension_resource_manager.cc",
-    "libhoneycomb/browser/extensions/component_extension_resource_manager.h",
-    "libhoneycomb/browser/extensions/extensions_api_client.cc",
-    "libhoneycomb/browser/extensions/extensions_api_client.h",
-    "libhoneycomb/browser/extensions/extensions_browser_api_provider.cc",
-    "libhoneycomb/browser/extensions/extensions_browser_api_provider.h",
-    "libhoneycomb/browser/extensions/extensions_browser_client.cc",
-    "libhoneycomb/browser/extensions/extensions_browser_client.h",
-    "libhoneycomb/browser/extensions/extension_background_host.cc",
-    "libhoneycomb/browser/extensions/extension_background_host.h",
-    "libhoneycomb/browser/extensions/extension_function_details.cc",
-    "libhoneycomb/browser/extensions/extension_function_details.h",
-    "libhoneycomb/browser/extensions/extension_host_delegate.cc",
-    "libhoneycomb/browser/extensions/extension_host_delegate.h",
-    "libhoneycomb/browser/extensions/extension_system.cc",
-    "libhoneycomb/browser/extensions/extension_system.h",
-    "libhoneycomb/browser/extensions/extension_system_factory.cc",
-    "libhoneycomb/browser/extensions/extension_system_factory.h",
-    "libhoneycomb/browser/extensions/extension_view_host.cc",
-    "libhoneycomb/browser/extensions/extension_view_host.h",
-    "libhoneycomb/browser/extensions/extension_web_contents_observer.cc",
-    "libhoneycomb/browser/extensions/extension_web_contents_observer.h",
-    "libhoneycomb/browser/extensions/mime_handler_view_guest_delegate.cc",
-    "libhoneycomb/browser/extensions/mime_handler_view_guest_delegate.h",
-    "libhoneycomb/browser/extensions/value_store/honey_value_store.cc",
-    "libhoneycomb/browser/extensions/value_store/honey_value_store.h",
-    "libhoneycomb/browser/extensions/value_store/honey_value_store_factory.cc",
-    "libhoneycomb/browser/extensions/value_store/honey_value_store_factory.h",
-    "libhoneycomb/browser/file_dialog_manager.cc",
-    "libhoneycomb/browser/file_dialog_manager.h",
-    "libhoneycomb/browser/file_dialog_runner.cc",
-    "libhoneycomb/browser/file_dialog_runner.h",
-    "libhoneycomb/browser/frame_host_impl.cc",
-    "libhoneycomb/browser/frame_host_impl.h",
-    "libhoneycomb/browser/frame_service_base.h",
-    "libhoneycomb/browser/global_preference_manager_impl.cc",
-    "libhoneycomb/browser/global_preference_manager_impl.h",
-    "libhoneycomb/browser/image_impl.cc",
-    "libhoneycomb/browser/image_impl.h",
-    "libhoneycomb/browser/iothread_state.cc",
-    "libhoneycomb/browser/iothread_state.h",
-    "libhoneycomb/browser/javascript_dialog_runner.h",
-    "libhoneycomb/browser/javascript_dialog_manager.cc",
-    "libhoneycomb/browser/javascript_dialog_manager.h",
-    "libhoneycomb/browser/main_runner.cc",
-    "libhoneycomb/browser/main_runner.h",
-    "libhoneycomb/browser/media_access_query.cc",
-    "libhoneycomb/browser/media_access_query.h",
-    "libhoneycomb/browser/media_capture_devices_dispatcher.cc",
-    "libhoneycomb/browser/media_capture_devices_dispatcher.h",
-    "libhoneycomb/browser/media_router/media_route_impl.cc",
-    "libhoneycomb/browser/media_router/media_route_impl.h",
-    "libhoneycomb/browser/media_router/media_router_impl.cc",
-    "libhoneycomb/browser/media_router/media_router_impl.h",
-    "libhoneycomb/browser/media_router/media_router_manager.cc",
-    "libhoneycomb/browser/media_router/media_router_manager.h",
-    "libhoneycomb/browser/media_router/media_sink_impl.cc",
-    "libhoneycomb/browser/media_router/media_sink_impl.h",
-    "libhoneycomb/browser/media_router/media_source_impl.cc",
-    "libhoneycomb/browser/media_router/media_source_impl.h",
-    "libhoneycomb/browser/media_stream_registrar.cc",
-    "libhoneycomb/browser/media_stream_registrar.h",
-    "libhoneycomb/browser/menu_manager.cc",
-    "libhoneycomb/browser/menu_manager.h",
-    "libhoneycomb/browser/menu_model_impl.cc",
-    "libhoneycomb/browser/menu_model_impl.h",
-    "libhoneycomb/browser/menu_runner.h",
-    "libhoneycomb/browser/native/browser_platform_delegate_native.cc",
-    "libhoneycomb/browser/native/browser_platform_delegate_native.h",
-    "libhoneycomb/browser/native/cursor_util.h",
-    "libhoneycomb/browser/native/cursor_util.cc",
-    "libhoneycomb/browser/native/window_delegate_view.cc",
-    "libhoneycomb/browser/native/window_delegate_view.h",
-    "libhoneycomb/browser/navigation_entry_impl.cc",
-    "libhoneycomb/browser/navigation_entry_impl.h",
-    "libhoneycomb/browser/net/chrome_scheme_handler.cc",
-    "libhoneycomb/browser/net/chrome_scheme_handler.h",
-    "libhoneycomb/browser/net/crlset_file_util_impl.cc",
-    "libhoneycomb/browser/net/devtools_scheme_handler.cc",
-    "libhoneycomb/browser/net/devtools_scheme_handler.h",
-    "libhoneycomb/browser/net/internal_scheme_handler.cc",
-    "libhoneycomb/browser/net/internal_scheme_handler.h",
-    "libhoneycomb/browser/net/scheme_handler.cc",
-    "libhoneycomb/browser/net/scheme_handler.h",
-    "libhoneycomb/browser/net/throttle_handler.cc",
-    "libhoneycomb/browser/net/throttle_handler.h",
-    "libhoneycomb/browser/net_service/browser_urlrequest_impl.cc",
-    "libhoneycomb/browser/net_service/browser_urlrequest_impl.h",
-    "libhoneycomb/browser/net_service/cookie_helper.cc",
-    "libhoneycomb/browser/net_service/cookie_helper.h",
-    "libhoneycomb/browser/net_service/cookie_manager_impl.cc",
-    "libhoneycomb/browser/net_service/cookie_manager_impl.h",
-    "libhoneycomb/browser/net_service/login_delegate.cc",
-    "libhoneycomb/browser/net_service/login_delegate.h",
-    "libhoneycomb/browser/net_service/proxy_url_loader_factory.cc",
-    "libhoneycomb/browser/net_service/proxy_url_loader_factory.h",
-    "libhoneycomb/browser/net_service/resource_handler_wrapper.cc",
-    "libhoneycomb/browser/net_service/resource_handler_wrapper.h",
-    "libhoneycomb/browser/net_service/resource_request_handler_wrapper.cc",
-    "libhoneycomb/browser/net_service/resource_request_handler_wrapper.h",
-    "libhoneycomb/browser/net_service/response_filter_wrapper.cc",
-    "libhoneycomb/browser/net_service/response_filter_wrapper.h",
-    "libhoneycomb/browser/net_service/stream_reader_url_loader.cc",
-    "libhoneycomb/browser/net_service/stream_reader_url_loader.h",
-    "libhoneycomb/browser/net_service/url_loader_factory_getter.cc",
-    "libhoneycomb/browser/net_service/url_loader_factory_getter.h",
-    "libhoneycomb/browser/origin_whitelist_impl.cc",
-    "libhoneycomb/browser/origin_whitelist_impl.h",
-    "libhoneycomb/browser/osr/browser_platform_delegate_osr.cc",
-    "libhoneycomb/browser/osr/browser_platform_delegate_osr.h",
-    "libhoneycomb/browser/osr/host_display_client_osr.cc",
-    "libhoneycomb/browser/osr/host_display_client_osr.h",
-    "libhoneycomb/browser/osr/motion_event_osr.cc",
-    "libhoneycomb/browser/osr/motion_event_osr.h",
-    "libhoneycomb/browser/osr/osr_accessibility_util.cc",
-    "libhoneycomb/browser/osr/osr_accessibility_util.h",
-    "libhoneycomb/browser/osr/osr_util.cc",
-    "libhoneycomb/browser/osr/osr_util.h",
-    "libhoneycomb/browser/osr/render_widget_host_view_osr.cc",
-    "libhoneycomb/browser/osr/render_widget_host_view_osr.h",
-    "libhoneycomb/browser/osr/synthetic_gesture_target_osr.cc",
-    "libhoneycomb/browser/osr/synthetic_gesture_target_osr.h",
-    "libhoneycomb/browser/osr/touch_handle_drawable_osr.cc",
-    "libhoneycomb/browser/osr/touch_handle_drawable_osr.h",
-    "libhoneycomb/browser/osr/touch_selection_controller_client_osr.cc",
-    "libhoneycomb/browser/osr/touch_selection_controller_client_osr.h",
-    "libhoneycomb/browser/osr/video_consumer_osr.cc",
-    "libhoneycomb/browser/osr/video_consumer_osr.h",
-    "libhoneycomb/browser/osr/web_contents_view_osr.cc",
-    "libhoneycomb/browser/osr/web_contents_view_osr.h",
-    "libhoneycomb/browser/path_util_impl.cc",
-    "libhoneycomb/browser/permission_prompt.cc",
-    "libhoneycomb/browser/permission_prompt.h",
-    "libhoneycomb/browser/prefs/browser_prefs.cc",
-    "libhoneycomb/browser/prefs/browser_prefs.h",
-    "libhoneycomb/browser/prefs/pref_helper.cc",
-    "libhoneycomb/browser/prefs/pref_helper.h",
-    "libhoneycomb/browser/prefs/pref_registrar.cc",
-    "libhoneycomb/browser/prefs/pref_registrar.h",
-    "libhoneycomb/browser/prefs/pref_store.cc",
-    "libhoneycomb/browser/prefs/pref_store.h",
-    "libhoneycomb/browser/prefs/renderer_prefs.cc",
-    "libhoneycomb/browser/prefs/renderer_prefs.h",
-    "libhoneycomb/browser/print_settings_impl.cc",
-    "libhoneycomb/browser/print_settings_impl.h",
-    "libhoneycomb/browser/printing/print_util.cc",
-    "libhoneycomb/browser/printing/print_util.h",
-    "libhoneycomb/browser/process_util_impl.cc",
-    "libhoneycomb/browser/request_context_handler_map.cc",
-    "libhoneycomb/browser/request_context_handler_map.h",
-    "libhoneycomb/browser/request_context_impl.cc",
-    "libhoneycomb/browser/request_context_impl.h",
-    "libhoneycomb/browser/scheme_impl.cc",
-    "libhoneycomb/browser/server_impl.cc",
-    "libhoneycomb/browser/server_impl.h",
-    "libhoneycomb/browser/simple_menu_model_impl.cc",
-    "libhoneycomb/browser/simple_menu_model_impl.h",
-    "libhoneycomb/browser/speech_recognition_manager_delegate.cc",
-    "libhoneycomb/browser/speech_recognition_manager_delegate.h",
-    "libhoneycomb/browser/ssl_host_state_delegate.cc",
-    "libhoneycomb/browser/ssl_host_state_delegate.h",
-    "libhoneycomb/browser/ssl_info_impl.cc",
-    "libhoneycomb/browser/ssl_info_impl.h",
-    "libhoneycomb/browser/ssl_status_impl.cc",
-    "libhoneycomb/browser/ssl_status_impl.h",
-    "libhoneycomb/browser/stream_impl.cc",
-    "libhoneycomb/browser/stream_impl.h",
-    "libhoneycomb/browser/trace_impl.cc",
-    "libhoneycomb/browser/trace_subscriber.cc",
-    "libhoneycomb/browser/trace_subscriber.h",
-    "libhoneycomb/browser/thread_util.h",
-    "libhoneycomb/browser/views/basic_label_button_impl.cc",
-    "libhoneycomb/browser/views/basic_label_button_impl.h",
-    "libhoneycomb/browser/views/basic_label_button_view.cc",
-    "libhoneycomb/browser/views/basic_label_button_view.h",
-    "libhoneycomb/browser/views/basic_panel_impl.cc",
-    "libhoneycomb/browser/views/basic_panel_impl.h",
-    "libhoneycomb/browser/views/basic_panel_view.cc",
-    "libhoneycomb/browser/views/basic_panel_view.h",
-    "libhoneycomb/browser/views/box_layout_impl.cc",
-    "libhoneycomb/browser/views/box_layout_impl.h",
-    "libhoneycomb/browser/views/browser_platform_delegate_views.cc",
-    "libhoneycomb/browser/views/browser_platform_delegate_views.h",
-    "libhoneycomb/browser/views/browser_view_impl.cc",
-    "libhoneycomb/browser/views/browser_view_impl.h",
-    "libhoneycomb/browser/views/browser_view_view.cc",
-    "libhoneycomb/browser/views/browser_view_view.h",
-    "libhoneycomb/browser/views/button_impl.h",
-    "libhoneycomb/browser/views/button_view.h",
-    "libhoneycomb/browser/views/display_impl.cc",
-    "libhoneycomb/browser/views/display_impl.h",
-    "libhoneycomb/browser/views/fill_layout_impl.cc",
-    "libhoneycomb/browser/views/fill_layout_impl.h",
-    "libhoneycomb/browser/views/label_button_impl.h",
-    "libhoneycomb/browser/views/label_button_view.h",
-    "libhoneycomb/browser/views/layout_impl.h",
-    "libhoneycomb/browser/views/layout_adapter.cc",
-    "libhoneycomb/browser/views/layout_adapter.h",
-    "libhoneycomb/browser/views/layout_util.cc",
-    "libhoneycomb/browser/views/layout_util.h",
-    "libhoneycomb/browser/views/menu_button_impl.cc",
-    "libhoneycomb/browser/views/menu_button_impl.h",
-    "libhoneycomb/browser/views/menu_button_view.cc",
-    "libhoneycomb/browser/views/menu_button_view.h",
-    "libhoneycomb/browser/views/menu_runner_views.cc",
-    "libhoneycomb/browser/views/menu_runner_views.h",
-    "libhoneycomb/browser/views/overlay_view_host.cc",
-    "libhoneycomb/browser/views/overlay_view_host.h",
-    "libhoneycomb/browser/views/panel_impl.h",
-    "libhoneycomb/browser/views/panel_view.h",
-    "libhoneycomb/browser/views/scroll_view_impl.cc",
-    "libhoneycomb/browser/views/scroll_view_impl.h",
-    "libhoneycomb/browser/views/scroll_view_view.cc",
-    "libhoneycomb/browser/views/scroll_view_view.h",
-    "libhoneycomb/browser/views/textfield_impl.cc",
-    "libhoneycomb/browser/views/textfield_impl.h",
-    "libhoneycomb/browser/views/textfield_view.cc",
-    "libhoneycomb/browser/views/textfield_view.h",
-    "libhoneycomb/browser/views/view_adapter.cc",
-    "libhoneycomb/browser/views/view_adapter.h",
-    "libhoneycomb/browser/views/view_impl.h",
-    "libhoneycomb/browser/views/view_util.cc",
-    "libhoneycomb/browser/views/view_util.h",
-    "libhoneycomb/browser/views/view_view.h",
-    "libhoneycomb/browser/views/widget_destruction_observer.h",
-    "libhoneycomb/browser/views/window_impl.cc",
-    "libhoneycomb/browser/views/window_impl.h",
-    "libhoneycomb/browser/views/window_view.cc",
-    "libhoneycomb/browser/views/window_view.h",
-    "libhoneycomb/browser/x509_certificate_impl.cc",
-    "libhoneycomb/browser/x509_certificate_impl.h",
-    "libhoneycomb/browser/x509_cert_principal_impl.cc",
-    "libhoneycomb/browser/x509_cert_principal_impl.h",
-    "libhoneycomb/browser/xml_reader_impl.cc",
-    "libhoneycomb/browser/xml_reader_impl.h",
-    "libhoneycomb/browser/zip_reader_impl.cc",
-    "libhoneycomb/browser/zip_reader_impl.h",
-    "libhoneycomb/common/alloy/alloy_content_client.cc",
-    "libhoneycomb/common/alloy/alloy_content_client.h",
-    "libhoneycomb/common/alloy/alloy_main_delegate.cc",
-    "libhoneycomb/common/alloy/alloy_main_delegate.h",
-    "libhoneycomb/common/alloy/alloy_main_runner_delegate.cc",
-    "libhoneycomb/common/alloy/alloy_main_runner_delegate.h",
-    "libhoneycomb/common/app_manager.cc",
-    "libhoneycomb/common/app_manager.h",
-    "libhoneycomb/common/base_impl.cc",
-    "libhoneycomb/common/honey_switches.cc",
-    "libhoneycomb/common/honey_switches.h",
-    "libhoneycomb/common/chrome/chrome_content_client_honey.cc",
-    "libhoneycomb/common/chrome/chrome_content_client_honey.h",
-    "libhoneycomb/common/chrome/chrome_main_delegate_honey.cc",
-    "libhoneycomb/common/chrome/chrome_main_delegate_honey.h",
-    "libhoneycomb/common/chrome/chrome_main_runner_delegate.cc",
-    "libhoneycomb/common/chrome/chrome_main_runner_delegate.h",
-    "libhoneycomb/common/command_line_impl.cc",
-    "libhoneycomb/common/command_line_impl.h",
-    "libhoneycomb/common/crash_reporter_client.cc",
-    "libhoneycomb/common/crash_reporter_client.h",
-    "libhoneycomb/common/crash_reporting.cc",
-    "libhoneycomb/common/crash_reporting.h",
-    "libhoneycomb/common/drag_data_impl.cc",
-    "libhoneycomb/common/drag_data_impl.h",
-    "libhoneycomb/common/extensions/chrome_generated_schemas.cc",
-    "libhoneycomb/common/extensions/chrome_generated_schemas.h",
-    "libhoneycomb/common/extensions/extensions_api_provider.cc",
-    "libhoneycomb/common/extensions/extensions_api_provider.h",
-    "libhoneycomb/common/extensions/extensions_client.cc",
-    "libhoneycomb/common/extensions/extensions_client.h",
-    "libhoneycomb/common/extensions/extensions_util.cc",
-    "libhoneycomb/common/extensions/extensions_util.h",
-    "libhoneycomb/common/file_util_impl.cc",
-    "libhoneycomb/common/frame_util.cc",
-    "libhoneycomb/common/frame_util.h",
-    "libhoneycomb/common/i18n_util_impl.cc",
-    "libhoneycomb/common/json_impl.cc",
-    "libhoneycomb/common/main_runner_delegate.h",
-    "libhoneycomb/common/main_runner_handler.h",
-    "libhoneycomb/common/net/http_header_utils.cc",
-    "libhoneycomb/common/net/http_header_utils.h",
-    "libhoneycomb/common/net/net_resource_provider.cc",
-    "libhoneycomb/common/net/net_resource_provider.h",
-    "libhoneycomb/common/net/scheme_registration.cc",
-    "libhoneycomb/common/net/scheme_registration.h",
-    "libhoneycomb/common/net/url_util.cc",
-    "libhoneycomb/common/net/url_util.h",
-    "libhoneycomb/common/net_service/net_service_util.cc",
-    "libhoneycomb/common/net_service/net_service_util.h",
-    "libhoneycomb/common/parser_impl.cc",
-    "libhoneycomb/common/process_message_impl.cc",
-    "libhoneycomb/common/process_message_impl.h",
-    "libhoneycomb/common/process_message_smr_impl.cc",
-    "libhoneycomb/common/process_message_smr_impl.h",
-    "libhoneycomb/common/request_impl.cc",
-    "libhoneycomb/common/request_impl.h",
-    "libhoneycomb/common/resource_bundle_delegate.cc",
-    "libhoneycomb/common/resource_bundle_delegate.h",
-    "libhoneycomb/common/resource_bundle_impl.cc",
-    "libhoneycomb/common/resource_bundle_impl.h",
-    "libhoneycomb/common/resource_util.cc",
-    "libhoneycomb/common/resource_util.h",
-    "libhoneycomb/common/response_impl.cc",
-    "libhoneycomb/common/response_impl.h",
-    "libhoneycomb/common/scheme_registrar_impl.cc",
-    "libhoneycomb/common/scheme_registrar_impl.h",
-    "libhoneycomb/common/string_list_impl.cc",
-    "libhoneycomb/common/string_map_impl.cc",
-    "libhoneycomb/common/string_multimap_impl.cc",
-    "libhoneycomb/common/string_types_impl.cc",
-    "libhoneycomb/common/string_util.cc",
-    "libhoneycomb/common/string_util.h",
-    "libhoneycomb/common/task_impl.cc",
-    "libhoneycomb/common/task_runner_impl.cc",
-    "libhoneycomb/common/task_runner_impl.h",
-    "libhoneycomb/common/task_runner_manager.cc",
-    "libhoneycomb/common/task_runner_manager.h",
-    "libhoneycomb/common/thread_impl.cc",
-    "libhoneycomb/common/thread_impl.h",
-    "libhoneycomb/common/time_impl.cc",
-    "libhoneycomb/common/time_util.h",
-    "libhoneycomb/common/tracker.cc",
-    "libhoneycomb/common/tracker.h",
-    "libhoneycomb/common/urlrequest_impl.cc",
-    "libhoneycomb/common/value_base.cc",
-    "libhoneycomb/common/value_base.h",
-    "libhoneycomb/common/values_impl.cc",
-    "libhoneycomb/common/values_impl.h",
-    "libhoneycomb/common/waitable_event_impl.cc",
-    "libhoneycomb/common/waitable_event_impl.h",
-    "libhoneycomb/features/runtime.h",
-    "libhoneycomb/features/runtime_checks.h",
-    "libhoneycomb/renderer/alloy/alloy_content_renderer_client.cc",
-    "libhoneycomb/renderer/alloy/alloy_content_renderer_client.h",
-    "libhoneycomb/renderer/alloy/alloy_render_thread_observer.cc",
-    "libhoneycomb/renderer/alloy/alloy_render_thread_observer.h",
-    "libhoneycomb/renderer/alloy/url_loader_throttle_provider_impl.cc",
-    "libhoneycomb/renderer/alloy/url_loader_throttle_provider_impl.h",
-    "libhoneycomb/renderer/browser_impl.cc",
-    "libhoneycomb/renderer/browser_impl.h",
-    "libhoneycomb/renderer/chrome/chrome_content_renderer_client_honey.cc",
-    "libhoneycomb/renderer/chrome/chrome_content_renderer_client_honey.h",
-    "libhoneycomb/renderer/dom_document_impl.cc",
-    "libhoneycomb/renderer/dom_document_impl.h",
-    "libhoneycomb/renderer/dom_node_impl.cc",
-    "libhoneycomb/renderer/dom_node_impl.h",
-    "libhoneycomb/renderer/extensions/extensions_dispatcher_delegate.cc",
-    "libhoneycomb/renderer/extensions/extensions_dispatcher_delegate.h",
-    "libhoneycomb/renderer/extensions/extensions_renderer_client.cc",
-    "libhoneycomb/renderer/extensions/extensions_renderer_client.h",
-    "libhoneycomb/renderer/extensions/print_render_frame_helper_delegate.cc",
-    "libhoneycomb/renderer/extensions/print_render_frame_helper_delegate.h",
-    "libhoneycomb/renderer/frame_impl.cc",
-    "libhoneycomb/renderer/frame_impl.h",
-    "libhoneycomb/renderer/render_frame_observer.cc",
-    "libhoneycomb/renderer/render_frame_observer.h",
-    "libhoneycomb/renderer/render_frame_util.cc",
-    "libhoneycomb/renderer/render_frame_util.h",
-    "libhoneycomb/renderer/render_manager.cc",
-    "libhoneycomb/renderer/render_manager.h",
-    "libhoneycomb/renderer/thread_util.h",
-    "libhoneycomb/renderer/v8_impl.cc",
-    "libhoneycomb/renderer/v8_impl.h",
+    "libhoney/browser/alloy/alloy_browser_context.cc",
+    "libhoney/browser/alloy/alloy_browser_context.h",
+    "libhoney/browser/alloy/alloy_browser_host_impl.cc",
+    "libhoney/browser/alloy/alloy_browser_host_impl.h",
+    "libhoney/browser/alloy/alloy_browser_main.cc",
+    "libhoney/browser/alloy/alloy_browser_main.h",
+    "libhoney/browser/alloy/alloy_content_browser_client.cc",
+    "libhoney/browser/alloy/alloy_content_browser_client.h",
+    "libhoney/browser/alloy/alloy_download_util.cc",
+    "libhoney/browser/alloy/alloy_download_util.h",
+    "libhoney/browser/alloy/alloy_web_contents_view_delegate.cc",
+    "libhoney/browser/alloy/alloy_web_contents_view_delegate.h",
+    "libhoney/browser/alloy/browser_platform_delegate_alloy.cc",
+    "libhoney/browser/alloy/browser_platform_delegate_alloy.h",
+    "libhoney/browser/alloy/dialogs/alloy_constrained_window_views_client.cc",
+    "libhoney/browser/alloy/dialogs/alloy_constrained_window_views_client.h",
+    "libhoney/browser/alloy/dialogs/alloy_javascript_dialog_manager_delegate.cc",
+    "libhoney/browser/alloy/dialogs/alloy_javascript_dialog_manager_delegate.h",
+    "libhoney/browser/alloy/dialogs/alloy_web_contents_dialog_helper.cc",
+    "libhoney/browser/alloy/dialogs/alloy_web_contents_dialog_helper.h",
+    "libhoney/browser/alloy/chrome_browser_process_alloy.cc",
+    "libhoney/browser/alloy/chrome_browser_process_alloy.h",
+    "libhoney/browser/alloy/chrome_profile_manager_alloy.cc",
+    "libhoney/browser/alloy/chrome_profile_manager_alloy.h",
+    "libhoney/browser/alloy/chrome_profile_alloy.cc",
+    "libhoney/browser/alloy/chrome_profile_alloy.h",
+    "libhoney/browser/audio_capturer.cc",
+    "libhoney/browser/audio_capturer.h",
+    "libhoney/browser/audio_loopback_stream_creator.cc",
+    "libhoney/browser/audio_loopback_stream_creator.h",
+    "libhoney/browser/browser_contents_delegate.cc",
+    "libhoney/browser/browser_contents_delegate.h",
+    "libhoney/browser/browser_context.cc",
+    "libhoney/browser/browser_context.h",
+    "libhoney/browser/browser_context_keyed_service_factories.cc",
+    "libhoney/browser/browser_context_keyed_service_factories.h",
+    "libhoney/browser/browser_frame.cc",
+    "libhoney/browser/browser_frame.h",
+    "libhoney/browser/browser_host_base.cc",
+    "libhoney/browser/browser_host_base.h",
+    "libhoney/browser/browser_host_create.cc",
+    "libhoney/browser/browser_info.cc",
+    "libhoney/browser/browser_info.h",
+    "libhoney/browser/browser_info_manager.cc",
+    "libhoney/browser/browser_info_manager.h",
+    "libhoney/browser/browser_manager.cc",
+    "libhoney/browser/browser_manager.h",
+    "libhoney/browser/browser_message_loop.cc",
+    "libhoney/browser/browser_message_loop.h",
+    "libhoney/browser/browser_platform_delegate.cc",
+    "libhoney/browser/browser_platform_delegate.h",
+    "libhoney/browser/browser_platform_delegate_create.cc",
+    "libhoney/browser/browser_util.cc",
+    "libhoney/browser/browser_util.h",
+    "libhoney/browser/certificate_query.cc",
+    "libhoney/browser/certificate_query.h",
+    "libhoney/browser/chrome/browser_delegate.h",
+    "libhoney/browser/chrome/browser_platform_delegate_chrome.cc",
+    "libhoney/browser/chrome/browser_platform_delegate_chrome.h",
+    "libhoney/browser/chrome/chrome_browser_context.cc",
+    "libhoney/browser/chrome/chrome_browser_context.h",
+    "libhoney/browser/chrome/chrome_browser_delegate.cc",
+    "libhoney/browser/chrome/chrome_browser_delegate.h",
+    "libhoney/browser/chrome/chrome_browser_host_impl.cc",
+    "libhoney/browser/chrome/chrome_browser_host_impl.h",
+    "libhoney/browser/chrome/chrome_browser_main_extra_parts_honey.cc",
+    "libhoney/browser/chrome/chrome_browser_main_extra_parts_honey.h",
+    "libhoney/browser/chrome/chrome_content_browser_client_honey.cc",
+    "libhoney/browser/chrome/chrome_content_browser_client_honey.h",
+    "libhoney/browser/chrome/chrome_context_menu_handler.cc",
+    "libhoney/browser/chrome/chrome_context_menu_handler.h",
+    "libhoney/browser/chrome_crash_reporter_client_stub.cc",
+    "libhoney/browser/chrome/extensions/chrome_mime_handler_view_guest_delegate_honey.cc",
+    "libhoney/browser/chrome/extensions/chrome_mime_handler_view_guest_delegate_honey.h",
+    "libhoney/browser/chrome/views/browser_platform_delegate_chrome_child_window.cc",
+    "libhoney/browser/chrome/views/browser_platform_delegate_chrome_child_window.h",
+    "libhoney/browser/chrome/views/browser_platform_delegate_chrome_views.cc",
+    "libhoney/browser/chrome/views/browser_platform_delegate_chrome_views.h",
+    "libhoney/browser/chrome/views/chrome_browser_frame.cc",
+    "libhoney/browser/chrome/views/chrome_browser_frame.h",
+    "libhoney/browser/chrome/views/chrome_browser_view.cc",
+    "libhoney/browser/chrome/views/chrome_browser_view.h",
+    "libhoney/browser/chrome/views/chrome_child_window.cc",
+    "libhoney/browser/chrome/views/chrome_child_window.h",
+    "libhoney/browser/chrome/views/chrome_views_util.cc",
+    "libhoney/browser/chrome/views/chrome_views_util.h",
+    "libhoney/browser/chrome/views/toolbar_view_impl.cc",
+    "libhoney/browser/chrome/views/toolbar_view_impl.h",
+    "libhoney/browser/chrome/views/toolbar_view_view.cc",
+    "libhoney/browser/chrome/views/toolbar_view_view.h",
+    "libhoney/browser/context.cc",
+    "libhoney/browser/context.h",
+    "libhoney/browser/context_menu_params_impl.cc",
+    "libhoney/browser/context_menu_params_impl.h",
+    "libhoney/browser/devtools/devtools_controller.cc",
+    "libhoney/browser/devtools/devtools_controller.h",
+    "libhoney/browser/devtools/devtools_file_manager.cc",
+    "libhoney/browser/devtools/devtools_file_manager.h",
+    "libhoney/browser/devtools/devtools_frontend.cc",
+    "libhoney/browser/devtools/devtools_frontend.h",
+    "libhoney/browser/devtools/devtools_manager.cc",
+    "libhoney/browser/devtools/devtools_manager.h",
+    "libhoney/browser/devtools/devtools_manager_delegate.cc",
+    "libhoney/browser/devtools/devtools_manager_delegate.h",
+    "libhoney/browser/download_item_impl.cc",
+    "libhoney/browser/download_item_impl.h",
+    "libhoney/browser/download_manager_delegate.cc",
+    "libhoney/browser/download_manager_delegate.h",
+    "libhoney/browser/extension_impl.cc",
+    "libhoney/browser/extension_impl.h",
+    "libhoney/browser/extensions/api/file_system/honey_file_system_delegate.cc",
+    "libhoney/browser/extensions/api/file_system/honey_file_system_delegate.h",
+    "libhoney/browser/extensions/api/storage/sync_value_store_cache.cc",
+    "libhoney/browser/extensions/api/storage/sync_value_store_cache.h",
+    "libhoney/browser/extensions/api/tabs/tabs_api.cc",
+    "libhoney/browser/extensions/api/tabs/tabs_api.h",
+    "libhoney/browser/extensions/alloy_extensions_util.cc",
+    "libhoney/browser/extensions/alloy_extensions_util.h",
+    "libhoney/browser/extensions/browser_extensions_util.cc",
+    "libhoney/browser/extensions/browser_extensions_util.h",
+    "libhoney/browser/extensions/browser_platform_delegate_background.cc",
+    "libhoney/browser/extensions/browser_platform_delegate_background.h",
+    "libhoney/browser/extensions/chrome_api_registration.cc",
+    "libhoney/browser/extensions/chrome_api_registration.h",
+    "libhoney/browser/extensions/component_extension_resource_manager.cc",
+    "libhoney/browser/extensions/component_extension_resource_manager.h",
+    "libhoney/browser/extensions/extensions_api_client.cc",
+    "libhoney/browser/extensions/extensions_api_client.h",
+    "libhoney/browser/extensions/extensions_browser_api_provider.cc",
+    "libhoney/browser/extensions/extensions_browser_api_provider.h",
+    "libhoney/browser/extensions/extensions_browser_client.cc",
+    "libhoney/browser/extensions/extensions_browser_client.h",
+    "libhoney/browser/extensions/extension_background_host.cc",
+    "libhoney/browser/extensions/extension_background_host.h",
+    "libhoney/browser/extensions/extension_function_details.cc",
+    "libhoney/browser/extensions/extension_function_details.h",
+    "libhoney/browser/extensions/extension_host_delegate.cc",
+    "libhoney/browser/extensions/extension_host_delegate.h",
+    "libhoney/browser/extensions/extension_system.cc",
+    "libhoney/browser/extensions/extension_system.h",
+    "libhoney/browser/extensions/extension_system_factory.cc",
+    "libhoney/browser/extensions/extension_system_factory.h",
+    "libhoney/browser/extensions/extension_view_host.cc",
+    "libhoney/browser/extensions/extension_view_host.h",
+    "libhoney/browser/extensions/extension_web_contents_observer.cc",
+    "libhoney/browser/extensions/extension_web_contents_observer.h",
+    "libhoney/browser/extensions/mime_handler_view_guest_delegate.cc",
+    "libhoney/browser/extensions/mime_handler_view_guest_delegate.h",
+    "libhoney/browser/extensions/value_store/honey_value_store.cc",
+    "libhoney/browser/extensions/value_store/honey_value_store.h",
+    "libhoney/browser/extensions/value_store/honey_value_store_factory.cc",
+    "libhoney/browser/extensions/value_store/honey_value_store_factory.h",
+    "libhoney/browser/file_dialog_manager.cc",
+    "libhoney/browser/file_dialog_manager.h",
+    "libhoney/browser/file_dialog_runner.cc",
+    "libhoney/browser/file_dialog_runner.h",
+    "libhoney/browser/frame_host_impl.cc",
+    "libhoney/browser/frame_host_impl.h",
+    "libhoney/browser/frame_service_base.h",
+    "libhoney/browser/global_preference_manager_impl.cc",
+    "libhoney/browser/global_preference_manager_impl.h",
+    "libhoney/browser/image_impl.cc",
+    "libhoney/browser/image_impl.h",
+    "libhoney/browser/iothread_state.cc",
+    "libhoney/browser/iothread_state.h",
+    "libhoney/browser/javascript_dialog_runner.h",
+    "libhoney/browser/javascript_dialog_manager.cc",
+    "libhoney/browser/javascript_dialog_manager.h",
+    "libhoney/browser/main_runner.cc",
+    "libhoney/browser/main_runner.h",
+    "libhoney/browser/media_access_query.cc",
+    "libhoney/browser/media_access_query.h",
+    "libhoney/browser/media_capture_devices_dispatcher.cc",
+    "libhoney/browser/media_capture_devices_dispatcher.h",
+    "libhoney/browser/media_router/media_route_impl.cc",
+    "libhoney/browser/media_router/media_route_impl.h",
+    "libhoney/browser/media_router/media_router_impl.cc",
+    "libhoney/browser/media_router/media_router_impl.h",
+    "libhoney/browser/media_router/media_router_manager.cc",
+    "libhoney/browser/media_router/media_router_manager.h",
+    "libhoney/browser/media_router/media_sink_impl.cc",
+    "libhoney/browser/media_router/media_sink_impl.h",
+    "libhoney/browser/media_router/media_source_impl.cc",
+    "libhoney/browser/media_router/media_source_impl.h",
+    "libhoney/browser/media_stream_registrar.cc",
+    "libhoney/browser/media_stream_registrar.h",
+    "libhoney/browser/menu_manager.cc",
+    "libhoney/browser/menu_manager.h",
+    "libhoney/browser/menu_model_impl.cc",
+    "libhoney/browser/menu_model_impl.h",
+    "libhoney/browser/menu_runner.h",
+    "libhoney/browser/native/browser_platform_delegate_native.cc",
+    "libhoney/browser/native/browser_platform_delegate_native.h",
+    "libhoney/browser/native/cursor_util.h",
+    "libhoney/browser/native/cursor_util.cc",
+    "libhoney/browser/native/window_delegate_view.cc",
+    "libhoney/browser/native/window_delegate_view.h",
+    "libhoney/browser/navigation_entry_impl.cc",
+    "libhoney/browser/navigation_entry_impl.h",
+    "libhoney/browser/net/chrome_scheme_handler.cc",
+    "libhoney/browser/net/chrome_scheme_handler.h",
+    "libhoney/browser/net/crlset_file_util_impl.cc",
+    "libhoney/browser/net/devtools_scheme_handler.cc",
+    "libhoney/browser/net/devtools_scheme_handler.h",
+    "libhoney/browser/net/internal_scheme_handler.cc",
+    "libhoney/browser/net/internal_scheme_handler.h",
+    "libhoney/browser/net/scheme_handler.cc",
+    "libhoney/browser/net/scheme_handler.h",
+    "libhoney/browser/net/throttle_handler.cc",
+    "libhoney/browser/net/throttle_handler.h",
+    "libhoney/browser/net_service/browser_urlrequest_impl.cc",
+    "libhoney/browser/net_service/browser_urlrequest_impl.h",
+    "libhoney/browser/net_service/cookie_helper.cc",
+    "libhoney/browser/net_service/cookie_helper.h",
+    "libhoney/browser/net_service/cookie_manager_impl.cc",
+    "libhoney/browser/net_service/cookie_manager_impl.h",
+    "libhoney/browser/net_service/login_delegate.cc",
+    "libhoney/browser/net_service/login_delegate.h",
+    "libhoney/browser/net_service/proxy_url_loader_factory.cc",
+    "libhoney/browser/net_service/proxy_url_loader_factory.h",
+    "libhoney/browser/net_service/resource_handler_wrapper.cc",
+    "libhoney/browser/net_service/resource_handler_wrapper.h",
+    "libhoney/browser/net_service/resource_request_handler_wrapper.cc",
+    "libhoney/browser/net_service/resource_request_handler_wrapper.h",
+    "libhoney/browser/net_service/response_filter_wrapper.cc",
+    "libhoney/browser/net_service/response_filter_wrapper.h",
+    "libhoney/browser/net_service/stream_reader_url_loader.cc",
+    "libhoney/browser/net_service/stream_reader_url_loader.h",
+    "libhoney/browser/net_service/url_loader_factory_getter.cc",
+    "libhoney/browser/net_service/url_loader_factory_getter.h",
+    "libhoney/browser/origin_whitelist_impl.cc",
+    "libhoney/browser/origin_whitelist_impl.h",
+    "libhoney/browser/osr/browser_platform_delegate_osr.cc",
+    "libhoney/browser/osr/browser_platform_delegate_osr.h",
+    "libhoney/browser/osr/host_display_client_osr.cc",
+    "libhoney/browser/osr/host_display_client_osr.h",
+    "libhoney/browser/osr/motion_event_osr.cc",
+    "libhoney/browser/osr/motion_event_osr.h",
+    "libhoney/browser/osr/osr_accessibility_util.cc",
+    "libhoney/browser/osr/osr_accessibility_util.h",
+    "libhoney/browser/osr/osr_util.cc",
+    "libhoney/browser/osr/osr_util.h",
+    "libhoney/browser/osr/render_widget_host_view_osr.cc",
+    "libhoney/browser/osr/render_widget_host_view_osr.h",
+    "libhoney/browser/osr/synthetic_gesture_target_osr.cc",
+    "libhoney/browser/osr/synthetic_gesture_target_osr.h",
+    "libhoney/browser/osr/touch_handle_drawable_osr.cc",
+    "libhoney/browser/osr/touch_handle_drawable_osr.h",
+    "libhoney/browser/osr/touch_selection_controller_client_osr.cc",
+    "libhoney/browser/osr/touch_selection_controller_client_osr.h",
+    "libhoney/browser/osr/video_consumer_osr.cc",
+    "libhoney/browser/osr/video_consumer_osr.h",
+    "libhoney/browser/osr/web_contents_view_osr.cc",
+    "libhoney/browser/osr/web_contents_view_osr.h",
+    "libhoney/browser/path_util_impl.cc",
+    "libhoney/browser/permission_prompt.cc",
+    "libhoney/browser/permission_prompt.h",
+    "libhoney/browser/prefs/browser_prefs.cc",
+    "libhoney/browser/prefs/browser_prefs.h",
+    "libhoney/browser/prefs/pref_helper.cc",
+    "libhoney/browser/prefs/pref_helper.h",
+    "libhoney/browser/prefs/pref_registrar.cc",
+    "libhoney/browser/prefs/pref_registrar.h",
+    "libhoney/browser/prefs/pref_store.cc",
+    "libhoney/browser/prefs/pref_store.h",
+    "libhoney/browser/prefs/renderer_prefs.cc",
+    "libhoney/browser/prefs/renderer_prefs.h",
+    "libhoney/browser/print_settings_impl.cc",
+    "libhoney/browser/print_settings_impl.h",
+    "libhoney/browser/printing/print_util.cc",
+    "libhoney/browser/printing/print_util.h",
+    "libhoney/browser/process_util_impl.cc",
+    "libhoney/browser/request_context_handler_map.cc",
+    "libhoney/browser/request_context_handler_map.h",
+    "libhoney/browser/request_context_impl.cc",
+    "libhoney/browser/request_context_impl.h",
+    "libhoney/browser/scheme_impl.cc",
+    "libhoney/browser/server_impl.cc",
+    "libhoney/browser/server_impl.h",
+    "libhoney/browser/simple_menu_model_impl.cc",
+    "libhoney/browser/simple_menu_model_impl.h",
+    "libhoney/browser/speech_recognition_manager_delegate.cc",
+    "libhoney/browser/speech_recognition_manager_delegate.h",
+    "libhoney/browser/ssl_host_state_delegate.cc",
+    "libhoney/browser/ssl_host_state_delegate.h",
+    "libhoney/browser/ssl_info_impl.cc",
+    "libhoney/browser/ssl_info_impl.h",
+    "libhoney/browser/ssl_status_impl.cc",
+    "libhoney/browser/ssl_status_impl.h",
+    "libhoney/browser/stream_impl.cc",
+    "libhoney/browser/stream_impl.h",
+    "libhoney/browser/trace_impl.cc",
+    "libhoney/browser/trace_subscriber.cc",
+    "libhoney/browser/trace_subscriber.h",
+    "libhoney/browser/thread_util.h",
+    "libhoney/browser/views/basic_label_button_impl.cc",
+    "libhoney/browser/views/basic_label_button_impl.h",
+    "libhoney/browser/views/basic_label_button_view.cc",
+    "libhoney/browser/views/basic_label_button_view.h",
+    "libhoney/browser/views/basic_panel_impl.cc",
+    "libhoney/browser/views/basic_panel_impl.h",
+    "libhoney/browser/views/basic_panel_view.cc",
+    "libhoney/browser/views/basic_panel_view.h",
+    "libhoney/browser/views/box_layout_impl.cc",
+    "libhoney/browser/views/box_layout_impl.h",
+    "libhoney/browser/views/browser_platform_delegate_views.cc",
+    "libhoney/browser/views/browser_platform_delegate_views.h",
+    "libhoney/browser/views/browser_view_impl.cc",
+    "libhoney/browser/views/browser_view_impl.h",
+    "libhoney/browser/views/browser_view_view.cc",
+    "libhoney/browser/views/browser_view_view.h",
+    "libhoney/browser/views/button_impl.h",
+    "libhoney/browser/views/button_view.h",
+    "libhoney/browser/views/display_impl.cc",
+    "libhoney/browser/views/display_impl.h",
+    "libhoney/browser/views/fill_layout_impl.cc",
+    "libhoney/browser/views/fill_layout_impl.h",
+    "libhoney/browser/views/label_button_impl.h",
+    "libhoney/browser/views/label_button_view.h",
+    "libhoney/browser/views/layout_impl.h",
+    "libhoney/browser/views/layout_adapter.cc",
+    "libhoney/browser/views/layout_adapter.h",
+    "libhoney/browser/views/layout_util.cc",
+    "libhoney/browser/views/layout_util.h",
+    "libhoney/browser/views/menu_button_impl.cc",
+    "libhoney/browser/views/menu_button_impl.h",
+    "libhoney/browser/views/menu_button_view.cc",
+    "libhoney/browser/views/menu_button_view.h",
+    "libhoney/browser/views/menu_runner_views.cc",
+    "libhoney/browser/views/menu_runner_views.h",
+    "libhoney/browser/views/overlay_view_host.cc",
+    "libhoney/browser/views/overlay_view_host.h",
+    "libhoney/browser/views/panel_impl.h",
+    "libhoney/browser/views/panel_view.h",
+    "libhoney/browser/views/scroll_view_impl.cc",
+    "libhoney/browser/views/scroll_view_impl.h",
+    "libhoney/browser/views/scroll_view_view.cc",
+    "libhoney/browser/views/scroll_view_view.h",
+    "libhoney/browser/views/textfield_impl.cc",
+    "libhoney/browser/views/textfield_impl.h",
+    "libhoney/browser/views/textfield_view.cc",
+    "libhoney/browser/views/textfield_view.h",
+    "libhoney/browser/views/view_adapter.cc",
+    "libhoney/browser/views/view_adapter.h",
+    "libhoney/browser/views/view_impl.h",
+    "libhoney/browser/views/view_util.cc",
+    "libhoney/browser/views/view_util.h",
+    "libhoney/browser/views/view_view.h",
+    "libhoney/browser/views/widget_destruction_observer.h",
+    "libhoney/browser/views/window_impl.cc",
+    "libhoney/browser/views/window_impl.h",
+    "libhoney/browser/views/window_view.cc",
+    "libhoney/browser/views/window_view.h",
+    "libhoney/browser/x509_certificate_impl.cc",
+    "libhoney/browser/x509_certificate_impl.h",
+    "libhoney/browser/x509_cert_principal_impl.cc",
+    "libhoney/browser/x509_cert_principal_impl.h",
+    "libhoney/browser/xml_reader_impl.cc",
+    "libhoney/browser/xml_reader_impl.h",
+    "libhoney/browser/zip_reader_impl.cc",
+    "libhoney/browser/zip_reader_impl.h",
+    "libhoney/common/alloy/alloy_content_client.cc",
+    "libhoney/common/alloy/alloy_content_client.h",
+    "libhoney/common/alloy/alloy_main_delegate.cc",
+    "libhoney/common/alloy/alloy_main_delegate.h",
+    "libhoney/common/alloy/alloy_main_runner_delegate.cc",
+    "libhoney/common/alloy/alloy_main_runner_delegate.h",
+    "libhoney/common/app_manager.cc",
+    "libhoney/common/app_manager.h",
+    "libhoney/common/base_impl.cc",
+    "libhoney/common/honey_switches.cc",
+    "libhoney/common/honey_switches.h",
+    "libhoney/common/chrome/chrome_content_client_honey.cc",
+    "libhoney/common/chrome/chrome_content_client_honey.h",
+    "libhoney/common/chrome/chrome_main_delegate_honey.cc",
+    "libhoney/common/chrome/chrome_main_delegate_honey.h",
+    "libhoney/common/chrome/chrome_main_runner_delegate.cc",
+    "libhoney/common/chrome/chrome_main_runner_delegate.h",
+    "libhoney/common/command_line_impl.cc",
+    "libhoney/common/command_line_impl.h",
+    "libhoney/common/crash_reporter_client.cc",
+    "libhoney/common/crash_reporter_client.h",
+    "libhoney/common/crash_reporting.cc",
+    "libhoney/common/crash_reporting.h",
+    "libhoney/common/drag_data_impl.cc",
+    "libhoney/common/drag_data_impl.h",
+    "libhoney/common/extensions/chrome_generated_schemas.cc",
+    "libhoney/common/extensions/chrome_generated_schemas.h",
+    "libhoney/common/extensions/extensions_api_provider.cc",
+    "libhoney/common/extensions/extensions_api_provider.h",
+    "libhoney/common/extensions/extensions_client.cc",
+    "libhoney/common/extensions/extensions_client.h",
+    "libhoney/common/extensions/extensions_util.cc",
+    "libhoney/common/extensions/extensions_util.h",
+    "libhoney/common/file_util_impl.cc",
+    "libhoney/common/frame_util.cc",
+    "libhoney/common/frame_util.h",
+    "libhoney/common/i18n_util_impl.cc",
+    "libhoney/common/json_impl.cc",
+    "libhoney/common/main_runner_delegate.h",
+    "libhoney/common/main_runner_handler.h",
+    "libhoney/common/net/http_header_utils.cc",
+    "libhoney/common/net/http_header_utils.h",
+    "libhoney/common/net/net_resource_provider.cc",
+    "libhoney/common/net/net_resource_provider.h",
+    "libhoney/common/net/scheme_registration.cc",
+    "libhoney/common/net/scheme_registration.h",
+    "libhoney/common/net/url_util.cc",
+    "libhoney/common/net/url_util.h",
+    "libhoney/common/net_service/net_service_util.cc",
+    "libhoney/common/net_service/net_service_util.h",
+    "libhoney/common/parser_impl.cc",
+    "libhoney/common/process_message_impl.cc",
+    "libhoney/common/process_message_impl.h",
+    "libhoney/common/process_message_smr_impl.cc",
+    "libhoney/common/process_message_smr_impl.h",
+    "libhoney/common/request_impl.cc",
+    "libhoney/common/request_impl.h",
+    "libhoney/common/resource_bundle_delegate.cc",
+    "libhoney/common/resource_bundle_delegate.h",
+    "libhoney/common/resource_bundle_impl.cc",
+    "libhoney/common/resource_bundle_impl.h",
+    "libhoney/common/resource_util.cc",
+    "libhoney/common/resource_util.h",
+    "libhoney/common/response_impl.cc",
+    "libhoney/common/response_impl.h",
+    "libhoney/common/scheme_registrar_impl.cc",
+    "libhoney/common/scheme_registrar_impl.h",
+    "libhoney/common/string_list_impl.cc",
+    "libhoney/common/string_map_impl.cc",
+    "libhoney/common/string_multimap_impl.cc",
+    "libhoney/common/string_types_impl.cc",
+    "libhoney/common/string_util.cc",
+    "libhoney/common/string_util.h",
+    "libhoney/common/task_impl.cc",
+    "libhoney/common/task_runner_impl.cc",
+    "libhoney/common/task_runner_impl.h",
+    "libhoney/common/task_runner_manager.cc",
+    "libhoney/common/task_runner_manager.h",
+    "libhoney/common/thread_impl.cc",
+    "libhoney/common/thread_impl.h",
+    "libhoney/common/time_impl.cc",
+    "libhoney/common/time_util.h",
+    "libhoney/common/tracker.cc",
+    "libhoney/common/tracker.h",
+    "libhoney/common/urlrequest_impl.cc",
+    "libhoney/common/value_base.cc",
+    "libhoney/common/value_base.h",
+    "libhoney/common/values_impl.cc",
+    "libhoney/common/values_impl.h",
+    "libhoney/common/waitable_event_impl.cc",
+    "libhoney/common/waitable_event_impl.h",
+    "libhoney/features/runtime.h",
+    "libhoney/features/runtime_checks.h",
+    "libhoney/renderer/alloy/alloy_content_renderer_client.cc",
+    "libhoney/renderer/alloy/alloy_content_renderer_client.h",
+    "libhoney/renderer/alloy/alloy_render_thread_observer.cc",
+    "libhoney/renderer/alloy/alloy_render_thread_observer.h",
+    "libhoney/renderer/alloy/url_loader_throttle_provider_impl.cc",
+    "libhoney/renderer/alloy/url_loader_throttle_provider_impl.h",
+    "libhoney/renderer/browser_impl.cc",
+    "libhoney/renderer/browser_impl.h",
+    "libhoney/renderer/chrome/chrome_content_renderer_client_honey.cc",
+    "libhoney/renderer/chrome/chrome_content_renderer_client_honey.h",
+    "libhoney/renderer/dom_document_impl.cc",
+    "libhoney/renderer/dom_document_impl.h",
+    "libhoney/renderer/dom_node_impl.cc",
+    "libhoney/renderer/dom_node_impl.h",
+    "libhoney/renderer/extensions/extensions_dispatcher_delegate.cc",
+    "libhoney/renderer/extensions/extensions_dispatcher_delegate.h",
+    "libhoney/renderer/extensions/extensions_renderer_client.cc",
+    "libhoney/renderer/extensions/extensions_renderer_client.h",
+    "libhoney/renderer/extensions/print_render_frame_helper_delegate.cc",
+    "libhoney/renderer/extensions/print_render_frame_helper_delegate.h",
+    "libhoney/renderer/frame_impl.cc",
+    "libhoney/renderer/frame_impl.h",
+    "libhoney/renderer/render_frame_observer.cc",
+    "libhoney/renderer/render_frame_observer.h",
+    "libhoney/renderer/render_frame_util.cc",
+    "libhoney/renderer/render_frame_util.h",
+    "libhoney/renderer/render_manager.cc",
+    "libhoney/renderer/render_manager.h",
+    "libhoney/renderer/thread_util.h",
+    "libhoney/renderer/v8_impl.cc",
+    "libhoney/renderer/v8_impl.h",
 
     # For Chrome runtime support.
     "//chrome/app/chrome_main_delegate.cc",
@@ -945,12 +945,12 @@ source_set("libhoneycomb_static") {
   ]
 
   configs += [
-    "libhoneycomb/features:config",
+    "libhoney/features:config",
     "//build/config:precompiled_headers",
   ]
 
   public_configs = [
-    "libhoneycomb/features:config",
+    "libhoney/features:config",
   ]
 
   include_dirs = [
@@ -960,23 +960,23 @@ source_set("libhoneycomb_static") {
 
   public_deps = [
     # Bring in feature flag defines.
-    "//honey/libhoneycomb/features",
+    "//honey/libhoney/features",
     # Support relative include paths.
     "//third_party/abseil-cpp:absl",
   ]
 
   deps = [
     ":honey_make_headers",
-    "libhoneycomb/common/mojom",
+    "libhoney/common/mojom",
 
-    ":libhoneycomb_static_unittested",
+    ":libhoney_static_unittested",
 
     # Generate API bindings for extensions.
     # TODO(honey): Enable if/when Honeycomb exposes its own Mojo APIs. See
-    # libhoneycomb/common/extensions/api/README.txt for details.
-    #"libhoneycomb/common/extensions/api",
-    #"libhoneycomb/common/extensions/api:api_registration",
-    "libhoneycomb/common/extensions/api:extensions_features",
+    # libhoney/common/extensions/api/README.txt for details.
+    #"libhoney/common/extensions/api",
+    #"libhoney/common/extensions/api:api_registration",
+    "libhoney/common/extensions/api:extensions_features",
 
     # Normal build dependencies. Should be sorted alphabetically.
     "//base",
@@ -1076,11 +1076,11 @@ source_set("libhoneycomb_static") {
 
   if (is_win) {
     sources += includes_win + [
-      "libhoneycomb/browser/alloy/alloy_browser_main_win.cc",
-      "libhoneycomb/browser/native/browser_platform_delegate_native_win.cc",
-      "libhoneycomb/browser/native/browser_platform_delegate_native_win.h",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_win.cc",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_win.h",
+      "libhoney/browser/alloy/alloy_browser_main_win.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_win.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_win.h",
+      "libhoney/browser/osr/browser_platform_delegate_osr_win.cc",
+      "libhoney/browser/osr/browser_platform_delegate_osr_win.h",
     ]
 
     deps += [
@@ -1105,20 +1105,20 @@ source_set("libhoneycomb_static") {
 
   if (is_linux) {
     sources += includes_linux + [
-      "libhoneycomb/browser/native/browser_platform_delegate_native_linux.cc",
-      "libhoneycomb/browser/native/browser_platform_delegate_native_linux.h",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_linux.cc",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_linux.h",
-      "libhoneycomb/browser/printing/print_dialog_linux.cc",
-      "libhoneycomb/browser/printing/print_dialog_linux.h",
-      "libhoneycomb/common/util_linux.h",
-      "libhoneycomb/common/util_linux.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_linux.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_linux.h",
+      "libhoney/browser/osr/browser_platform_delegate_osr_linux.cc",
+      "libhoney/browser/osr/browser_platform_delegate_osr_linux.h",
+      "libhoney/browser/printing/print_dialog_linux.cc",
+      "libhoney/browser/printing/print_dialog_linux.h",
+      "libhoney/common/util_linux.h",
+      "libhoney/common/util_linux.cc",
     ]
 
     if (ozone_platform_x11) {
       sources += [
-        "libhoneycomb/browser/native/window_x11.cc",
-        "libhoneycomb/browser/native/window_x11.h",
+        "libhoney/browser/native/window_x11.cc",
+        "libhoney/browser/native/window_x11.h",
       ]
     }
 
@@ -1136,22 +1136,22 @@ source_set("libhoneycomb_static") {
 
   if (is_mac) {
     sources += includes_mac + [
-      "libhoneycomb/browser/native/browser_platform_delegate_native_mac.h",
-      "libhoneycomb/browser/native/browser_platform_delegate_native_mac.mm",
-      "libhoneycomb/browser/native/cursor_util_mac.mm",
-      "libhoneycomb/browser/native/javascript_dialog_runner_mac.h",
-      "libhoneycomb/browser/native/javascript_dialog_runner_mac.mm",
-      "libhoneycomb/browser/native/menu_runner_mac.h",
-      "libhoneycomb/browser/native/menu_runner_mac.mm",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_mac.h",
-      "libhoneycomb/browser/osr/browser_platform_delegate_osr_mac.mm",
-      "libhoneycomb/browser/views/native_widget_mac.h",
-      "libhoneycomb/browser/views/native_widget_mac.mm",
-      "libhoneycomb/browser/views/ns_window.h",
-      "libhoneycomb/browser/views/ns_window.mm",
-      "libhoneycomb/browser/views/view_util_mac.mm",
-      "libhoneycomb/common/util_mac.h",
-      "libhoneycomb/common/util_mac.mm",
+      "libhoney/browser/native/browser_platform_delegate_native_mac.h",
+      "libhoney/browser/native/browser_platform_delegate_native_mac.mm",
+      "libhoney/browser/native/cursor_util_mac.mm",
+      "libhoney/browser/native/javascript_dialog_runner_mac.h",
+      "libhoney/browser/native/javascript_dialog_runner_mac.mm",
+      "libhoney/browser/native/menu_runner_mac.h",
+      "libhoney/browser/native/menu_runner_mac.mm",
+      "libhoney/browser/osr/browser_platform_delegate_osr_mac.h",
+      "libhoney/browser/osr/browser_platform_delegate_osr_mac.mm",
+      "libhoney/browser/views/native_widget_mac.h",
+      "libhoney/browser/views/native_widget_mac.mm",
+      "libhoney/browser/views/ns_window.h",
+      "libhoney/browser/views/ns_window.mm",
+      "libhoney/browser/views/view_util_mac.mm",
+      "libhoney/common/util_mac.h",
+      "libhoney/common/util_mac.mm",
 
       # For Chrome runtime support.
       "//chrome/app/chrome_main_mac.h",
@@ -1169,12 +1169,12 @@ source_set("libhoneycomb_static") {
 
   if (use_aura) {
     sources += [
-      "libhoneycomb/browser/native/browser_platform_delegate_native_aura.cc",
-      "libhoneycomb/browser/native/browser_platform_delegate_native_aura.h",
-      "libhoneycomb/browser/native/cursor_util_aura.cc",
-      "libhoneycomb/browser/native/menu_runner_views_aura.cc",
-      "libhoneycomb/browser/native/menu_runner_views_aura.h",
-      "libhoneycomb/browser/views/view_util_aura.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_aura.cc",
+      "libhoney/browser/native/browser_platform_delegate_native_aura.h",
+      "libhoney/browser/native/cursor_util_aura.cc",
+      "libhoney/browser/native/menu_runner_views_aura.cc",
+      "libhoney/browser/native/menu_runner_views_aura.h",
+      "libhoney/browser/views/view_util_aura.cc",
     ]
 
     deps += [
@@ -1186,19 +1186,19 @@ source_set("libhoneycomb_static") {
 
   if (enable_cdm_host_verification) {
     sources += [
-      "libhoneycomb/common/cdm_host_file_path.cc",
-      "libhoneycomb/common/cdm_host_file_path.h",
+      "libhoney/common/cdm_host_file_path.cc",
+      "libhoney/common/cdm_host_file_path.h",
     ]
   }
 }
 
 
 #
-# libhoneycomb_dll_wrapper static targets.
+# libhoney_dll_wrapper static targets.
 #
 
 # Configuration that will be applied to all targets that build autogen files.
-config("libhoneycomb_autogen_config") {
+config("libhoney_autogen_config") {
   if (is_clang) {
     cflags = [
       # Disable clang warnings related to Honeycomb's translation layer templates.
@@ -1208,8 +1208,8 @@ config("libhoneycomb_autogen_config") {
 }
 
 # Configuration that will be applied to all targets that depend on
-# libhoneycomb_dll_wrapper.
-config("libhoneycomb_dll_wrapper_config") {
+# libhoney_dll_wrapper.
+config("libhoney_dll_wrapper_config") {
   include_dirs = [
     # Honeycomb sources use include paths relative to the Honeycomb root directory.
     ".",
@@ -1218,7 +1218,7 @@ config("libhoneycomb_dll_wrapper_config") {
     "$root_out_dir/includes",
   ]
 
-  configs = [ ":libhoneycomb_autogen_config" ]
+  configs = [ ":libhoney_autogen_config" ]
 
   if (is_win) {
     if (current_cpu == "x86") {
@@ -1236,25 +1236,25 @@ config("libhoneycomb_dll_wrapper_config") {
   }
 }
 
-# libhoneycomb_dll_wrapper target.
-static_library("libhoneycomb_dll_wrapper") {
+# libhoney_dll_wrapper target.
+static_library("libhoney_dll_wrapper") {
   sources = includes_common +
             gypi_paths.autogen_cpp_includes +
             gypi_paths2.includes_capi +
             gypi_paths.autogen_capi_includes +
             gypi_paths2.includes_wrapper +
-            gypi_paths2.libhoneycomb_dll_wrapper_sources_base +
-            gypi_paths2.libhoneycomb_dll_wrapper_sources_common +
+            gypi_paths2.libhoney_dll_wrapper_sources_base +
+            gypi_paths2.libhoney_dll_wrapper_sources_common +
             gypi_paths.autogen_client_side
 
   if (is_mac) {
-    sources += gypi_paths2.libhoneycomb_dll_wrapper_sources_mac
+    sources += gypi_paths2.libhoney_dll_wrapper_sources_mac
   }
 
   defines = [ "WRAPPING_HONEYCOMB_SHARED" ]
 
-  configs += [ ":libhoneycomb_dll_wrapper_config" ]
-  public_configs = [ ":libhoneycomb_dll_wrapper_config" ]
+  configs += [ ":libhoney_dll_wrapper_config" ]
+  public_configs = [ ":libhoney_dll_wrapper_config" ]
 
   deps = [ ":honey_make_headers" ]
 }
@@ -1266,16 +1266,16 @@ static_library("libhoneycomb_dll_wrapper") {
 
 if (is_win) {
   static_library("honey_sandbox") {
-    sources = [ "libhoneycomb_dll/sandbox/sandbox_win.cc" ]
+    sources = [ "libhoney_dll/sandbox/sandbox_win.cc" ]
     # Honeycomb sources use include paths relative to the Honeycomb root directory.
     include_dirs = [ "." ]
-    deps = [ "libhoneycomb/features", "//sandbox" ]
+    deps = [ "libhoney/features", "//sandbox" ]
   }
 }
 
 if (is_mac) {
   static_library("honey_sandbox") {
-    sources = [ "libhoneycomb_dll/sandbox/sandbox_mac.mm" ]
+    sources = [ "libhoney_dll/sandbox/sandbox_mac.mm" ]
     # Honeycomb sources use include paths relative to the Honeycomb root directory.
     include_dirs = [ "." ]
     deps = [
@@ -1291,7 +1291,7 @@ if (is_mac) {
 
 # Included in locales/*.pak via //chrome/chrome_repack_locales.gni.
 grit("honey_strings") {
-  source = "libhoneycomb/resources/honey_strings.grd"
+  source = "libhoney/resources/honey_strings.grd"
   outputs = [
     "grit/honey_strings.h",
   ]
@@ -1303,7 +1303,7 @@ grit("honey_strings") {
 
 # Included in resources.pak via //chrome/chrome_paks.gni.
 grit("honey_resources") {
-  source = "libhoneycomb/resources/honey_resources.grd"
+  source = "libhoney/resources/honey_resources.grd"
   outputs = [
     "grit/honey_resources.h",
     "honey_resources.pak",
@@ -1483,14 +1483,14 @@ group("honey_make_headers") {
 
 
 #
-# libhoneycomb dll/framework target.
+# libhoney dll/framework target.
 #
 
 if (is_mac) {
   honey_framework_name = "Honeycomb"
 
   tweak_info_plist("honey_framework_plist") {
-    info_plist = "libhoneycomb/resources/framework-Info.plist"
+    info_plist = "libhoney/resources/framework-Info.plist"
     args = [
       "--breakpad=0",
       "--keystone=0",
@@ -1576,7 +1576,7 @@ if (is_mac) {
   }
 
   mac_framework_bundle("honey_framework") {
-    # Necessary because the libhoneycomb_test_support target is testonly.
+    # Necessary because the libhoney_test_support target is testonly.
     testonly = true
 
     output_name = honey_framework_name
@@ -1592,19 +1592,19 @@ if (is_mac) {
               gypi_paths.autogen_cpp_includes +
               gypi_paths2.includes_capi +
               gypi_paths.autogen_capi_includes +
-              gypi_paths2.libhoneycomb_sources_common +
+              gypi_paths2.libhoney_sources_common +
               gypi_paths.autogen_library_side
 
     deps = [
       ":honey_framework_angle_library",
       ":honey_framework_resources",
       ":honey_framework_swiftshader_library",
-      ":libhoneycomb_static",
-      ":libhoneycomb_test_support",
+      ":libhoney_static",
+      ":libhoney_test_support",
     ]
 
     configs += [
-      ":libhoneycomb_autogen_config",
+      ":libhoney_autogen_config",
     ]
 
     # We don't link the framework so just use the path from the main executable.
@@ -1639,30 +1639,30 @@ if (is_mac) {
     }
   }
 
-  shared_library("libhoneycomb") {
-    # Necessary because the libhoneycomb_test_support target is testonly.
+  shared_library("libhoney") {
+    # Necessary because the libhoney_test_support target is testonly.
     testonly = true
 
     sources = includes_common +
               gypi_paths.autogen_cpp_includes +
               gypi_paths2.includes_capi +
               gypi_paths.autogen_capi_includes +
-              gypi_paths2.libhoneycomb_sources_common +
+              gypi_paths2.libhoney_sources_common +
               gypi_paths.autogen_library_side
 
     deps = [
-      ":libhoneycomb_static",
-      ":libhoneycomb_test_support",
+      ":libhoney_static",
+      ":libhoney_test_support",
     ]
 
     configs += [
-      ":libhoneycomb_autogen_config",
+      ":libhoney_autogen_config",
       ":pdb_larger_than_4gb",
     ]
 
     if (is_win) {
       sources += includes_win + [
-        "libhoneycomb_dll/libhoneycomb_dll.rc",
+        "libhoney_dll/libhoney_dll.rc",
       ]
 
       deps += [
@@ -1678,13 +1678,13 @@ if (is_mac) {
     }
 
     if (is_linux && !is_debug && !use_partition_alloc_as_malloc) {
-      # Only export necessary symbols from libhoneycomb.so.
+      # Only export necessary symbols from libhoney.so.
       # Don't do this in Debug builds because it causes the resulting
       # application to crash.
       # Also need to do this for ASAN builds to work around
       # https://crbug.com/832808.
       ldflags = [ "-Wl,--version-script=" +
-                  rebase_path("//honey/libhoneycomb_dll/libhoneycomb.lst") ]
+                  rebase_path("//honey/libhoney_dll/libhoney.lst") ]
     }
   }
 }
@@ -1712,7 +1712,7 @@ source_set("gtest_teamcity") {
   ]
 
   configs += [
-    "libhoneycomb/features:config",
+    "libhoney/features:config",
     "//build/config:precompiled_headers",
   ]
 }
@@ -1759,7 +1759,7 @@ if (is_mac) {
         deps = [
           ":honey_make_headers",
           ":honey_sandbox",
-          ":libhoneycomb_dll_wrapper",
+          ":libhoney_dll_wrapper",
         ]
         if (defined(invoker.helper_deps)) {
           deps += invoker.helper_deps
@@ -1856,10 +1856,10 @@ if (is_mac) {
 
       sources = invoker.sources
 
-      public_deps = [ ":libhoneycomb_dll_wrapper" ]
+      public_deps = [ ":libhoney_dll_wrapper" ]
       deps = [
         ":honey_make_headers",
-        ":libhoneycomb_dll_wrapper",
+        ":libhoney_dll_wrapper",
         ":${app_name}_framework_bundle_data",
       ]
       if (defined(invoker.deps)) {
@@ -2147,7 +2147,7 @@ if (is_mac) {
   }
 
   executable("honeyclient") {
-    # Necessary because the libhoneycomb target is testonly.
+    # Necessary because the libhoney target is testonly.
     testonly = true
 
     sources = includes_common +
@@ -2160,8 +2160,8 @@ if (is_mac) {
               gypi_paths2.honeyclient_sources_renderer
 
     deps = [
-      ":libhoneycomb",
-      ":libhoneycomb_dll_wrapper",
+      ":libhoney",
+      ":libhoney_dll_wrapper",
     ]
 
     defines = [
@@ -2245,7 +2245,7 @@ if (is_mac) {
   #
 
   executable("honeysimple") {
-    # Necessary because the libhoneycomb target is testonly.
+    # Necessary because the libhoney target is testonly.
     testonly = true
 
     sources = includes_common +
@@ -2253,8 +2253,8 @@ if (is_mac) {
               gypi_paths2.honeysimple_sources_common
 
     deps = [
-      ":libhoneycomb",
-      ":libhoneycomb_dll_wrapper",
+      ":libhoney",
+      ":libhoney_dll_wrapper",
     ]
 
     defines = [
@@ -2325,8 +2325,8 @@ if (is_mac) {
               gypi_paths2.honeytests_sources_common
 
     deps = [
-      ":libhoneycomb",
-      ":libhoneycomb_dll_wrapper",
+      ":libhoney",
+      ":libhoney_dll_wrapper",
       ":gtest_teamcity",
       "//testing/gtest",
     ]

@@ -24,8 +24,8 @@ def make_cpptoc_header(header, clsname):
 
   result = get_copyright()
 
-  result += '#ifndef HONEYCOMB_LIBHONEYCOMB_DLL_CPPTOC_'+defname+'_CPPTOC_H_\n'+ \
-            '#define HONEYCOMB_LIBHONEYCOMB_DLL_CPPTOC_'+defname+'_CPPTOC_H_\n' + \
+  result += '#ifndef HONEYCOMB_LIBHONEY_DLL_CPPTOC_'+defname+'_CPPTOC_H_\n'+ \
+            '#define HONEYCOMB_LIBHONEY_DLL_CPPTOC_'+defname+'_CPPTOC_H_\n' + \
             '#pragma once\n'
 
   if dllside:
@@ -62,7 +62,7 @@ def make_cpptoc_header(header, clsname):
     template_file = 'cpptoc_ref_counted.h'
     template_class = 'HoneycombCppToCRefCounted'
 
-  result += '#include "libhoneycomb_dll/cpptoc/' + template_file + '"'
+  result += '#include "libhoney_dll/cpptoc/' + template_file + '"'
   result += '\n\n// Wrap a C++ class with a C structure.\n'
 
   if dllside:
@@ -77,7 +77,7 @@ def make_cpptoc_header(header, clsname):
              '  virtual ~'+clsname+'CppToC();\n'+ \
              '};\n\n'
 
-  result += '#endif  // HONEYCOMB_LIBHONEYCOMB_DLL_CPPTOC_' + defname + '_CPPTOC_H_'
+  result += '#endif  // HONEYCOMB_LIBHONEY_DLL_CPPTOC_' + defname + '_CPPTOC_H_'
 
   return result
 

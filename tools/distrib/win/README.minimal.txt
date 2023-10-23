@@ -5,16 +5,16 @@ cmake       Contains CMake configuration files shared by all targets.
 
 include     Contains all required Honeycomb header files.
 
-libhoneycomb_dll  Contains the source code for the libhoneycomb_dll_wrapper static library
+libhoney_dll  Contains the source code for the libhoney_dll_wrapper static library
             that all applications using the Honeycomb C++ API must link against.
 
-Release     Contains libhoneycomb.dll, libhoneycomb.lib and other components required to
+Release     Contains libhoney.dll, libhoney.lib and other components required to
             build and run the release version of Honeycomb-based applications. By
             default these files should be placed in the same directory as the
             executable.
 
-Resources   Contains resources required by libhoneycomb.dll. By default these files
-            should be placed in the same directory as libhoneycomb.dll.
+Resources   Contains resources required by libhoney.dll. By default these files
+            should be placed in the same directory as libhoney.dll.
 
 
 USAGE

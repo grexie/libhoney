@@ -25,11 +25,11 @@ def get_files_for_variable(cmake_path, variables, variable):
 
   # Return path values relative to the cmake file directory.
   # Example 1:
-  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
-  #   include path = "/path/to/libhoneycomb_dll/wrapper/honey_browser_info_map.h"
+  #   cmake file   = "/path/to/libhoney_dll/CMakeLists.txt"
+  #   include path = "/path/to/libhoney_dll/wrapper/honey_browser_info_map.h"
   #   return path  = "wrapper/honey_browser_info_map.h"
   # Example 2:
-  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   cmake file   = "/path/to/libhoney_dll/CMakeLists.txt"
   #   include path = "/path/to/include/internal/honey_export.h"
   #   return path  = "../include/internal/honey_export.h"
   new_paths = []
@@ -55,11 +55,11 @@ def format_cmake_group(cmake_path, name, files, platform_sep, append_macro):
   # Folder will be the cmake parent directory name combined with the path to
   # first file in the files list.
   # Example 1:
-  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   cmake file   = "/path/to/libhoney_dll/CMakeLists.txt"
   #   include path = "wrapper/honey_browser_info_map.h"
-  #   folder       = "libhoneycomb_dll\\\\wrapper"
+  #   folder       = "libhoney_dll\\\\wrapper"
   # Example 2:
-  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   cmake file   = "/path/to/libhoney_dll/CMakeLists.txt"
   #   include path = "../include/internal/honey_export.h"
   #   folder       = "include\\\\internal"
   folder = os.path.basename(os.path.dirname(cmake_path))

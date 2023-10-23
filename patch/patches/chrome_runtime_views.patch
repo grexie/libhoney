@@ -663,7 +663,7 @@ index 36831f71eeb95..24e0f9e70781b 100644
  #include "ui/views/window/hit_test_utils.h"
  
 +#if BUILDFLAG(ENABLE_HONEYCOMB)
-+#include "honey/libhoneycomb/browser/chrome/views/chrome_views_util.h"
++#include "honey/libhoney/browser/chrome/views/chrome_views_util.h"
 +#endif
 +
  using views::View;

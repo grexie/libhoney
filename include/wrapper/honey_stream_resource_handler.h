@@ -30,7 +30,7 @@
 // ---------------------------------------------------------------------------
 //
 // The contents of this file are only available to applications that link
-// against the libhoneycomb_dll_wrapper target.
+// against the libhoney_dll_wrapper target.
 //
 
 #ifndef HONEYCOMB_INCLUDE_WRAPPER_HONEYCOMB_STREAM_RESOURCE_HANDLER_H_

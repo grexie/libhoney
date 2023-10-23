@@ -87,7 +87,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
   if func.has_attrib('api_hash_check'):
     result += '\n  const char* api_hash = honey_api_hash(0);'\
               '\n  if (strcmp(api_hash, HONEYCOMB_API_HASH_PLATFORM)) {'\
-              '\n    // The libhoneycomb API hash does not match the current header API hash.'\
+              '\n    // The libhoney API hash does not match the current header API hash.'\
               '\n    DCHECK(false);'\
               '\n    return'+retval_default+';'\
               '\n  }\n'

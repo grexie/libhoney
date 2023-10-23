@@ -3,23 +3,23 @@ CONTENTS
 
 cmake       Contains CMake configuration files shared by all targets.
 
-Debug       Contains libhoneycomb.so and other components required to run the debug
+Debug       Contains libhoney.so and other components required to run the debug
             version of Honeycomb-based applications. By default these files should be
-            placed in the same directory as libhoneycomb.so and will be copied there
+            placed in the same directory as libhoney.so and will be copied there
             as part of the build process.
 
 include     Contains all required Honeycomb header files.
 
-libhoneycomb_dll  Contains the source code for the libhoneycomb_dll_wrapper static library
+libhoney_dll  Contains the source code for the libhoney_dll_wrapper static library
             that all applications using the Honeycomb C++ API must link against.
 
-Release     Contains libhoneycomb.so and other components required to run the release
+Release     Contains libhoney.so and other components required to run the release
             version of Honeycomb-based applications. By default these files should be
-            placed in the same directory as libhoneycomb.so and will be copied there
+            placed in the same directory as libhoney.so and will be copied there
             as part of the build process.
 
-Resources   Contains resources required by libhoneycomb.so. By default these files
-            should be placed in the same directory as libhoneycomb.so and will be
+Resources   Contains resources required by libhoney.so. By default these files
+            should be placed in the same directory as libhoney.so and will be
             copied there as part of the build process.
 
 tests/      Directory of tests that demonstrate Honeycomb usage.

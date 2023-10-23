@@ -1,0 +1,101 @@
+# Copyright (C) 2023 Grexie. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/buildflag_header.gni")
+import("//honey/libhoney/features/features.gni")
+
+# This file is in a separate directory so all targets in the build can refer to
+# the buildflag header to get the necessary preprocessor defines without
+# bringing in any Honeycomb targets. Other targets can depend on this target
+# regardless of whether Honeycomb is being built. Set the `enable_honey=false` GN arg to
+# disable the Honeycomb changes when building Chrome.
+#
+# Example usage:
+#
+# 1. An existing GN configuration file at path/to/foo/BUILD.gn:
+#
+#    # Import the `enable_honey` arg.
+#    import("//honey/libhoney/features/features.gni")
+#    ...
+#
+#    # An existing target that is modified for Honeycomb.
+#    # The target type might instead be `component`, `source_set`, etc.
+#    static_library("foo") {
+#      sources = [ ... ]
+#
+#      deps = [
+#        # Always include the Honeycomb features.
+#        "//honey/libhoney/features",
+#        ...
+#      ]
+#
+#      if (enable_honey) {
+#        # Actions to perform when the Honeycomb build is enabled.
+#
+#        # Optionally include Honeycomb source files directly in this target. This
+#        # approach is required for targets that are either directly or
+#        # indirectly included in a `component` target (otherwise
+#        # `is_component_build=true` builds will fail). Keep in mind that these
+#        # files are part of this target instead of the `libhoney_static` target
+#        # and therefore subject to any target-specific configuration settings
+#        # such as include paths, defines, compiler flags, etc.
+#        sources += [
+#          "//honey/libhoney/browser/foo_helper.cc",
+#          "//honey/libhoney/browser/foo_helper.h",
+#        ]
+#
+#        # Always include the Honeycomb configuration.
+#        configs += [ "//honey/libhoney/features:config" ]
+#     }
+#     ...
+#   }
+#
+# 2. An existing C++ source file at path/to/foo/foo.cc:
+#
+#    // Include the `BUILDFLAG(ENABLE_HONEYCOMB)` definition.
+#    #include "honey/libhoney/features/features.h"
+#    ...
+#
+#    #if BUILDFLAG(ENABLE_HONEYCOMB)
+#    // Honeycomb headers here...
+#    #include "honey/libhoney/browser/foo_helper.h"
+#    #else
+#    // Chrome headers here...
+#    #endif
+#
+#    // An existing function that is modified for Honeycomb.
+#    void DoFoo() {
+#    #if BUILDFLAG(ENABLE_HONEYCOMB)
+#      // Honeycomb implementation here...
+#      honey_foo_helper::DoFoo();
+#    #else
+#      // Chrome implementation here...
+#    #endif  // !BUILDFLAG(ENABLE_HONEYCOMB)
+#    }
+#    ...
+#
+
+buildflag_header("features") {
+  header = "features.h"
+
+  flags = [
+    "ENABLE_HONEYCOMB=$enable_honey",
+    "IS_HONEYCOMB_SANDBOX_BUILD=$is_honey_sandbox_build",
+  ]
+}
+
+# Configuration for all targets that include Honeycomb source code library-side.
+config("config") {
+  # Honeycomb sources use includes relative to the Honeycomb root directory.
+  include_dirs = [
+    "//honey",
+
+    # Honeycomb generates some header files that also need to be discoverable.
+    "$root_build_dir/includes",
+  ]
+  defines = [
+    "BUILDING_HONEYCOMB_SHARED",
+    "USING_CHROMIUM_INCLUDES",
+  ]
+}

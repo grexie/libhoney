@@ -53,8 +53,8 @@ endif()
 # Path to the include directory.
 set(HONEYCOMB_INCLUDE_PATH "${_HONEYCOMB_ROOT}")
 
-# Path to the libhoneycomb_dll_wrapper target.
-set(HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_PATH "${_HONEYCOMB_ROOT}/libhoneycomb_dll")
+# Path to the libhoney_dll_wrapper target.
+set(HONEYCOMB_LIBHONEY_DLL_WRAPPER_PATH "${_HONEYCOMB_ROOT}/libhoney_dll")
 
 
 # Shared compiler/linker flags.
@@ -209,13 +209,13 @@ if(OS_LINUX)
   set(HONEYCOMB_BINARY_DIR_RELEASE  "${_HONEYCOMB_ROOT}/Release")
 
   # Honeycomb library paths.
-  set(HONEYCOMB_LIB_DEBUG   "${HONEYCOMB_BINARY_DIR_DEBUG}/libhoneycomb.so")
-  set(HONEYCOMB_LIB_RELEASE "${HONEYCOMB_BINARY_DIR_RELEASE}/libhoneycomb.so")
+  set(HONEYCOMB_LIB_DEBUG   "${HONEYCOMB_BINARY_DIR_DEBUG}/libhoney.so")
+  set(HONEYCOMB_LIB_RELEASE "${HONEYCOMB_BINARY_DIR_RELEASE}/libhoney.so")
 
   # List of Honeycomb binary files.
   set(HONEYCOMB_BINARY_FILES
     chrome-sandbox
-    libhoneycomb.so
+    libhoney.so
     libEGL.so
     libGLESv2.so
     libvk_swiftshader.so
@@ -537,14 +537,14 @@ if(OS_WINDOWS)
   set(HONEYCOMB_BINARY_DIR_RELEASE  "${_HONEYCOMB_ROOT}/Release")
 
   # Honeycomb library paths.
-  set(HONEYCOMB_LIB_DEBUG   "${HONEYCOMB_BINARY_DIR_DEBUG}/libhoneycomb.lib")
-  set(HONEYCOMB_LIB_RELEASE "${HONEYCOMB_BINARY_DIR_RELEASE}/libhoneycomb.lib")
+  set(HONEYCOMB_LIB_DEBUG   "${HONEYCOMB_BINARY_DIR_DEBUG}/libhoney.lib")
+  set(HONEYCOMB_LIB_RELEASE "${HONEYCOMB_BINARY_DIR_RELEASE}/libhoney.lib")
 
   # List of Honeycomb binary files.
   set(HONEYCOMB_BINARY_FILES
     chrome_elf.dll
     d3dcompiler_47.dll
-    libhoneycomb.dll
+    libhoney.dll
     libEGL.dll
     libGLESv2.dll
     snapshot_blob.bin

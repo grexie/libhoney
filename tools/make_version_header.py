@@ -49,7 +49,7 @@ def make_version_header(header):
 extern "C" {
 #endif
 
-// Returns Honeycomb version information for the libhoneycomb library. The |entry|
+// Returns Honeycomb version information for the libhoney library. The |entry|
 // parameter describes which version component will be returned:
 // 0 - HONEYCOMB_VERSION_MAJOR
 // 1 - HONEYCOMB_VERSION_MINOR

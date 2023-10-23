@@ -254,7 +254,7 @@ def format_translation_includes(header, body):
     result += '#include "include/honey_api_hash.h"\n'
 
   if body.find('template_util::has_valid_size(') > 0:
-    result += '#include "libhoneycomb_dll/template_util.h"\n'
+    result += '#include "libhoney_dll/template_util.h"\n'
 
   # identify what CppToC classes are being used
   p = re.compile('([A-Za-z0-9_]{1,})CppToC')
@@ -266,7 +266,7 @@ def format_translation_includes(header, body):
       dir = cls.get_file_directory()
       if not dir is None:
         directory = dir + '/'
-    result += '#include "libhoneycomb_dll/cpptoc/'+directory+ \
+    result += '#include "libhoney_dll/cpptoc/'+directory+ \
               get_capi_name(item[3:], False)+'_cpptoc.h"\n'
 
   # identify what CToCpp classes are being used
@@ -279,14 +279,14 @@ def format_translation_includes(header, body):
       dir = cls.get_file_directory()
       if not dir is None:
         directory = dir + '/'
-    result += '#include "libhoneycomb_dll/ctocpp/'+directory+ \
+    result += '#include "libhoney_dll/ctocpp/'+directory+ \
               get_capi_name(item[3:], False)+'_ctocpp.h"\n'
 
   if body.find('shutdown_checker') > 0:
-    result += '#include "libhoneycomb_dll/shutdown_checker.h"\n'
+    result += '#include "libhoney_dll/shutdown_checker.h"\n'
 
   if body.find('transfer_') > 0:
-    result += '#include "libhoneycomb_dll/transfer_util.h"\n'
+    result += '#include "libhoney_dll/transfer_util.h"\n'
 
   return result
 

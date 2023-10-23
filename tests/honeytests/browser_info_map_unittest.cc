@@ -4,7 +4,7 @@
 
 #include <list>
 
-#include "libhoneycomb_dll/wrapper/honey_browser_info_map.h"
+#include "libhoney_dll/wrapper/honey_browser_info_map.h"
 #include "tests/gtest/include/gtest/gtest.h"
 
 namespace {

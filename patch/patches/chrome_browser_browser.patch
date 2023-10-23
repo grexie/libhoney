@@ -20,7 +20,7 @@ index a521886e9eb44..4ba68bf125c94 100644
  import("//build/config/features.gni")
  import("//build/config/ozone.gni")
  import("//build/config/ui.gni")
-+import("//honey/libhoneycomb/features/features.gni")
++import("//honey/libhoney/features/features.gni")
  import("//chrome/browser/buildflags.gni")
  import("//chrome/common/features.gni")
  import("//chromeos/ash/components/assistant/assistant.gni")
@@ -29,7 +29,7 @@ index a521886e9eb44..4ba68bf125c94 100644
    ]
  
 +  if (enable_honey) {
-+    configs += [ "//honey/libhoneycomb/features:config" ]
++    configs += [ "//honey/libhoney/features:config" ]
 +  }
 +
    # Since browser and browser_ui actually depend on each other,
@@ -39,7 +39,7 @@ index a521886e9eb44..4ba68bf125c94 100644
      "//build:chromeos_buildflags",
      "//build/config/chromebox_for_meetings:buildflags",
      "//cc/paint",
-+    "//honey/libhoneycomb/features",
++    "//honey/libhoney/features",
      "//chrome:resources",
      "//chrome:strings",
      "//chrome/app:chrome_dll_resources",
@@ -336,7 +336,7 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
  #include "base/timer/elapsed_timer.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/runtime.h"
++#include "honey/libhoney/features/runtime.h"
  #include "chrome/browser/tab_contents/web_contents_collection.h"
  #include "chrome/browser/themes/theme_service_observer.h"
  #include "chrome/browser/ui/bookmarks/bookmark_bar.h"
@@ -345,7 +345,7 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
  #include "ui/shell_dialogs/select_file_dialog.h"
  
 +#if BUILDFLAG(ENABLE_HONEYCOMB)
-+#include "honey/libhoneycomb/browser/chrome/browser_delegate.h"
++#include "honey/libhoney/browser/chrome/browser_delegate.h"
 +#endif
 +
  #if BUILDFLAG(IS_ANDROID)

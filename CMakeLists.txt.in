@@ -26,7 +26,7 @@
 #
 # CMakeLists.txt              Bootstrap that sets up the CMake environment.
 # cmake/*.cmake               Honeycomb configuration files shared by all targets.
-# libhoneycomb_dll/CMakeLists.txt   Defines the libhoneycomb_dll_wrapper target.
+# libhoney_dll/CMakeLists.txt   Defines the libhoney_dll_wrapper target.
 # tests/*/CMakeLists.txt      Defines the test application target.
 #
 # See the "TODO:" comments below for guidance on how to integrate this Honeycomb
@@ -214,10 +214,10 @@ find_package(Honeycomb REQUIRED)
 # Define Honeycomb-based targets.
 #
 
-# Include the libhoneycomb_dll_wrapper target.
-# Comes from the libhoneycomb_dll/CMakeLists.txt file in the binary distribution
+# Include the libhoney_dll_wrapper target.
+# Comes from the libhoney_dll/CMakeLists.txt file in the binary distribution
 # directory.
-add_subdirectory(${HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_PATH} libhoneycomb_dll_wrapper)
+add_subdirectory(${HONEYCOMB_LIBHONEY_DLL_WRAPPER_PATH} libhoney_dll_wrapper)
 
 # Include application targets.
 # Comes from the <target>/CMakeLists.txt file in the current directory.

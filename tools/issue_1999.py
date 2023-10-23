@@ -2,7 +2,7 @@
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 #
-# Resort order of object files in libhoneycomb.ninja file.
+# Resort order of object files in libhoney.ninja file.
 #
 # See: https://github.com/chromiumembedded/honey/issues/1999
 #
@@ -69,7 +69,7 @@ def obj_compare(x, y):
 
 
 def process_line(line):
-  if line.startswith("build ./libhoneycomb.dll ./libhoneycomb.dll.lib: solink "):
+  if line.startswith("build ./libhoney.dll ./libhoney.dll.lib: solink "):
     index = line.find("solink")
     if index >= 0:
       part1 = line[0:index + 6]
@@ -104,4 +104,4 @@ def process_file(path):
 
 
 def apply(confpath):
-  process_file(os.path.join(confpath, "obj", "honey", "libhoneycomb.ninja"))
+  process_file(os.path.join(confpath, "obj", "honey", "libhoney.ninja"))

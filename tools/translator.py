@@ -15,7 +15,7 @@ from make_cpptoc_impl import *
 from make_ctocpp_header import *
 from make_ctocpp_impl import *
 from make_gypi_file import *
-from make_libhoneycomb_dll_dylib_impl import *
+from make_libhoney_dll_dylib_impl import *
 from make_wrapper_types_header import *
 from optparse import OptionParser
 
@@ -74,16 +74,16 @@ cpp_header_test_dir = os.path.join(cpp_header_dir, 'test')
 cpp_header_views_dir = os.path.join(cpp_header_dir, 'views')
 capi_header_dir = os.path.join(cpp_header_dir, 'capi')
 api_hash_header = os.path.join(cpp_header_dir, 'honey_api_hash.h')
-libhoneycomb_dll_dir = os.path.join(root_dir, 'libhoneycomb_dll')
-cpptoc_global_impl = os.path.join(libhoneycomb_dll_dir, 'libhoneycomb_dll.cc')
-ctocpp_global_impl = os.path.join(libhoneycomb_dll_dir, 'wrapper',
-                                  'libhoneycomb_dll_wrapper.cc')
-wrapper_types_header = os.path.join(libhoneycomb_dll_dir, 'wrapper_types.h')
-cpptoc_dir = os.path.join(libhoneycomb_dll_dir, 'cpptoc')
-ctocpp_dir = os.path.join(libhoneycomb_dll_dir, 'ctocpp')
+libhoney_dll_dir = os.path.join(root_dir, 'libhoney_dll')
+cpptoc_global_impl = os.path.join(libhoney_dll_dir, 'libhoney_dll.cc')
+ctocpp_global_impl = os.path.join(libhoney_dll_dir, 'wrapper',
+                                  'libhoney_dll_wrapper.cc')
+wrapper_types_header = os.path.join(libhoney_dll_dir, 'wrapper_types.h')
+cpptoc_dir = os.path.join(libhoney_dll_dir, 'cpptoc')
+ctocpp_dir = os.path.join(libhoney_dll_dir, 'ctocpp')
 gypi_file = os.path.join(root_dir, 'honey_paths.gypi')
-libhoneycomb_dll_dylib_impl = os.path.join(libhoneycomb_dll_dir, 'wrapper',
-                                     'libhoneycomb_dll_dylib.cc')
+libhoney_dll_dylib_impl = os.path.join(libhoney_dll_dir, 'wrapper',
+                                     'libhoney_dll_dylib.cc')
 
 # make sure the header directory exists
 if not path_exists(cpp_header_dir):
@@ -226,10 +226,10 @@ if not options.quiet:
   sys.stdout.write('Generating ' + gypi_file + ' file...\n')
 update_file(*write_gypi_file(header, gypi_file))
 
-# output the libhoneycomb dll dylib file
+# output the libhoney dll dylib file
 if not options.quiet:
-  sys.stdout.write('Generating ' + libhoneycomb_dll_dylib_impl + ' file...\n')
-update_file(*write_libhoneycomb_dll_dylib_impl(header, libhoneycomb_dll_dylib_impl))
+  sys.stdout.write('Generating ' + libhoney_dll_dylib_impl + ' file...\n')
+update_file(*write_libhoney_dll_dylib_impl(header, libhoney_dll_dylib_impl))
 
 # Update the API hash header file if necessary. This must be done last because
 # it reads files that were potentially written by proceeding operations.

@@ -9,8 +9,8 @@ from honey_parser import *
 def make_wrapper_types_header(header):
   result = get_copyright()
 
-  result += '#ifndef HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_\n'+ \
-            '#define HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_\n' + \
+  result += '#ifndef HONEYCOMB_LIBHONEY_DLL_WRAPPER_TYPES_H_\n'+ \
+            '#define HONEYCOMB_LIBHONEY_DLL_WRAPPER_TYPES_H_\n' + \
             '#pragma once\n\n' + \
             'enum HoneycombWrapperType {\n' + \
             '  WT_BASE_REF_COUNTED = 1,\n' + \
@@ -22,7 +22,7 @@ def make_wrapper_types_header(header):
 
   result += '\n  WT_LAST\n'
   result += '};\n\n' + \
-            '#endif  // HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_'
+            '#endif  // HONEYCOMB_LIBHONEY_DLL_WRAPPER_TYPES_H_'
 
   return result
 

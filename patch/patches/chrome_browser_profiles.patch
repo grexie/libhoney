@@ -141,7 +141,7 @@ index 421a3a60d308a..b89123a708f79 100644
  #include "base/functional/bind.h"
  #include "base/functional/callback.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/runtime.h"
++#include "honey/libhoney/features/runtime.h"
  #include "chrome/browser/content_settings/content_settings_manager_delegate.h"
  #include "chrome/browser/content_settings/host_content_settings_map_factory.h"
  #include "chrome/browser/profiles/profile.h"
@@ -168,7 +168,7 @@ index ed5b366aa47ab..58ebe795e4636 100644
  
  #include "chrome/browser/profiles/renderer_updater_factory.h"
  
-+#include "honey/libhoneycomb/features/runtime.h"
++#include "honey/libhoney/features/runtime.h"
  #include "chrome/browser/content_settings/host_content_settings_map_factory.h"
  #include "chrome/browser/profiles/profile.h"
  #include "chrome/browser/profiles/renderer_updater.h"

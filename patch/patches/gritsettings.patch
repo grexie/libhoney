@@ -6,11 +6,11 @@ index e65fe348a1b7e..7ef760b495845 100644
    # END "everything else" section.
    # Everything but chrome/, components/, content/, and ios/
  
-+  "honey/libhoneycomb/resources/honey_resources.grd": {
++  "honey/libhoney/resources/honey_resources.grd": {
 +    "META": {"align": 31500},
 +    "includes": [31500],
 +  },
-+  "honey/libhoneycomb/resources/honey_strings.grd": {
++  "honey/libhoney/resources/honey_strings.grd": {
 +    "META": {"align": 32000},
 +    "messages": [32000],
 +  },

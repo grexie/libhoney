@@ -9,8 +9,8 @@ OVERVIEW
 
 The Honeycomb translator tool automatically generates Honeycomb source code based on the
 contents of the Honeycomb header file (honey.h). The generated source code includes the
-main C API header file (honey_capi.h) and all files in the libhoneycomb_dll/cpptoc and
-libhoneycomb_dll/ctocpp directories.
+main C API header file (honey_capi.h) and all files in the libhoney_dll/cpptoc and
+libhoney_dll/ctocpp directories.
 
 If any differences are detected between the new translator-generated output and
 the file that currently exists on disk a backup of the existing file will be

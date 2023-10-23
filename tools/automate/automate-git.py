@@ -31,7 +31,7 @@ else:
 depot_tools_url = 'https://chromium.googlesource.com/chromium/tools/depot_tools.git'
 depot_tools_archive_url = 'https://storage.googleapis.com/chrome-infra/depot_tools.zip'
 
-honey_git_url = 'https://bitbucket.org/chromiumembedded/honey.git'
+honey_git_url = 'https://github.com/grexie/libhoney.git'
 
 ##
 # Global system variables.

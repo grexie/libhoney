@@ -8,7 +8,7 @@ Required components:
 The following components are required. Honeycomb will not function without them.
 
 * Honeycomb core library.
-  * libhoneycomb.so
+  * libhoney.so
 
 * Unicode support data.
   * icudtl.dat

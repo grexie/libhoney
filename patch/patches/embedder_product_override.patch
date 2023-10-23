@@ -6,7 +6,7 @@ index c957a691efcac..127872ce6c249 100644
  #include "base/version.h"
  #include "build/branding_buildflags.h"
  #include "build/build_config.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "components/embedder_support/pref_names.h"
  #include "components/embedder_support/switches.h"
  #include "components/policy/core/common/policy_pref_names.h"
@@ -15,7 +15,7 @@ index c957a691efcac..127872ce6c249 100644
  #endif  // BUILDFLAG(IS_WIN)
  
 +#if BUILDFLAG(ENABLE_HONEYCOMB)
-+#include "honey/libhoneycomb/common/honey_switches.h"
++#include "honey/libhoney/common/honey_switches.h"
 +#endif
 +
  namespace embedder_support {

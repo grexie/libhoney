@@ -33,7 +33,7 @@
 /// A bunch of macros for logging.
 ///
 /// NOTE: The contents of this file are only available to applications that link
-/// against the libhoneycomb_dll_wrapper target.
+/// against the libhoney_dll_wrapper target.
 ///
 /// WARNING: Logging macros should not be used in the main/browser process
 /// before calling HoneycombInitialize or in sub-processes before calling

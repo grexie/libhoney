@@ -117,7 +117,7 @@ index bf03f3d03991a..c36d26af6747c 100644
  #include "build/branding_buildflags.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "chrome/browser/browser_process.h"
  #include "chrome/browser/enterprise/browser_management/management_service_factory.h"
  #include "chrome/browser/policy/configuration_policy_handler_list_factory.h"
@@ -372,7 +372,7 @@ index ab0301b8eb26d..3ed179ccf84bf 100644
  #include "build/branding_buildflags.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "third_party/widevine/cdm/buildflags.h"
  
  namespace base {
@@ -393,7 +393,7 @@ index e9d31053cb2ea..793ceac3c7772 100755
  #include <cstdint>
  #include <string>
  
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
  #include "components/policy/core/common/policy_details.h"
  #include "components/policy/core/common/policy_map.h"
  

@@ -8,7 +8,7 @@ Required components:
 The following components are required. Honeycomb will not function without them.
 
 * Honeycomb core library.
-  * libhoneycomb.dll
+  * libhoney.dll
 
 * Crash reporting library.
   * chrome_elf.dll

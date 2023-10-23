@@ -58,8 +58,8 @@ def make_ctocpp_header(header, clsname):
 
   result = get_copyright()
 
-  result += '#ifndef HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n'+ \
-            '#define HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n' + \
+  result += '#ifndef HONEYCOMB_LIBHONEY_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n'+ \
+            '#define HONEYCOMB_LIBHONEY_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n' + \
             '#pragma once\n'
 
   if clientside:
@@ -105,7 +105,7 @@ def make_ctocpp_header(header, clsname):
     template_file = 'ctocpp_ref_counted.h'
     template_class = 'HoneycombCToCppRefCounted'
 
-  result += '#include "libhoneycomb_dll/ctocpp/' + template_file + '"'
+  result += '#include "libhoney_dll/ctocpp/' + template_file + '"'
   result += '\n\n// Wrap a C structure with a C++ class.\n'
 
   if clientside:
@@ -122,7 +122,7 @@ def make_ctocpp_header(header, clsname):
   result += func_body
   result += '};\n\n'
 
-  result += '#endif  // HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_' + defname + '_CTOCPP_H_'
+  result += '#endif  // HONEYCOMB_LIBHONEY_DLL_CTOCPP_' + defname + '_CTOCPP_H_'
 
   return result
 

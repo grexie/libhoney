@@ -87,7 +87,7 @@ Honeycomb-based application, are available on the
 [Downloads](https://honey-builds.spotifycdn.com/index.html) page. Binary
 distributions are stand-alone and do not require the download of Honeycomb or
 Chromium source code. Symbol files for debugging binary distributions of
-libhoneycomb can also be downloaded from the above links.
+libhoney can also be downloaded from the above links.
 
 # Source Distributions
 

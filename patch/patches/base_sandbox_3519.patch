@@ -40,7 +40,7 @@ index c33cda7211238..063be1886c544 100644
  #include <utility>
  #include <vector>
  
-+#include "honey/libhoneycomb/features/features.h"
++#include "honey/libhoney/features/features.h"
 +
 +#if BUILDFLAG(IS_HONEYCOMB_SANDBOX_BUILD)
 +// Avoid overloads for const std::array in base/ranges/ranges.h that don't

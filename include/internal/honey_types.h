@@ -935,7 +935,7 @@ extern "C"
 
     ///
     /// Path and filename of the module containing the Honeycomb code (usually the
-    /// libhoneycomb module).
+    /// libhoney module).
     ///
     PK_FILE_MODULE,
 

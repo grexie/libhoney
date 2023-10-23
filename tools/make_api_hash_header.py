@@ -46,7 +46,7 @@ extern "C" {
 #endif
 
 ///
-// Returns Honeycomb API hashes for the libhoneycomb library. The returned string is owned
+// Returns Honeycomb API hashes for the libhoney library. The returned string is owned
 // by the library and should not be freed. The |entry| parameter describes which
 // hash value will be returned:
 // 0 - HONEYCOMB_API_HASH_PLATFORM

@@ -370,7 +370,7 @@ def combine_libs(platform, build_dir, libs, dest_lib):
     cmdline = 'msvs_env.bat win%s "%s" combine_libs.py -b "%s" -o "%s"' % (
         platform_arch, sys.executable, build_dir, dest_lib)
   elif platform == 'mac':
-    # Find HONEYCOMB_EXPORT symbols from libhoneycomb_sandbox.a (include/honey_sandbox_mac.h)
+    # Find HONEYCOMB_EXPORT symbols from libhoney_sandbox.a (include/honey_sandbox_mac.h)
     # Export only symbols that include these strings.
     symbol_match = [
         '_honey_',  # C symbols
@@ -378,7 +378,7 @@ def combine_libs(platform, build_dir, libs, dest_lib):
     ]
 
     print('Finding exported symbols...')
-    assert 'libhoneycomb_sandbox.a' in libs[0], libs[0]
+    assert 'libhoney_sandbox.a' in libs[0], libs[0]
     symbols = []
     for symbol in get_exported_symbols(os.path.join(build_dir, libs[0])):
       for match in symbol_match:
@@ -712,9 +712,9 @@ if mode == 'standard' or mode == 'minimal':
   cmake_dir = os.path.join(output_dir, 'cmake')
   make_dir(cmake_dir, options.quiet)
 
-  # create the libhoneycomb_dll_wrapper directory
-  libhoneycomb_dll_dir = os.path.join(output_dir, 'libhoneycomb_dll')
-  make_dir(libhoneycomb_dll_dir, options.quiet)
+  # create the libhoney_dll_wrapper directory
+  libhoney_dll_dir = os.path.join(output_dir, 'libhoney_dll')
+  make_dir(libhoney_dll_dir, options.quiet)
 
   # transfer common include files
   transfer_gypi_files(honey_dir, honey_paths2['includes_common'], \
@@ -746,13 +746,13 @@ if mode == 'standard' or mode == 'minimal':
         raise Exception('Missing generated header file: %s' % include)
     copy_file(src_path, os.path.join(include_dir, include), options.quiet)
 
-  # transfer common libhoneycomb_dll_wrapper files
-  transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_base'], \
-                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
-  transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_common'], \
-                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
+  # transfer common libhoney_dll_wrapper files
+  transfer_gypi_files(honey_dir, honey_paths2['libhoney_dll_wrapper_sources_base'], \
+                      'libhoney_dll/', libhoney_dll_dir, options.quiet)
+  transfer_gypi_files(honey_dir, honey_paths2['libhoney_dll_wrapper_sources_common'], \
+                      'libhoney_dll/', libhoney_dll_dir, options.quiet)
   transfer_gypi_files(honey_dir, honey_paths['autogen_client_side'], \
-                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
+                      'libhoney_dll/', libhoney_dll_dir, options.quiet)
 
   if mode == 'standard' or mode == 'minimal':
     # transfer additional files
@@ -774,8 +774,8 @@ if mode == 'standard' or mode == 'minimal':
   process_cmake_template(os.path.join(honey_dir, 'cmake', 'FindHoneycomb.cmake.in'), \
                          os.path.join(cmake_dir, 'FindHoneycomb.cmake'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(honey_dir, 'libhoneycomb_dll', 'CMakeLists.txt.in'), \
-                         os.path.join(libhoneycomb_dll_dir, 'CMakeLists.txt'), \
+  process_cmake_template(os.path.join(honey_dir, 'libhoney_dll', 'CMakeLists.txt.in'), \
+                         os.path.join(libhoney_dll_dir, 'CMakeLists.txt'), \
                          variables, options.quiet)
 
 if mode == 'standard':
@@ -883,14 +883,14 @@ if not options.nodocs:
     sys.stdout.write("ERROR: No docs generated.\n")
 
 if platform == 'windows':
-  libhoneycomb_dll = 'libhoneycomb.dll'
-  libhoneycomb_dll_lib = '%s.lib' % libhoneycomb_dll
-  libhoneycomb_dll_pdb = '%s.pdb' % libhoneycomb_dll
+  libhoney_dll = 'libhoney.dll'
+  libhoney_dll_lib = '%s.lib' % libhoney_dll
+  libhoney_dll_pdb = '%s.pdb' % libhoney_dll
   # yapf: disable
   binaries = [
       {'path': 'chrome_elf.dll'},
       {'path': 'd3dcompiler_47.dll'},
-      {'path': libhoneycomb_dll},
+      {'path': libhoney_dll},
       {'path': 'libEGL.dll'},
       {'path': 'libGLESv2.dll'},
       {'path': 'snapshot_blob.bin', 'conditional': True},
@@ -906,7 +906,7 @@ if platform == 'windows':
         'path': 'honeysimple.exe' if platform_arch == 'arm64' else 'honeyclient.exe'
     })
   else:
-    binaries.append({'path': libhoneycomb_dll_lib, 'out_path': 'libhoneycomb.lib'})
+    binaries.append({'path': libhoney_dll_lib, 'out_path': 'libhoney.lib'})
 
   # yapf: disable
   resources = [
@@ -959,7 +959,7 @@ if platform == 'windows':
     # transfer Debug files
     build_dir = build_dir_debug
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, libhoneycomb_dll)):
+        os.path.join(build_dir, libhoney_dll)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Debug')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -970,7 +970,7 @@ if platform == 'windows':
             output_dir_name + '_debug_symbols', options.outputdir)
         # transfer contents
         copy_file(
-            os.path.join(build_dir, libhoneycomb_dll_pdb), symbol_output_dir,
+            os.path.join(build_dir, libhoney_dll_pdb), symbol_output_dir,
             options.quiet)
     else:
       sys.stdout.write("No Debug build files.\n")
@@ -979,7 +979,7 @@ if platform == 'windows':
     # transfer Release files
     build_dir = build_dir_release
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, libhoneycomb_dll)):
+        os.path.join(build_dir, libhoney_dll)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Release')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -990,7 +990,7 @@ if platform == 'windows':
             output_dir_name + '_release_symbols', options.outputdir)
         # transfer contents
         copy_file(
-            os.path.join(build_dir, libhoneycomb_dll_pdb), symbol_output_dir,
+            os.path.join(build_dir, libhoney_dll_pdb), symbol_output_dir,
             options.quiet)
     else:
       sys.stdout.write("No Release build files.\n")
@@ -1043,7 +1043,7 @@ elif platform == 'mac':
   framework_dsym = '%s.dSYM' % framework_name
   honeyclient_app = 'honeyclient.app'
 
-  honey_sandbox_lib = 'obj/honey/libhoneycomb_sandbox.a'
+  honey_sandbox_lib = 'obj/honey/libhoney_sandbox.a'
   sandbox_libs = [
       honey_sandbox_lib,
       'obj/sandbox/mac/libseatbelt.a',
@@ -1147,9 +1147,9 @@ elif platform == 'mac':
     transfer_gypi_files(honey_dir, honey_paths2['includes_wrapper_mac'], \
                         'include/', include_dir, options.quiet)
 
-    # transfer libhoneycomb_dll_wrapper files
-    transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_mac'], \
-                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
+    # transfer libhoney_dll_wrapper files
+    transfer_gypi_files(honey_dir, honey_paths2['libhoney_dll_wrapper_sources_mac'], \
+                      'libhoney_dll/', libhoney_dll_dir, options.quiet)
 
     # transfer additional files, if any
     transfer_files(honey_dir, script_dir, os.path.join(script_dir, 'distrib', 'mac'), \
@@ -1194,11 +1194,11 @@ elif platform == 'mac':
              options.quiet)
 
 elif platform == 'linux':
-  libhoneycomb_so = 'libhoneycomb.so'
+  libhoney_so = 'libhoney.so'
   # yapf: disable
   binaries = [
       {'path': 'chrome_sandbox', 'out_path': 'chrome-sandbox'},
-      {'path': libhoneycomb_so},
+      {'path': libhoney_so},
       {'path': 'libEGL.so'},
       {'path': 'libGLESv2.so'},
       {'path': 'libvk_swiftshader.so'},
@@ -1229,8 +1229,8 @@ elif platform == 'linux':
   if mode == 'standard':
     # transfer Debug files
     build_dir = build_dir_debug
-    libhoneycomb_path = os.path.join(build_dir, libhoneycomb_so)
-    if not options.allowpartial or path_exists(libhoneycomb_path):
+    libhoney_path = os.path.join(build_dir, libhoney_so)
+    if not options.allowpartial or path_exists(libhoney_path):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Debug')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -1239,8 +1239,8 @@ elif platform == 'linux':
 
   # transfer Release files
   build_dir = build_dir_release
-  libhoneycomb_path = os.path.join(build_dir, libhoneycomb_so)
-  if not options.allowpartial or path_exists(libhoneycomb_path):
+  libhoney_path = os.path.join(build_dir, libhoney_so)
+  if not options.allowpartial or path_exists(libhoney_path):
     valid_build_dir = build_dir
     dst_dir = os.path.join(output_dir, 'Release')
     copy_files_list(build_dir, dst_dir, binaries)

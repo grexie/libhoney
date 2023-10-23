@@ -51,11 +51,11 @@ def make_gypi_file(header):
     if not dir is None:
       filename = dir + '/' + filename
     if cls.is_library_side():
-      result += "      'libhoneycomb_dll/cpptoc/"+filename+"_cpptoc.cc',\n" \
-                "      'libhoneycomb_dll/cpptoc/"+filename+"_cpptoc.h',\n"
+      result += "      'libhoney_dll/cpptoc/"+filename+"_cpptoc.cc',\n" \
+                "      'libhoney_dll/cpptoc/"+filename+"_cpptoc.h',\n"
     else:
-      result += "      'libhoneycomb_dll/ctocpp/"+filename+"_ctocpp.cc',\n" \
-                "      'libhoneycomb_dll/ctocpp/"+filename+"_ctocpp.h',\n"
+      result += "      'libhoney_dll/ctocpp/"+filename+"_ctocpp.cc',\n" \
+                "      'libhoney_dll/ctocpp/"+filename+"_ctocpp.h',\n"
   result += "    ],\n"
 
   # client side includes
@@ -67,11 +67,11 @@ def make_gypi_file(header):
     if not dir is None:
       filename = dir + '/' + filename
     if cls.is_library_side():
-      result += "      'libhoneycomb_dll/ctocpp/"+filename+"_ctocpp.cc',\n" \
-                "      'libhoneycomb_dll/ctocpp/"+filename+"_ctocpp.h',\n"
+      result += "      'libhoney_dll/ctocpp/"+filename+"_ctocpp.cc',\n" \
+                "      'libhoney_dll/ctocpp/"+filename+"_ctocpp.h',\n"
     else:
-      result += "      'libhoneycomb_dll/cpptoc/"+filename+"_cpptoc.cc',\n" \
-                "      'libhoneycomb_dll/cpptoc/"+filename+"_cpptoc.h',\n"
+      result += "      'libhoney_dll/cpptoc/"+filename+"_cpptoc.cc',\n" \
+                "      'libhoney_dll/cpptoc/"+filename+"_cpptoc.h',\n"
   result += "    ],\n"
 
   # footer string

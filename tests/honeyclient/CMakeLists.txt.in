@@ -98,8 +98,8 @@ if(OS_MAC)
   set(HONEYCOMB_HELPER_TARGET "honeyclient_Helper")
   set(HONEYCOMB_HELPER_OUTPUT_NAME "honeyclient Helper")
 else()
-  # Logical target used to link the libhoneycomb library.
-  ADD_LOGICAL_TARGET("libhoneycomb_lib" "${HONEYCOMB_LIB_DEBUG}" "${HONEYCOMB_LIB_RELEASE}")
+  # Logical target used to link the libhoney library.
+  ADD_LOGICAL_TARGET("libhoney_lib" "${HONEYCOMB_LIB_DEBUG}" "${HONEYCOMB_LIB_RELEASE}")
 endif()
 
 # Determine the target output directory.
@@ -127,8 +127,8 @@ if(OS_LINUX)
   # Executable target.
   add_executable(${HONEYCOMB_TARGET} ${HONEYCOMBCLIENT_SRCS})
   SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
-  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper)
-  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_lib libhoneycomb_dll_wrapper "GL" ${HONEYCOMB_STANDARD_LIBS})
+  add_dependencies(${HONEYCOMB_TARGET} libhoney_dll_wrapper)
+  target_link_libraries(${HONEYCOMB_TARGET} libhoney_lib libhoney_dll_wrapper "GL" ${HONEYCOMB_STANDARD_LIBS})
 
   # Set rpath so that libraries can be placed next to the executable.
   set_target_properties(${HONEYCOMB_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
@@ -197,8 +197,8 @@ if(OS_MAC)
   # Main app bundle target.
   add_executable(${HONEYCOMB_TARGET} MACOSX_BUNDLE ${HONEYCOMBCLIENT_RESOURCES_SRCS} ${HONEYCOMBCLIENT_SRCS})
   SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
-  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper)
-  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper ${HONEYCOMB_STANDARD_LIBS} "-framework OpenGL")
+  add_dependencies(${HONEYCOMB_TARGET} libhoney_dll_wrapper)
+  target_link_libraries(${HONEYCOMB_TARGET} libhoney_dll_wrapper ${HONEYCOMB_STANDARD_LIBS} "-framework OpenGL")
   set_target_properties(${HONEYCOMB_TARGET} PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/Info.plist
     )
@@ -239,8 +239,8 @@ if(OS_MAC)
     # Create Helper executable target.
     add_executable(${_helper_target} MACOSX_BUNDLE ${HONEYCOMBCLIENT_HELPER_SRCS})
     SET_EXECUTABLE_TARGET_PROPERTIES(${_helper_target})
-    add_dependencies(${_helper_target} libhoneycomb_dll_wrapper)
-    target_link_libraries(${_helper_target} libhoneycomb_dll_wrapper ${HONEYCOMB_STANDARD_LIBS})
+    add_dependencies(${_helper_target} libhoney_dll_wrapper)
+    target_link_libraries(${_helper_target} libhoney_dll_wrapper ${HONEYCOMB_STANDARD_LIBS})
     set_target_properties(${_helper_target} PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${_helper_info_plist}
       OUTPUT_NAME ${_helper_output_name}
@@ -295,8 +295,8 @@ if(OS_WINDOWS)
   # Executable target.
   add_executable(${HONEYCOMB_TARGET} WIN32 ${HONEYCOMBCLIENT_SRCS})
   SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
-  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper)
-  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_lib libhoneycomb_dll_wrapper ${HONEYCOMB_STANDARD_LIBS} d3d11.lib glu32.lib imm32.lib opengl32.lib)
+  add_dependencies(${HONEYCOMB_TARGET} libhoney_dll_wrapper)
+  target_link_libraries(${HONEYCOMB_TARGET} libhoney_lib libhoney_dll_wrapper ${HONEYCOMB_STANDARD_LIBS} d3d11.lib glu32.lib imm32.lib opengl32.lib)
 
   if(USE_ATL)
     # Required by VS2013 to link accessibility API functions.
