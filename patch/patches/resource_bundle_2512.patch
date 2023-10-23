@@ -6,7 +6,7 @@ index 3604fa07ff1c4..baf2f2d6507df 100644
      : delegate_(delegate),
        locale_resources_data_lock_(new base::Lock),
        max_scale_factor_(k100Percent) {
-+  // With CEF's multi-threaded mode the ResourceBundle may be created on the
++  // With Honeycomb's multi-threaded mode the ResourceBundle may be created on the
 +  // main thread and then accessed on the UI thread. Allow the SequenceChecker
 +  // to re-bind on the UI thread when CalledOnValidSequence() is called for the
 +  // first time.
@@ -35,7 +35,7 @@ index c24f5faf14d3f..96d4f6be11588 100644
    ResourceBundle(const ResourceBundle&) = delete;
    ResourceBundle& operator=(const ResourceBundle&) = delete;
  
-+  // With CEF's multi-threaded mode the ResourceBundle may be created/destroyed
++  // With Honeycomb's multi-threaded mode the ResourceBundle may be created/destroyed
 +  // on the main thread but accessed on the UI thread. Call this method on the
 +  // UI thread to clean up resources before destruction.
 +  void CleanupOnUIThread();

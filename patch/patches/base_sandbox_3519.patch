@@ -6,7 +6,7 @@ index 641bbaf2c7576..afdd641e38452 100644
    return const_cast<T*>(begin(const_cast<const std::array<T, N>&>(array), tag));
  }
  
-+#if !defined(CEF_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS)
++#if !defined(HONEYCOMB_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS)
  // Overload for const std::array. Required since std::array::begin is not
  // constexpr prior to C++17.
  template <typename T, size_t N>
@@ -21,7 +21,7 @@ index 641bbaf2c7576..afdd641e38452 100644
    return const_cast<T*>(end(const_cast<const std::array<T, N>&>(array), tag));
  }
  
-+#if !defined(CEF_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS)
++#if !defined(HONEYCOMB_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS)
  // Overload for const std::array. Required since std::array::end is not
  // constexpr prior to C++17.
  template <typename T, size_t N>
@@ -40,12 +40,12 @@ index c33cda7211238..063be1886c544 100644
  #include <utility>
  #include <vector>
  
-+#include "cef/libcef/features/features.h"
++#include "honey/libhoneycomb/features/features.h"
 +
-+#if BUILDFLAG(IS_CEF_SANDBOX_BUILD)
++#if BUILDFLAG(IS_HONEYCOMB_SANDBOX_BUILD)
 +// Avoid overloads for const std::array in base/ranges/ranges.h that don't
 +// compile with MSVC. See issue #3519.
-+#define CEF_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS 1
++#define HONEYCOMB_EXCLUDE_PROBLEMATIC_CONST_ARRAY_OVERLOADS 1
 +#endif
 +
  #include "base/check_op.h"

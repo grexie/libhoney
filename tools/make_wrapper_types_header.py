@@ -1,18 +1,18 @@
-# Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2015 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
-from cef_parser import *
+from honey_parser import *
 
 
 def make_wrapper_types_header(header):
   result = get_copyright()
 
-  result += '#ifndef CEF_LIBCEF_DLL_WRAPPER_TYPES_H_\n'+ \
-            '#define CEF_LIBCEF_DLL_WRAPPER_TYPES_H_\n' + \
+  result += '#ifndef HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_\n'+ \
+            '#define HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_\n' + \
             '#pragma once\n\n' + \
-            'enum CefWrapperType {\n' + \
+            'enum HoneycombWrapperType {\n' + \
             '  WT_BASE_REF_COUNTED = 1,\n' + \
             '  WT_BASE_SCOPED,\n'
 
@@ -22,7 +22,7 @@ def make_wrapper_types_header(header):
 
   result += '\n  WT_LAST\n'
   result += '};\n\n' + \
-            '#endif  // CEF_LIBCEF_DLL_WRAPPER_TYPES_H_'
+            '#endif  // HONEYCOMB_LIBHONEYCOMB_DLL_WRAPPER_TYPES_H_'
 
   return result
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
   # create the header object
   header = obj_header()
-  excluded_files = ['cef_api_hash.h', 'cef_application_mac.h', 'cef_version.h']
+  excluded_files = ['honey_api_hash.h', 'honey_application_mac.h', 'honey_version.h']
   header.add_directory(sys.argv[1], excluded_files)
 
   # dump the result to stdout

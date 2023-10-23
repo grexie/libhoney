@@ -299,14 +299,14 @@ index 53c1d25e3f56d..377ef1e646958 100644
  
  void DesktopWindowTreeHostWin::HandleNativeFocus(HWND last_focused_window) {
 -  // TODO(beng): inform the native_widget_delegate_.
-+  // See comments in CefBrowserPlatformDelegateNativeWin::SetFocus.
++  // See comments in HoneycombBrowserPlatformDelegateNativeWin::SetFocus.
 +  if (has_external_parent_ && CanActivate())
 +    HandleActivationChanged(true);
  }
  
  void DesktopWindowTreeHostWin::HandleNativeBlur(HWND focused_window) {
 -  // TODO(beng): inform the native_widget_delegate_.
-+  // See comments in CefBrowserPlatformDelegateNativeWin::SetFocus.
++  // See comments in HoneycombBrowserPlatformDelegateNativeWin::SetFocus.
 +  if (has_external_parent_ && CanActivate())
 +    HandleActivationChanged(false);
  }
@@ -316,7 +316,7 @@ index 53c1d25e3f56d..377ef1e646958 100644
    if (ui::PlatformEventSource::ShouldIgnoreNativePlatformEvents())
      return true;
  
-+  // See comments in CefBrowserPlatformDelegateNativeWin::SetFocus.
++  // See comments in HoneycombBrowserPlatformDelegateNativeWin::SetFocus.
 +  if (has_external_parent_ && CanActivate() && event->IsAnyButton() &&
 +      ::GetFocus() != GetHWND()) {
 +    ::SetFocus(GetHWND());
@@ -433,7 +433,7 @@ index 6d87be86ae8b3..02fe7a11958d0 100644
    // Returns true if the title text should be centered.
    bool ShouldCenterWindowTitleText() const;
  
-+  // CEF supports override of min/max size values.
++  // Honeycomb supports override of min/max size values.
 +  virtual bool MaybeGetMinimumSize(gfx::Size* size) const { return false; }
 +  virtual bool MaybeGetMaximumSize(gfx::Size* size) const { return false; }
 +
@@ -463,7 +463,7 @@ index a386fb0594530..edc5dc99de31d 100644
    // actual one. This ensures that onfocus/onblur notifications work
    // as expected and no unexpected throttling occurs.
 +  // This active state is checked via FocusManager::SetFocusedViewWithReason.
-+  // With CEF external parent hwnd() may be a child window, whereas
++  // With Honeycomb external parent hwnd() may be a child window, whereas
 +  // GetActiveWindow() will return the root window, so make sure that we always
 +  // compare root windows.
    return IsHeadless() ? headless_mode_window_->active_state

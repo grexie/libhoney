@@ -1,30 +1,30 @@
-// Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2015 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #include "tests/shared/browser/main_message_loop_std.h"
 
-#include "include/cef_app.h"
+#include "include/honey_app.h"
 
 namespace client {
 
 MainMessageLoopStd::MainMessageLoopStd() {}
 
 int MainMessageLoopStd::Run() {
-  CefRunMessageLoop();
+  HoneycombRunMessageLoop();
   return 0;
 }
 
 void MainMessageLoopStd::Quit() {
-  CefQuitMessageLoop();
+  HoneycombQuitMessageLoop();
 }
 
-void MainMessageLoopStd::PostTask(CefRefPtr<CefTask> task) {
-  CefPostTask(TID_UI, task);
+void MainMessageLoopStd::PostTask(HoneycombRefPtr<HoneycombTask> task) {
+  HoneycombPostTask(TID_UI, task);
 }
 
 bool MainMessageLoopStd::RunsTasksOnCurrentThread() const {
-  return CefCurrentlyOn(TID_UI);
+  return HoneycombCurrentlyOn(TID_UI);
 }
 
 #if defined(OS_WIN)

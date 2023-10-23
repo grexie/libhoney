@@ -1,13 +1,13 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #include "tests/shared/browser/resource_util.h"
 
-#include "include/base/cef_logging.h"
-#include "include/cef_stream.h"
-#include "include/wrapper/cef_byte_read_handler.h"
-#include "include/wrapper/cef_stream_resource_handler.h"
+#include "include/base/honey_logging.h"
+#include "include/honey_stream.h"
+#include "include/wrapper/honey_byte_read_handler.h"
+#include "include/wrapper/honey_stream_resource_handler.h"
 
 namespace client {
 
@@ -32,7 +32,7 @@ bool LoadBinaryResource(int binaryId, DWORD& dwSize, LPBYTE& pBytes) {
 }
 
 // Provider of binary resources.
-class BinaryResourceProvider : public CefResourceManager::Provider {
+class BinaryResourceProvider : public HoneycombResourceManager::Provider {
  public:
   BinaryResourceProvider(const std::string& url_path,
                          const std::string& resource_path_prefix)
@@ -44,8 +44,8 @@ class BinaryResourceProvider : public CefResourceManager::Provider {
     }
   }
 
-  bool OnRequest(scoped_refptr<CefResourceManager::Request> request) override {
-    CEF_REQUIRE_IO_THREAD();
+  bool OnRequest(scoped_refptr<HoneycombResourceManager::Request> request) override {
+    HONEYCOMB_REQUIRE_IO_THREAD();
 
     const std::string& url = request->url();
     if (url.find(url_path_) != 0L) {
@@ -53,7 +53,7 @@ class BinaryResourceProvider : public CefResourceManager::Provider {
       return false;
     }
 
-    CefRefPtr<CefResourceHandler> handler;
+    HoneycombRefPtr<HoneycombResourceHandler> handler;
 
     std::string relative_path = url.substr(url_path_.length());
     if (!relative_path.empty()) {
@@ -61,10 +61,10 @@ class BinaryResourceProvider : public CefResourceManager::Provider {
         relative_path = resource_path_prefix_ + relative_path;
       }
 
-      CefRefPtr<CefStreamReader> stream =
+      HoneycombRefPtr<HoneycombStreamReader> stream =
           GetBinaryResourceReader(relative_path.data());
       if (stream.get()) {
-        handler = new CefStreamResourceHandler(
+        handler = new HoneycombStreamResourceHandler(
             request->mime_type_resolver().Run(url), stream);
       }
     }
@@ -103,7 +103,7 @@ bool LoadBinaryResource(const char* resource_name, std::string& resource_data) {
   return false;
 }
 
-CefRefPtr<CefStreamReader> GetBinaryResourceReader(const char* resource_name) {
+HoneycombRefPtr<HoneycombStreamReader> GetBinaryResourceReader(const char* resource_name) {
   int resource_id = GetResourceId(resource_name);
   if (resource_id == 0) {
     return nullptr;
@@ -113,15 +113,15 @@ CefRefPtr<CefStreamReader> GetBinaryResourceReader(const char* resource_name) {
   LPBYTE pBytes;
 
   if (LoadBinaryResource(resource_id, dwSize, pBytes)) {
-    return CefStreamReader::CreateForHandler(
-        new CefByteReadHandler(pBytes, dwSize, nullptr));
+    return HoneycombStreamReader::CreateForHandler(
+        new HoneycombByteReadHandler(pBytes, dwSize, nullptr));
   }
 
   NOTREACHED();  // The resource should be found.
   return nullptr;
 }
 
-CefResourceManager::Provider* CreateBinaryResourceProvider(
+HoneycombResourceManager::Provider* CreateBinaryResourceProvider(
     const std::string& url_path,
     const std::string& resource_path_prefix) {
   return new BinaryResourceProvider(url_path, resource_path_prefix);

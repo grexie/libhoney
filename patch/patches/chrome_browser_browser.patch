@@ -20,7 +20,7 @@ index a521886e9eb44..4ba68bf125c94 100644
  import("//build/config/features.gni")
  import("//build/config/ozone.gni")
  import("//build/config/ui.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/browser/buildflags.gni")
  import("//chrome/common/features.gni")
  import("//chromeos/ash/components/assistant/assistant.gni")
@@ -28,8 +28,8 @@ index a521886e9eb44..4ba68bf125c94 100644
      "//build/config/compiler:wexit_time_destructors",
    ]
  
-+  if (enable_cef) {
-+    configs += [ "//cef/libcef/features:config" ]
++  if (enable_honey) {
++    configs += [ "//honey/libhoneycomb/features:config" ]
 +  }
 +
    # Since browser and browser_ui actually depend on each other,
@@ -39,7 +39,7 @@ index a521886e9eb44..4ba68bf125c94 100644
      "//build:chromeos_buildflags",
      "//build/config/chromebox_for_meetings:buildflags",
      "//cc/paint",
-+    "//cef/libcef/features",
++    "//honey/libhoneycomb/features",
      "//chrome:resources",
      "//chrome:strings",
      "//chrome/app:chrome_dll_resources",
@@ -77,23 +77,23 @@ index fdb96dee05067..a188b6442b1ca 100644
  #include "components/captive_portal/content/captive_portal_tab_helper.h"
  #endif
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#define CALL_CEF_DELEGATE(name, ...) \
-+  if (cef_browser_delegate_) { \
-+    cef_browser_delegate_->name(__VA_ARGS__); \
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#define CALL_HONEYCOMB_DELEGATE(name, ...) \
++  if (honey_browser_delegate_) { \
++    honey_browser_delegate_->name(__VA_ARGS__); \
 +  }
-+#define CALL_CEF_DELEGATE_RETURN(name, ...) \
-+  if (cef_browser_delegate_) { \
-+    return cef_browser_delegate_->name(__VA_ARGS__); \
++#define CALL_HONEYCOMB_DELEGATE_RETURN(name, ...) \
++  if (honey_browser_delegate_) { \
++    return honey_browser_delegate_->name(__VA_ARGS__); \
 +  }
-+#define CALL_CEF_DELEGATE_RESULT(name, result, ...) \
-+  if (cef_browser_delegate_) { \
-+    result = cef_browser_delegate_->name(__VA_ARGS__); \
++#define CALL_HONEYCOMB_DELEGATE_RESULT(name, result, ...) \
++  if (honey_browser_delegate_) { \
++    result = honey_browser_delegate_->name(__VA_ARGS__); \
 +  }
-+#else  // !BUILDFLAG(ENABLE_CEF)
-+#define CALL_CEF_DELEGATE(name, ...)
-+#define CALL_CEF_DELEGATE_RETURN(name, ...)
-+#define CALL_CEF_DELEGATE_RESULT(name, result, ...)
++#else  // !BUILDFLAG(ENABLE_HONEYCOMB)
++#define CALL_HONEYCOMB_DELEGATE(name, ...)
++#define CALL_HONEYCOMB_DELEGATE_RETURN(name, ...)
++#define CALL_HONEYCOMB_DELEGATE_RESULT(name, result, ...)
 +#endif
 +
  #if BUILDFLAG(ENABLE_EXTENSIONS)
@@ -103,9 +103,9 @@ index fdb96dee05067..a188b6442b1ca 100644
        type_(params.type),
        profile_(params.profile),
        window_(nullptr),
-+#if BUILDFLAG(ENABLE_CEF)
-+      cef_browser_delegate_(
-+          cef::BrowserDelegate::Create(this, params.cef_params, params.opener)),
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++      honey_browser_delegate_(
++          honey::BrowserDelegate::Create(this, params.honey_params, params.opener)),
 +#endif
        tab_strip_model_delegate_(
            std::make_unique<chrome::BrowserTabStripModelDelegate>(this)),
@@ -118,7 +118,7 @@ index fdb96dee05067..a188b6442b1ca 100644
 +  // Clean up any objects attached via UserData before implicit destruction
 +  // of CreateParams. Destruction of those objects may call into something
 +  // (ProfileImpl, PrefService, etc) that will be destroyed when the last
-+  // CefRequestContextImpl reference (held by CreateParams) is released.
++  // HoneycombRequestContextImpl reference (held by CreateParams) is released.
 +  ClearAllUserData();
  }
  
@@ -128,7 +128,7 @@ index fdb96dee05067..a188b6442b1ca 100644
    command_controller_->FullscreenStateChanged();
    UpdateBookmarkBarState(BOOKMARK_BAR_STATE_CHANGE_TOGGLE_FULLSCREEN);
 +
-+  CALL_CEF_DELEGATE(WindowFullscreenStateChanged);
++  CALL_HONEYCOMB_DELEGATE(WindowFullscreenStateChanged);
  }
  
  void Browser::FullscreenTopUIStateChanged() {
@@ -136,9 +136,9 @@ index fdb96dee05067..a188b6442b1ca 100644
    if (exclusive_access_manager_->HandleUserKeyEvent(event))
      return content::KeyboardEventProcessingResult::HANDLED;
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_browser_delegate_) {
-+    auto result = cef_browser_delegate_->PreHandleKeyboardEvent(source, event);
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_browser_delegate_) {
++    auto result = honey_browser_delegate_->PreHandleKeyboardEvent(source, event);
 +    if (result != content::KeyboardEventProcessingResult::NOT_HANDLED)
 +      return result;
 +  }
@@ -157,9 +157,9 @@ index fdb96dee05067..a188b6442b1ca 100644
 +    return true;
 +  }
 +
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_browser_delegate_ &&
-+      cef_browser_delegate_->HandleKeyboardEvent(source, event)) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_browser_delegate_ &&
++      honey_browser_delegate_->HandleKeyboardEvent(source, event)) {
 +    return true;
 +  }
 +#endif
@@ -172,9 +172,9 @@ index fdb96dee05067..a188b6442b1ca 100644
    }
  #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_browser_delegate_) {
-+    auto web_contents = cef_browser_delegate_->OpenURLFromTab(source, params);
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_browser_delegate_) {
++    auto web_contents = honey_browser_delegate_->OpenURLFromTab(source, params);
 +    if (!web_contents)
 +      return nullptr;
 +  }
@@ -188,7 +188,7 @@ index fdb96dee05067..a188b6442b1ca 100644
    ScheduleUIUpdate(source, content::INVALIDATE_TYPE_LOAD);
    UpdateWindowForLoadingStateChanged(source, should_show_loading_ui);
 +
-+  CALL_CEF_DELEGATE(LoadingStateChanged, source, should_show_loading_ui);
++  CALL_HONEYCOMB_DELEGATE(LoadingStateChanged, source, should_show_loading_ui);
  }
  
  void Browser::CloseContents(WebContents* source) {
@@ -196,7 +196,7 @@ index fdb96dee05067..a188b6442b1ca 100644
  }
  
  void Browser::UpdateTargetURL(WebContents* source, const GURL& url) {
-+  CALL_CEF_DELEGATE(UpdateTargetURL, source, url);
++  CALL_HONEYCOMB_DELEGATE(UpdateTargetURL, source, url);
 +
    if (!GetStatusBubble())
      return;
@@ -211,7 +211,7 @@ index fdb96dee05067..a188b6442b1ca 100644
 +    const std::u16string& message,
 +    int32_t line_no,
 +    const std::u16string& source_id) {
-+  CALL_CEF_DELEGATE_RETURN(DidAddMessageToConsole, source, log_level, message,
++  CALL_HONEYCOMB_DELEGATE_RETURN(DidAddMessageToConsole, source, log_level, message,
 +                           line_no, source_id);
 +  return false;
 +}
@@ -226,9 +226,9 @@ index fdb96dee05067..a188b6442b1ca 100644
 +void Browser::CanDownload(const GURL& url,
 +                          const std::string& request_method,
 +                          base::OnceCallback<void(bool)> callback) {
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_browser_delegate_) {
-+    cef_browser_delegate_->CanDownload(url, request_method,
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_browser_delegate_) {
++    honey_browser_delegate_->CanDownload(url, request_method,
 +                                       std::move(callback));
 +    return;
 +  }
@@ -244,7 +244,7 @@ index fdb96dee05067..a188b6442b1ca 100644
    // Make the tab show up in the task manager.
    task_manager::WebContentsTags::CreateForTabContents(new_contents);
 +
-+  CALL_CEF_DELEGATE(WebContentsCreated, source_contents,
++  CALL_HONEYCOMB_DELEGATE(WebContentsCreated, source_contents,
 +                    opener_render_process_id, opener_render_frame_id,
 +                    frame_name, target_url, new_contents);
  }
@@ -255,14 +255,14 @@ index fdb96dee05067..a188b6442b1ca 100644
    exclusive_access_manager_->fullscreen_controller()->EnterFullscreenModeForTab(
        requesting_frame, options.display_id);
 +
-+  CALL_CEF_DELEGATE(EnterFullscreenModeForTab, requesting_frame, options);
++  CALL_HONEYCOMB_DELEGATE(EnterFullscreenModeForTab, requesting_frame, options);
  }
  
  void Browser::ExitFullscreenModeForTab(WebContents* web_contents) {
    exclusive_access_manager_->fullscreen_controller()->ExitFullscreenModeForTab(
        web_contents);
 +
-+  CALL_CEF_DELEGATE(ExitFullscreenModeForTab, web_contents);
++  CALL_HONEYCOMB_DELEGATE(ExitFullscreenModeForTab, web_contents);
  }
  
  bool Browser::IsFullscreenForTabOrPending(const WebContents* web_contents) {
@@ -270,9 +270,9 @@ index fdb96dee05067..a188b6442b1ca 100644
      content::WebContents* web_contents,
      const content::MediaStreamRequest& request,
      content::MediaResponseCallback callback) {
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_browser_delegate_) {
-+    callback = cef_browser_delegate_->RequestMediaAccessPermissionEx(
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_browser_delegate_) {
++    callback = honey_browser_delegate_->RequestMediaAccessPermissionEx(
 +        web_contents, request, std::move(callback));
 +    if (callback.is_null())
 +      return;
@@ -297,7 +297,7 @@ index fdb96dee05067..a188b6442b1ca 100644
    }
  
 +  bool show = show_by_default;
-+  CALL_CEF_DELEGATE_RESULT(ShowStatusBubble, show, show_by_default);
++  CALL_HONEYCOMB_DELEGATE_RESULT(ShowStatusBubble, show, show_by_default);
 +  if (!show)
 +    return nullptr;
 +
@@ -309,7 +309,7 @@ index fdb96dee05067..a188b6442b1ca 100644
      web_contents_collection_.StopObserving(web_contents);
    }
 +
-+  CALL_CEF_DELEGATE(SetAsDelegate, web_contents, set_delegate);
++  CALL_HONEYCOMB_DELEGATE(SetAsDelegate, web_contents, set_delegate);
  }
  
  void Browser::TabDetachedAtImpl(content::WebContents* contents,
@@ -317,9 +317,9 @@ index fdb96dee05067..a188b6442b1ca 100644
  
  bool Browser::SupportsWindowFeatureImpl(WindowFeature feature,
                                          bool check_can_support) const {
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef_delegate()) {
-+    if (auto value = cef_delegate()->SupportsWindowFeature(feature)) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey_delegate()) {
++    if (auto value = honey_delegate()->SupportsWindowFeature(feature)) {
 +      return *value;
 +    }
 +  }
@@ -336,7 +336,7 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
  #include "base/timer/elapsed_timer.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "cef/libcef/features/runtime.h"
++#include "honey/libhoneycomb/features/runtime.h"
  #include "chrome/browser/tab_contents/web_contents_collection.h"
  #include "chrome/browser/themes/theme_service_observer.h"
  #include "chrome/browser/ui/bookmarks/bookmark_bar.h"
@@ -344,8 +344,8 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
  #include "ui/gfx/geometry/rect.h"
  #include "ui/shell_dialogs/select_file_dialog.h"
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/browser/chrome/browser_delegate.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/browser/chrome/browser_delegate.h"
 +#endif
 +
  #if BUILDFLAG(IS_ANDROID)
@@ -355,9 +355,9 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
      // Document Picture in Picture options, specific to TYPE_PICTURE_IN_PICTURE.
      absl::optional<blink::mojom::PictureInPictureWindowOptions> pip_options;
  
-+#if BUILDFLAG(ENABLE_CEF)
-+    // Opaque CEF-specific configuration. Will be propagated to new Browsers.
-+    scoped_refptr<cef::BrowserDelegate::CreateParams> cef_params;
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++    // Opaque Honeycomb-specific configuration. Will be propagated to new Browsers.
++    scoped_refptr<honey::BrowserDelegate::CreateParams> honey_params;
 +
 +    // Specify the Browser that is opening this popup.
 +    // Currently only used with TYPE_PICTURE_IN_PICTURE.
@@ -371,7 +371,7 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
      update_ui_immediately_for_testing_ = true;
    }
  
-+  // Return true if CEF will expose the toolbar to the client. This value is
++  // Return true if Honeycomb will expose the toolbar to the client. This value is
 +  // used to selectively enable toolbar behaviors such as command processing
 +  // and omnibox focus without also including the toolbar in BrowserView layout
 +  // calculations.
@@ -385,9 +385,9 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
  
    base::WeakPtr<Browser> AsWeakPtr();
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  cef::BrowserDelegate* cef_delegate() const {
-+    return cef_browser_delegate_.get();
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  honey::BrowserDelegate* honey_delegate() const {
++    return honey_browser_delegate_.get();
 +  }
 +#endif
 +
@@ -418,8 +418,8 @@ index ce9edb90a7ac7..a0f0e6fe0d02f 100644
    // This Browser's window.
    raw_ptr<BrowserWindow, DanglingUntriaged> window_;
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  std::unique_ptr<cef::BrowserDelegate> cef_browser_delegate_;
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  std::unique_ptr<honey::BrowserDelegate> honey_browser_delegate_;
 +#endif
 +
    std::unique_ptr<TabStripModelDelegate> const tab_strip_model_delegate_;
@@ -442,7 +442,7 @@ index 3b7f96e505e0b..d44d0369def55 100644
                  : 1.0;
          browser_params.pip_options = pip_options;
  
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +        browser_params.opener = params.browser;
 +#endif
 +
@@ -453,10 +453,10 @@ index 3b7f96e505e0b..d44d0369def55 100644
    std::unique_ptr<WebContents> target_contents =
        WebContents::Create(create_params);
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  auto cef_delegate = params.browser->cef_delegate();
-+  if (cef_delegate) {
-+    cef_delegate->OnWebContentsCreated(target_contents.get());
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  auto honey_delegate = params.browser->honey_delegate();
++  if (honey_delegate) {
++    honey_delegate->OnWebContentsCreated(target_contents.get());
 +  }
 +#endif
 +
@@ -471,8 +471,8 @@ index 535d038f7023b..f861a0f37bf85 100644
    // Time new tab page creation time.  We keep track of the timing data in
    // WebContents, but we want to include the time it takes to create the
    // WebContents object too.
-+  // For CEF use a PageTransition that matches
-+  // CefFrameHostImpl::kPageTransitionExplicit.
++  // For Honeycomb use a PageTransition that matches
++  // HoneycombFrameHostImpl::kPageTransitionExplicit.
    base::TimeTicks new_tab_start_time = base::TimeTicks::Now();
    NavigateParams params(browser, url.is_empty() ? browser->GetNewTabURL() : url,
 -                        ui::PAGE_TRANSITION_TYPED);
@@ -486,9 +486,9 @@ index 535d038f7023b..f861a0f37bf85 100644
    // Can't create a new contents for the current tab - invalid case.
    DCHECK(disposition != WindowOpenDisposition::CURRENT_TAB);
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser && browser->cef_delegate() && new_contents) {
-+    new_contents = browser->cef_delegate()->AddWebContents(
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser && browser->honey_delegate() && new_contents) {
++    new_contents = browser->honey_delegate()->AddWebContents(
 +        std::move(new_contents));
 +    if (!new_contents) {
 +      return;

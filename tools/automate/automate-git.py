@@ -1,4 +1,4 @@
-# Copyright (c) 2014 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2014 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
@@ -31,7 +31,7 @@ else:
 depot_tools_url = 'https://chromium.googlesource.com/chromium/tools/depot_tools.git'
 depot_tools_archive_url = 'https://storage.googleapis.com/chrome-infra/depot_tools.zip'
 
-cef_git_url = 'https://bitbucket.org/chromiumembedded/cef.git'
+honey_git_url = 'https://bitbucket.org/chromiumembedded/honey.git'
 
 ##
 # Global system variables.
@@ -243,8 +243,8 @@ def write_config_file(path, contents):
 
 
 def read_branch_config_file(path):
-  """ Read the CEF branch from the specified path. """
-  config_file = os.path.join(path, 'cef.branch')
+  """ Read the Honeycomb branch from the specified path. """
+  config_file = os.path.join(path, 'honey.branch')
   if os.path.isfile(config_file):
     contents = read_config_file(config_file)
     if 'branch' in contents:
@@ -253,17 +253,17 @@ def read_branch_config_file(path):
 
 
 def write_branch_config_file(path, branch):
-  """ Write the CEF branch to the specified path. """
-  config_file = os.path.join(path, 'cef.branch')
+  """ Write the Honeycomb branch to the specified path. """
+  config_file = os.path.join(path, 'honey.branch')
   if not os.path.isfile(config_file):
     write_config_file(config_file, {'branch': branch})
 
 
 def apply_patch(name):
-  patch_file = os.path.join(cef_dir, 'patch', 'patches', name)
+  patch_file = os.path.join(honey_dir, 'patch', 'patches', name)
   if os.path.exists(patch_file + ".patch"):
     # Attempt to apply the patch file.
-    patch_tool = os.path.join(cef_dir, 'tools', 'patcher.py')
+    patch_tool = os.path.join(honey_dir, 'tools', 'patcher.py')
     run('%s %s --patch-file "%s" --patch-dir "%s"' %
         (python_exe, patch_tool, patch_file,
          chromium_src_dir), chromium_src_dir, depot_tools_dir)
@@ -286,10 +286,10 @@ def apply_runhooks_patch():
 
 def run_patch_updater(args='', output_file=None):
   """ Run the patch updater script. """
-  tool = os.path.join(cef_src_dir, 'tools', 'patch_updater.py')
+  tool = os.path.join(honey_src_dir, 'tools', 'patch_updater.py')
   if len(args) > 0:
     args = ' ' + args
-  run('%s %s%s' % (python_exe, tool, args), cef_src_dir, depot_tools_dir,
+  run('%s %s%s' % (python_exe, tool, args), honey_src_dir, depot_tools_dir,
       output_file)
 
 
@@ -340,8 +340,8 @@ def get_chromium_main_commit(position):
 
 def get_build_compat_versions():
   """ Returns the compatible Chromium and (optionally) depot_tools versions
-      specified by the CEF checkout. """
-  compat_path = os.path.join(cef_dir, 'CHROMIUM_BUILD_COMPATIBILITY.txt')
+      specified by the Honeycomb checkout. """
+  compat_path = os.path.join(honey_dir, 'CHROMIUM_BUILD_COMPATIBILITY.txt')
   msg("Reading %s" % compat_path)
   config = read_config_file(compat_path)
 
@@ -353,7 +353,7 @@ def get_build_compat_versions():
 def get_build_directory_name(is_debug):
   build_dir = ('Debug' if is_debug else 'Release') + '_'
 
-  # CEF uses a consistent directory naming scheme for GN via
+  # Honeycomb uses a consistent directory naming scheme for GN via
   # GetAllPlatformConfigs in tools/gn_args.py.
   if options.x64build:
     build_dir += 'GN_x64'
@@ -367,7 +367,7 @@ def get_build_directory_name(is_debug):
 
 
 def read_update_file():
-  update_path = os.path.join(cef_src_dir, 'CHROMIUM_UPDATE.txt')
+  update_path = os.path.join(honey_src_dir, 'CHROMIUM_UPDATE.txt')
   if not os.path.exists(update_path):
     msg("Missing file: %s" % update_path)
     return None
@@ -479,7 +479,7 @@ if __name__ != "__main__":
 # Parse command-line options.
 disc = """
 This utility implements automation for the download, update, build and
-distribution of CEF.
+distribution of Honeycomb.
 """
 
 parser = OptionParser(description=disc)
@@ -500,13 +500,13 @@ parser.add_option('--depot-tools-archive', dest='depottoolsarchive',
                   help='Zip archive file that contains a single top-level '+\
                        'depot_tools directory.', default='')
 parser.add_option('--branch', dest='branch',
-                  help='Branch of CEF to build (master, 3987, ...). This '+\
-                       'will be used to name the CEF download directory and '+\
+                  help='Branch of Honeycomb to build (master, 3987, ...). This '+\
+                       'will be used to name the Honeycomb download directory and '+\
                        'to identify the correct URL if --url is not '+\
                        'specified. The default value is master.',
                   default='master')
 parser.add_option('--url', dest='url',
-                  help='CEF download URL. If not specified the default URL '+\
+                  help='Honeycomb download URL. If not specified the default URL '+\
                        'will be used.',
                   default='')
 parser.add_option('--chromium-url', dest='chromiumurl',
@@ -514,13 +514,13 @@ parser.add_option('--chromium-url', dest='chromiumurl',
                        'URL will be used.',
                   default='')
 parser.add_option('--checkout', dest='checkout',
-                  help='Version of CEF to checkout. If not specified the '+\
+                  help='Version of Honeycomb to checkout. If not specified the '+\
                        'most recent remote version of the branch will be used.',
                   default='')
 parser.add_option('--chromium-checkout', dest='chromiumcheckout',
                   help='Version of Chromium to checkout (Git '+\
                        'branch/hash/tag). This overrides the value specified '+\
-                       'by CEF in CHROMIUM_BUILD_COMPATIBILITY.txt.',
+                       'by Honeycomb in CHROMIUM_BUILD_COMPATIBILITY.txt.',
                   default='')
 
 # Miscellaneous options.
@@ -532,7 +532,7 @@ parser.add_option(
     help='Force creation of a new gclient config file.')
 parser.add_option('--force-clean',
                   action='store_true', dest='forceclean', default=False,
-                  help='Force a clean checkout of Chromium and CEF. This will'+\
+                  help='Force a clean checkout of Chromium and Honeycomb. This will'+\
                        ' trigger a new update, build and distribution.')
 parser.add_option('--force-clean-deps',
                   action='store_true', dest='forcecleandeps', default=False,
@@ -552,22 +552,22 @@ parser.add_option('--dry-run-platform', dest='dryrunplatform', default=None,
 # Update-related options.
 parser.add_option('--force-update',
                   action='store_true', dest='forceupdate', default=False,
-                  help='Force a Chromium and CEF update. This will trigger a '+\
+                  help='Force a Chromium and Honeycomb update. This will trigger a '+\
                        'new build and distribution.')
 parser.add_option('--no-update',
                   action='store_true', dest='noupdate', default=False,
-                  help='Do not update Chromium or CEF. Pass --force-build or '+\
+                  help='Do not update Chromium or Honeycomb. Pass --force-build or '+\
                        '--force-distrib if you desire a new build or '+\
                        'distribution.')
-parser.add_option('--no-cef-update',
-                  action='store_true', dest='nocefupdate', default=False,
-                  help='Do not update CEF. Pass --force-build or '+\
+parser.add_option('--no-honey-update',
+                  action='store_true', dest='nohoneyupdate', default=False,
+                  help='Do not update Honeycomb. Pass --force-build or '+\
                        '--force-distrib if you desire a new build or '+\
                        'distribution.')
-parser.add_option('--force-cef-update',
-                  action='store_true', dest='forcecefupdate', default=False,
-                  help='Force a CEF update. This will cause local changes in '+\
-                       'the CEF checkout to be discarded and patch files to '+\
+parser.add_option('--force-honey-update',
+                  action='store_true', dest='forcehoneyupdate', default=False,
+                  help='Force a Honeycomb update. This will cause local changes in '+\
+                       'the Honeycomb checkout to be discarded and patch files to '+\
                        'be reapplied.')
 parser.add_option(
     '--no-chromium-update',
@@ -583,9 +583,9 @@ parser.add_option(
     help='Do not update depot_tools.')
 parser.add_option('--fast-update',
                   action='store_true', dest='fastupdate', default=False,
-                  help='Update existing Chromium/CEF checkouts for fast incremental '+\
+                  help='Update existing Chromium/Honeycomb checkouts for fast incremental '+\
                        'builds by attempting to minimize the number of modified files. '+\
-                       'The update will fail if there are unstaged CEF changes or if '+\
+                       'The update will fail if there are unstaged Honeycomb changes or if '+\
                        'Chromium changes are not included in a patch file.')
 parser.add_option(
     '--force-patch-update',
@@ -609,7 +609,7 @@ parser.add_option(
 # Build-related options.
 parser.add_option('--force-build',
                   action='store_true', dest='forcebuild', default=False,
-                  help='Force CEF debug and release builds. This builds '+\
+                  help='Force Honeycomb debug and release builds. This builds '+\
                        '[build-target] on all platforms and chrome_sandbox '+\
                        'on Linux.')
 parser.add_option(
@@ -617,12 +617,12 @@ parser.add_option(
     action='store_true',
     dest='nobuild',
     default=False,
-    help='Do not build CEF.')
+    help='Do not build Honeycomb.')
 parser.add_option(
     '--build-target',
     dest='buildtarget',
-    default='cefclient',
-    help='Target name(s) to build (defaults to "cefclient").')
+    default='honeyclient',
+    help='Target name(s) to build (defaults to "honeyclient").')
 parser.add_option(
     '--build-tests',
     action='store_true',
@@ -634,13 +634,13 @@ parser.add_option(
     action='store_true',
     dest='nodebugbuild',
     default=False,
-    help="Don't perform the CEF debug build.")
+    help="Don't perform the Honeycomb debug build.")
 parser.add_option(
     '--no-release-build',
     action='store_true',
     dest='noreleasebuild',
     default=False,
-    help="Don't perform the CEF release build.")
+    help="Don't perform the Honeycomb release build.")
 parser.add_option(
     '--verbose-build',
     action='store_true',
@@ -689,7 +689,7 @@ parser.add_option(
     action='store_true',
     dest='runtests',
     default=False,
-    help='Run the ceftests target.')
+    help='Run the honeytests target.')
 parser.add_option(
     '--no-debug-tests',
     action='store_true',
@@ -705,8 +705,8 @@ parser.add_option(
 parser.add_option(
     '--test-target',
     dest='testtarget',
-    default='ceftests',
-    help='Test target name to build (defaults to "ceftests").')
+    default='honeytests',
+    help='Test target name to build (defaults to "honeytests").')
 parser.add_option(
     '--test-prefix',
     dest='testprefix',
@@ -724,55 +724,55 @@ parser.add_option(
     action='store_true',
     dest='forcedistrib',
     default=False,
-    help='Force creation of a CEF binary distribution.')
+    help='Force creation of a Honeycomb binary distribution.')
 parser.add_option(
     '--no-distrib',
     action='store_true',
     dest='nodistrib',
     default=False,
-    help="Don't create a CEF binary distribution.")
+    help="Don't create a Honeycomb binary distribution.")
 parser.add_option(
     '--minimal-distrib',
     action='store_true',
     dest='minimaldistrib',
     default=False,
-    help='Create a minimal CEF binary distribution.')
+    help='Create a minimal Honeycomb binary distribution.')
 parser.add_option(
     '--minimal-distrib-only',
     action='store_true',
     dest='minimaldistribonly',
     default=False,
-    help='Create a minimal CEF binary distribution only.')
+    help='Create a minimal Honeycomb binary distribution only.')
 parser.add_option(
     '--client-distrib',
     action='store_true',
     dest='clientdistrib',
     default=False,
-    help='Create a client CEF binary distribution.')
+    help='Create a client Honeycomb binary distribution.')
 parser.add_option(
     '--client-distrib-only',
     action='store_true',
     dest='clientdistribonly',
     default=False,
-    help='Create a client CEF binary distribution only.')
+    help='Create a client Honeycomb binary distribution only.')
 parser.add_option(
     '--sandbox-distrib',
     action='store_true',
     dest='sandboxdistrib',
     default=False,
-    help='Create a cef_sandbox static library distribution.')
+    help='Create a honey_sandbox static library distribution.')
 parser.add_option(
     '--sandbox-distrib-only',
     action='store_true',
     dest='sandboxdistribonly',
     default=False,
-    help='Create a cef_sandbox static library distribution only.')
+    help='Create a honey_sandbox static library distribution only.')
 parser.add_option(
     '--no-distrib-docs',
     action='store_true',
     dest='nodistribdocs',
     default=False,
-    help="Don't create CEF documentation.")
+    help="Don't create Honeycomb documentation.")
 parser.add_option(
     '--no-distrib-archive',
     action='store_true',
@@ -789,12 +789,12 @@ parser.add_option(
     '--distrib-subdir',
     dest='distribsubdir',
     default='',
-    help='CEF distrib dir name, child of chromium/src/cef/binary_distrib')
+    help='Honeycomb distrib dir name, child of chromium/src/honey/binary_distrib')
 parser.add_option(
     '--distrib-subdir-suffix',
     dest='distribsubdirsuffix',
     default='',
-    help='CEF distrib dir name suffix, child of chromium/src/cef/binary_distrib'
+    help='Honeycomb distrib dir name suffix, child of chromium/src/honey/binary_distrib'
 )
 
 (options, args) = parser.parse_args()
@@ -806,7 +806,7 @@ if options.downloaddir is None:
 
 # Opt into component-specific flags for later use.
 if options.noupdate:
-  options.nocefupdate = True
+  options.nohoneyupdate = True
   options.nochromiumupdate = True
   options.nodepottoolsupdate = True
 
@@ -815,8 +815,8 @@ if options.runtests:
 
 if (options.nochromiumupdate and options.forceupdate):
     invalid_options_combination('--no-chromium-update', '--force-update')
-if (options.nocefupdate and options.forceupdate):
-    invalid_options_combination('--no-cef-update', '--force-update')
+if (options.nohoneyupdate and options.forceupdate):
+    invalid_options_combination('--no-honey-update', '--force-update')
 if (options.nobuild and options.forcebuild):
     invalid_options_combination('--no-build', '--force-build')
 if (options.nodistrib and options.forcedistrib):
@@ -862,36 +862,36 @@ else:
 
 if options.clientdistrib or options.clientdistribonly:
   if platform == 'linux' or (platform == 'windows' and options.arm64build):
-    client_app = 'cefsimple'
+    client_app = 'honeysimple'
   else:
-    client_app = 'cefclient'
+    client_app = 'honeyclient'
   if options.buildtarget.find(client_app) == -1:
     print('A client distribution cannot be generated if --build-target ' +
           'excludes %s.' % client_app)
     parser.print_help(sys.stderr)
     sys.exit(1)
 
-# CEF branch.
-cef_branch = options.branch
+# Honeycomb branch.
+honey_branch = options.branch
 
-branch_is_master = (cef_branch == 'master' or cef_branch == 'trunk')
+branch_is_master = (honey_branch == 'master' or honey_branch == 'trunk')
 if not branch_is_master:
   # Verify that the branch value is numeric.
-  if not cef_branch.isdigit():
-    print('Invalid branch value: %s' % cef_branch)
+  if not honey_branch.isdigit():
+    print('Invalid branch value: %s' % honey_branch)
     sys.exit(1)
 
   # Verify the minimum supported branch number.
-  if int(cef_branch) < 3071:
+  if int(honey_branch) < 3071:
     print('The requested branch (%s) is too old to build using this tool. ' +
-          'The minimum supported branch is 3071.' % cef_branch)
+          'The minimum supported branch is 3071.' % honey_branch)
     sys.exit(1)
 
 # True if the requested branch is 3538 or newer.
-branch_is_3538_or_newer = (branch_is_master or int(cef_branch) >= 3538)
+branch_is_3538_or_newer = (branch_is_master or int(honey_branch) >= 3538)
 
 # True if the requested branch is 3945 or newer.
-branch_is_3945_or_newer = (branch_is_master or int(cef_branch) >= 3945)
+branch_is_3945_or_newer = (branch_is_master or int(honey_branch) >= 3945)
 
 # Enable Python 3 usage in Chromium for branches 3945 and newer.
 if branch_is_3945_or_newer and not is_python2 and \
@@ -916,7 +916,7 @@ if platform == 'mac' and not (options.x64build or options.arm64build):
         'Add --x64-build or --arm64-build flag to generate a 64-bit build.')
   sys.exit(1)
 
-# Platforms that build a cef_sandbox library.
+# Platforms that build a honey_sandbox library.
 sandbox_lib_platforms = ['windows']
 if branch_is_3538_or_newer:
   sandbox_lib_platforms.append('mac')
@@ -930,7 +930,7 @@ if not platform in sandbox_lib_platforms and (options.sandboxdistrib or
 force_change = options.forceclean or options.forceupdate
 
 # Options that cause local changes to be discarded.
-discard_local_changes = force_change or options.forcecefupdate
+discard_local_changes = force_change or options.forcehoneyupdate
 
 if options.resave and (options.forcepatchupdate or discard_local_changes):
   print('--resave cannot be combined with options that modify or discard ' +
@@ -946,12 +946,12 @@ download_dir = os.path.abspath(options.downloaddir)
 chromium_dir = os.path.join(download_dir, 'chromium')
 chromium_src_dir = os.path.join(chromium_dir, 'src')
 out_src_dir = os.path.join(chromium_src_dir, 'out')
-cef_src_dir = os.path.join(chromium_src_dir, 'cef')
+honey_src_dir = os.path.join(chromium_src_dir, 'honey')
 
-if options.fastupdate and os.path.exists(cef_src_dir):
-  cef_dir = cef_src_dir
+if options.fastupdate and os.path.exists(honey_src_dir):
+  honey_dir = honey_src_dir
 else:
-  cef_dir = os.path.join(download_dir, 'cef')
+  honey_dir = os.path.join(download_dir, 'honey')
 
 ##
 # Manage the download directory.
@@ -1016,80 +1016,80 @@ else:
   python_exe = sys.executable
 
 ##
-# Manage the cef directory.
+# Manage the honey directory.
 ##
 
-# Delete the existing CEF directory if requested.
-if options.forceclean and os.path.exists(cef_dir):
-  delete_directory(cef_dir)
+# Delete the existing Honeycomb directory if requested.
+if options.forceclean and os.path.exists(honey_dir):
+  delete_directory(honey_dir)
 
-# Determine the type of CEF checkout to use.
-if os.path.exists(cef_dir) and not is_git_checkout(cef_dir):
-  raise Exception("Not a valid CEF Git checkout: %s" % (cef_dir))
+# Determine the type of Honeycomb checkout to use.
+if os.path.exists(honey_dir) and not is_git_checkout(honey_dir):
+  raise Exception("Not a valid Honeycomb Git checkout: %s" % (honey_dir))
 
-# Determine the CEF download URL to use.
-cef_url = options.url.strip()
-if cef_url == '':
-  cef_url = cef_git_url
+# Determine the Honeycomb download URL to use.
+honey_url = options.url.strip()
+if honey_url == '':
+  honey_url = honey_git_url
 
-# Verify that the requested CEF URL matches the existing checkout.
-if not options.nocefupdate and os.path.exists(cef_dir):
-  cef_existing_url = get_git_url(cef_dir)
-  if cef_url != cef_existing_url:
+# Verify that the requested Honeycomb URL matches the existing checkout.
+if not options.nohoneyupdate and os.path.exists(honey_dir):
+  honey_existing_url = get_git_url(honey_dir)
+  if honey_url != honey_existing_url:
     raise Exception(
-        'Requested CEF checkout URL %s does not match existing URL %s' %
-        (cef_url, cef_existing_url))
+        'Requested Honeycomb checkout URL %s does not match existing URL %s' %
+        (honey_url, honey_existing_url))
 
-msg("CEF Branch: %s" % (cef_branch))
-msg("CEF URL: %s" % (cef_url))
-msg("CEF Source Directory: %s" % (cef_dir))
+msg("Honeycomb Branch: %s" % (honey_branch))
+msg("Honeycomb URL: %s" % (honey_url))
+msg("Honeycomb Source Directory: %s" % (honey_dir))
 
-# Determine the CEF Git branch to use.
+# Determine the Honeycomb Git branch to use.
 if options.checkout == '':
   # Target the most recent branch commit from the remote repo.
   if branch_is_master:
-    cef_checkout = 'origin/master'
+    honey_checkout = 'origin/master'
   else:
-    cef_checkout = 'origin/' + cef_branch
+    honey_checkout = 'origin/' + honey_branch
 else:
-  cef_checkout = options.checkout
+  honey_checkout = options.checkout
 
-# Create the CEF checkout if necessary.
-if not options.nocefupdate and not os.path.exists(cef_dir):
-  cef_checkout_new = True
-  run('%s clone %s %s' % (git_exe, cef_url, cef_dir), download_dir,
+# Create the Honeycomb checkout if necessary.
+if not options.nohoneyupdate and not os.path.exists(honey_dir):
+  honey_checkout_new = True
+  run('%s clone %s %s' % (git_exe, honey_url, honey_dir), download_dir,
       depot_tools_dir)
 else:
-  cef_checkout_new = False
+  honey_checkout_new = False
 
-# Determine if the CEF checkout needs to change.
-if not options.nocefupdate and os.path.exists(cef_dir):
-  cef_current_hash = get_git_hash(cef_dir, 'HEAD')
+# Determine if the Honeycomb checkout needs to change.
+if not options.nohoneyupdate and os.path.exists(honey_dir):
+  honey_current_hash = get_git_hash(honey_dir, 'HEAD')
 
-  if not cef_checkout_new:
+  if not honey_checkout_new:
     # Fetch updated sources.
-    run('%s fetch' % (git_exe), cef_dir, depot_tools_dir)
+    run('%s fetch' % (git_exe), honey_dir, depot_tools_dir)
 
-  cef_desired_hash = get_git_hash(cef_dir, cef_checkout)
-  cef_checkout_changed = cef_checkout_new or force_change or \
-                         options.forcecefupdate or \
-                         cef_current_hash != cef_desired_hash
+  honey_desired_hash = get_git_hash(honey_dir, honey_checkout)
+  honey_checkout_changed = honey_checkout_new or force_change or \
+                         options.forcehoneyupdate or \
+                         honey_current_hash != honey_desired_hash
 
-  msg("CEF Current Checkout: %s" % (cef_current_hash))
-  msg("CEF Desired Checkout: %s (%s)" % (cef_desired_hash, cef_checkout))
+  msg("Honeycomb Current Checkout: %s" % (honey_current_hash))
+  msg("Honeycomb Desired Checkout: %s (%s)" % (honey_desired_hash, honey_checkout))
 
-  if cef_checkout_changed:
-    if cef_dir == cef_src_dir:
+  if honey_checkout_changed:
+    if honey_dir == honey_src_dir:
       # Running in fast update mode. Backup and revert the patched files before
-      # changing the CEF checkout.
+      # changing the Honeycomb checkout.
       run_patch_updater("--backup --revert")
 
-    # Update the CEF checkout.
+    # Update the Honeycomb checkout.
     run('%s checkout %s%s' %
-      (git_exe, '--force ' if discard_local_changes else '', cef_checkout), \
-      cef_dir, depot_tools_dir)
+      (git_exe, '--force ' if discard_local_changes else '', honey_checkout), \
+      honey_dir, depot_tools_dir)
 else:
-  cef_checkout_changed = False
+  honey_checkout_changed = False
 
 build_compat_versions = get_build_compat_versions()
 
@@ -1108,13 +1108,13 @@ os.environ['DEPOT_TOOLS_UPDATE'] = '0'
 # Manage the out directory.
 ##
 
-out_dir = os.path.join(download_dir, 'out_' + cef_branch)
+out_dir = os.path.join(download_dir, 'out_' + honey_branch)
 
 # Delete the existing out directory if requested.
 if options.forceclean and os.path.exists(out_dir):
   delete_directory(out_dir)
 
-msg("CEF Output Directory: %s" % (out_dir))
+msg("Honeycomb Output Directory: %s" % (out_dir))
 
 ##
 # Manage the chromium directory.
@@ -1186,7 +1186,7 @@ if not options.nochromiumupdate and os.path.exists(chromium_src_dir):
   # Also fetch tags, which are required for release branch builds.
   run("%s fetch --tags" % (git_exe), chromium_src_dir, depot_tools_dir)
 
-# Determine the Chromium checkout options required by CEF.
+# Determine the Chromium checkout options required by Honeycomb.
 chromium_compat_version = build_compat_versions['chromium_checkout']
 if len(options.chromiumcheckout) > 0:
   chromium_checkout = options.chromiumcheckout
@@ -1206,12 +1206,12 @@ if not options.nochromiumupdate and os.path.exists(chromium_src_dir):
 else:
   chromium_checkout_changed = options.dryrun
 
-if cef_checkout_changed:
-  if cef_dir != cef_src_dir and os.path.exists(cef_src_dir):
-    # Delete the existing src/cef directory. It will be re-copied from the
+if honey_checkout_changed:
+  if honey_dir != honey_src_dir and os.path.exists(honey_src_dir):
+    # Delete the existing src/honey directory. It will be re-copied from the
     # download directory later.
-    delete_directory(cef_src_dir)
-elif chromium_checkout_changed and cef_dir == cef_src_dir:
+    delete_directory(honey_src_dir)
+elif chromium_checkout_changed and honey_dir == honey_src_dir:
   # Running in fast update mode. Backup and revert the patched files before
   # changing the Chromium checkout.
   run_patch_updater("--backup --revert")
@@ -1225,7 +1225,7 @@ if options.forceclean and os.path.exists(out_src_dir):
 if os.path.exists(out_src_dir):
   old_branch = read_branch_config_file(out_src_dir)
   if old_branch != '' and (chromium_checkout_changed or
-                           old_branch != cef_branch):
+                           old_branch != honey_branch):
     old_out_dir = os.path.join(download_dir, 'out_' + old_branch)
     move_directory(out_src_dir, old_out_dir)
 
@@ -1261,14 +1261,14 @@ if chromium_checkout_changed:
   # Delete the src/out directory created by `gclient sync`.
   delete_directory(out_src_dir)
 
-if cef_dir == cef_src_dir:
+if honey_dir == honey_src_dir:
   # Running in fast update mode.
-  if cef_checkout_changed or chromium_checkout_changed:
+  if honey_checkout_changed or chromium_checkout_changed:
     # Check and restore the patched files.
     run_patch_updater("--reapply --restore")
-elif os.path.exists(cef_dir) and not os.path.exists(cef_src_dir):
-  # Restore the src/cef directory.
-  copy_directory(cef_dir, cef_src_dir)
+elif os.path.exists(honey_dir) and not os.path.exists(honey_src_dir):
+  # Restore the src/honey directory.
+  copy_directory(honey_dir, honey_src_dir)
 
 # Restore the src/out directory.
 out_src_dir_exists = os.path.exists(out_src_dir)
@@ -1279,7 +1279,7 @@ elif not out_src_dir_exists:
   create_directory(out_src_dir)
 
 # Write the config file for identifying the branch.
-write_branch_config_file(out_src_dir, cef_branch)
+write_branch_config_file(out_src_dir, honey_branch)
 
 if options.logchromiumchanges and chromium_checkout != chromium_compat_version:
   log_chromium_changes()
@@ -1309,31 +1309,31 @@ if chromium_checkout != chromium_compat_version:
   check_pattern_matches(output_file=out_file)
 
 ##
-# Build CEF.
+# Build Honeycomb.
 ##
 
 if not options.nobuild and (chromium_checkout_changed or \
-                            cef_checkout_changed or options.forcebuild or \
+                            honey_checkout_changed or options.forcebuild or \
                             not out_src_dir_exists):
   # Building should also force a distribution.
   options.forcedistrib = True
 
   # Make sure the GN configuration exists.
   if not options.dryrun and \
-    not os.path.exists(os.path.join(cef_src_dir, 'BUILD.gn')):
+    not os.path.exists(os.path.join(honey_src_dir, 'BUILD.gn')):
     raise Exception('GN configuration does not exist.')
 
   # Print all build-related environment variables including any that were set
   # previously.
   for key in os.environ.keys():
-    if key.startswith('CEF_') or key.startswith('GCLIENT_') or \
+    if key.startswith('HONEYCOMB_') or key.startswith('GCLIENT_') or \
        key.startswith('GN_') or key.startswith('GYP_') or \
        key.startswith('DEPOT_TOOLS_'):
       msg('%s=%s' % (key, os.environ[key]))
 
   # Generate project files.
-  tool = os.path.join(cef_src_dir, 'tools', 'gclient_hook.py')
-  run('%s %s' % (python_exe, tool), cef_src_dir, depot_tools_dir)
+  tool = os.path.join(honey_src_dir, 'tools', 'gclient_hook.py')
+  run('%s %s' % (python_exe, tool), honey_src_dir, depot_tools_dir)
 
   # Build using Ninja.
   command = 'ninja '
@@ -1348,46 +1348,46 @@ if not options.nobuild and (chromium_checkout_changed or \
   if platform == 'linux':
     target += ' chrome_sandbox'
 
-  # Make a CEF Debug build.
+  # Make a Honeycomb Debug build.
   if not options.nodebugbuild:
     build_path = os.path.join('out', get_build_directory_name(True))
     args_path = os.path.join(chromium_src_dir, build_path, 'args.gn')
     msg(args_path + ' contents:\n' + read_file(args_path))
 
     run(command + build_path + target, chromium_src_dir, depot_tools_dir,
-        os.path.join(download_dir, 'build-%s-debug.log' % (cef_branch)) \
+        os.path.join(download_dir, 'build-%s-debug.log' % (honey_branch)) \
           if options.buildlogfile else None)
 
     if platform in sandbox_lib_platforms:
-      # Make the separate cef_sandbox build when GN is_official_build=true.
+      # Make the separate honey_sandbox build when GN is_official_build=true.
       build_path += '_sandbox'
       if os.path.exists(os.path.join(chromium_src_dir, build_path)):
         args_path = os.path.join(chromium_src_dir, build_path, 'args.gn')
         msg(args_path + ' contents:\n' + read_file(args_path))
 
-        run(command + build_path + ' cef_sandbox', chromium_src_dir, depot_tools_dir,
-            os.path.join(download_dir, 'build-%s-debug-sandbox.log' % (cef_branch)) \
+        run(command + build_path + ' honey_sandbox', chromium_src_dir, depot_tools_dir,
+            os.path.join(download_dir, 'build-%s-debug-sandbox.log' % (honey_branch)) \
               if options.buildlogfile else None)
 
-  # Make a CEF Release build.
+  # Make a Honeycomb Release build.
   if not options.noreleasebuild:
     build_path = os.path.join('out', get_build_directory_name(False))
     args_path = os.path.join(chromium_src_dir, build_path, 'args.gn')
     msg(args_path + ' contents:\n' + read_file(args_path))
 
     run(command + build_path + target, chromium_src_dir, depot_tools_dir,
-        os.path.join(download_dir, 'build-%s-release.log' % (cef_branch)) \
+        os.path.join(download_dir, 'build-%s-release.log' % (honey_branch)) \
           if options.buildlogfile else None)
 
     if platform in sandbox_lib_platforms:
-      # Make the separate cef_sandbox build when GN is_official_build=true.
+      # Make the separate honey_sandbox build when GN is_official_build=true.
       build_path += '_sandbox'
       if os.path.exists(os.path.join(chromium_src_dir, build_path)):
         args_path = os.path.join(chromium_src_dir, build_path, 'args.gn')
         msg(args_path + ' contents:\n' + read_file(args_path))
 
-        run(command + build_path + ' cef_sandbox', chromium_src_dir, depot_tools_dir,
-            os.path.join(download_dir, 'build-%s-release-sandbox.log' % (cef_branch)) \
+        run(command + build_path + ' honey_sandbox', chromium_src_dir, depot_tools_dir,
+            os.path.join(download_dir, 'build-%s-release-sandbox.log' % (honey_branch)) \
               if options.buildlogfile else None)
 
 elif not options.nobuild:
@@ -1395,7 +1395,7 @@ elif not options.nobuild:
       'the output folder "%s" already exists' % (out_src_dir))
 
 ##
-# Run CEF tests.
+# Run Honeycomb tests.
 ##
 
 if options.runtests:
@@ -1432,14 +1432,14 @@ if options.runtests:
       msg('Not running release tests. Missing executable: %s' % test_path)
 
 ##
-# Create the CEF binary distribution.
+# Create the Honeycomb binary distribution.
 ##
 
 if not options.nodistrib and (chromium_checkout_changed or \
-                              cef_checkout_changed or options.forcedistrib):
+                              honey_checkout_changed or options.forcedistrib):
   if not options.forceclean and options.cleanartifacts:
     # Clean the artifacts output directory.
-    artifacts_path = os.path.join(cef_src_dir, 'binary_distrib')
+    artifacts_path = os.path.join(honey_src_dir, 'binary_distrib')
     delete_directory(artifacts_path)
 
   # Determine the requested distribution types.
@@ -1459,7 +1459,7 @@ if not options.nodistrib and (chromium_checkout_changed or \
     if options.sandboxdistrib:
       distrib_types.append('sandbox')
 
-  cef_tools_dir = os.path.join(cef_src_dir, 'tools')
+  honey_tools_dir = os.path.join(honey_src_dir, 'tools')
 
   # Create the requested distribution types.
   first_type = True
@@ -1500,4 +1500,4 @@ if not options.nodistrib and (chromium_checkout_changed or \
       path += ' --distrib-subdir-suffix=' + options.distribsubdirsuffix
 
     # Create the distribution.
-    run(path, cef_tools_dir, depot_tools_dir)
+    run(path, honey_tools_dir, depot_tools_dir)

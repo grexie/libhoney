@@ -1,5 +1,5 @@
-// Copyright 2016 The Chromium Embedded Framework Authors. Portions copyright
-// 2012 The Chromium Authors. All rights reserved. Use of this source code is
+// Copyright (C) 2023 Grexie. Portions copyright
+// 2012 The Chromium Authors and 2016 the CEF Authors. All rights reserved. Use of this source code is
 // governed by a BSD-style license that can be found in the LICENSE file.
 
 #include "tests/shared/browser/file_util.h"
@@ -8,8 +8,8 @@
 #include <cstdio>
 #include <memory>
 
-#include "include/base/cef_build.h"
-#include "include/cef_task.h"
+#include "include/base/honey_build.h"
+#include "include/honey_task.h"
 
 namespace client {
 namespace file_util {
@@ -17,7 +17,7 @@ namespace file_util {
 namespace {
 
 bool AllowFileIO() {
-  if (CefCurrentlyOn(TID_UI) || CefCurrentlyOn(TID_IO)) {
+  if (HoneycombCurrentlyOn(TID_UI) || HoneycombCurrentlyOn(TID_IO)) {
     NOTREACHED() << "file IO is not allowed on the current thread";
     return false;
   }

@@ -19,7 +19,7 @@ index 819da6b0bff94..b25a48fb2516b 100644
    if (widget->HasCapture())
      return;
  
-+  // |host_view| will be nullptr with CEF windowless rendering.
++  // |host_view| will be nullptr with Honeycomb windowless rendering.
 +  auto host_view = dialog_host->GetHostView();
    views::Widget* host_widget =
 -      views::Widget::GetWidgetForNativeView(dialog_host->GetHostView());
@@ -55,7 +55,7 @@ index 819da6b0bff94..b25a48fb2516b 100644
  
    gfx::NativeView parent_view =
        parent ? CurrentClient()->GetDialogHostView(parent) : nullptr;
-+  // Use with CEF windowless rendering.
++  // Use with Honeycomb windowless rendering.
 +  gfx::AcceleratedWidget parent_widget =
 +      parent ? gfx::kNullAcceleratedWidget :
 +               CurrentClient()->GetModalDialogHost(parent)->GetAcceleratedWidget();
@@ -87,7 +87,7 @@ index 647391095306e..bd49316ac758e 100644
 -    for (auto* widget : observed_widgets_) {
 -      views::Widget::ReparentNativeView(widget->GetNativeView(),
 -                                        host_->GetHostView());
-+    // |host_view| will be nullptr with CEF windowless rendering.
++    // |host_view| will be nullptr with Honeycomb windowless rendering.
 +    if (auto host_view = host_->GetHostView()) {
 +      for (auto* widget : observed_widgets_) {
 +#if defined(USE_AURA)
@@ -113,7 +113,7 @@ index 51ed6bcf6b540..9ae4737e0737e 100644
    // Returns the view against which the dialog is positioned and parented.
    virtual gfx::NativeView GetHostView() const = 0;
 +  // Returns the widget against which the dialog is positioned and parented.
-+  // Used with CEF windowless rendering.
++  // Used with Honeycomb windowless rendering.
 +  virtual gfx::AcceleratedWidget GetAcceleratedWidget() const {
 +      return gfx::kNullAcceleratedWidget; }
    // Gets the position for the dialog in coordinates relative to the host view.

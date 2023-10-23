@@ -6,7 +6,7 @@ index 50ed39df38044..7839bdaf7b7e5 100644
        return nullptr;
    }
  
-+  // For CEF this will always be false when running in OSR mode.
++  // For Honeycomb this will always be false when running in OSR mode.
 +  if (!view->GetNativeView())
 +    return nullptr;
 +

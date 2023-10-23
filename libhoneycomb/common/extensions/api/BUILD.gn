@@ -1,0 +1,39 @@
+# Copyright (C) 2023 Grexie. Portions copyright
+# 2014 the Chromium Authors and 2016 the CEF Authors. All rights reserved. Use of this source code is
+# governed by a BSD-style license that can be found in the LICENSE file.
+
+import("//tools/json_schema_compiler/json_features.gni")
+
+json_features("honey_api_features") {
+  feature_type = "APIFeature"
+  method_name = "AddHoneycombAPIFeatures"
+  sources = [
+    "_api_features.json",
+  ]
+}
+
+json_features("honey_permission_features") {
+  feature_type = "PermissionFeature"
+  method_name = "AddHoneycombPermissionFeatures"
+  sources = [
+    "_permission_features.json",
+  ]
+}
+
+json_features("honey_manifest_features") {
+  feature_type = "ManifestFeature"
+  method_name = "AddHoneycombManifestFeatures"
+  sources = [
+    # Use the same manifest features as Chrome.
+    "//chrome/common/extensions/api/_manifest_features.json",
+  ]
+}
+
+group("extensions_features") {
+  public_deps = [
+    ":honey_api_features",
+    ":honey_manifest_features",
+    ":honey_permission_features",
+    "//extensions/common/api:extensions_features",
+  ]
+}

@@ -1,9 +1,9 @@
-# Copyright (c) 2011 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2011 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
-from cef_parser import *
+from honey_parser import *
 
 
 def make_function_body_block(cls):
@@ -58,19 +58,19 @@ def make_ctocpp_header(header, clsname):
 
   result = get_copyright()
 
-  result += '#ifndef CEF_LIBCEF_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n'+ \
-            '#define CEF_LIBCEF_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n' + \
+  result += '#ifndef HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n'+ \
+            '#define HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_'+defname+'_CTOCPP_H_\n' + \
             '#pragma once\n'
 
   if clientside:
     result += """
-#if !defined(BUILDING_CEF_SHARED)
+#if !defined(BUILDING_HONEYCOMB_SHARED)
 #error This file can be included DLL-side only
 #endif
 """
   else:
     result += """
-#if !defined(WRAPPING_CEF_SHARED)
+#if !defined(WRAPPING_HONEYCOMB_SHARED)
 #error This file can be included wrapper-side only
 #endif
 """
@@ -97,15 +97,15 @@ def make_ctocpp_header(header, clsname):
                 '#include "include/capi/'+dcls.get_capi_file_name()+'"\n'
 
   base_class_name = header.get_base_class_name(clsname)
-  base_scoped = True if base_class_name == 'CefBaseScoped' else False
+  base_scoped = True if base_class_name == 'HoneycombBaseScoped' else False
   if base_scoped:
     template_file = 'ctocpp_scoped.h'
-    template_class = 'CefCToCppScoped'
+    template_class = 'HoneycombCToCppScoped'
   else:
     template_file = 'ctocpp_ref_counted.h'
-    template_class = 'CefCToCppRefCounted'
+    template_class = 'HoneycombCToCppRefCounted'
 
-  result += '#include "libcef_dll/ctocpp/' + template_file + '"'
+  result += '#include "libhoneycomb_dll/ctocpp/' + template_file + '"'
   result += '\n\n// Wrap a C structure with a C++ class.\n'
 
   if clientside:
@@ -122,7 +122,7 @@ def make_ctocpp_header(header, clsname):
   result += func_body
   result += '};\n\n'
 
-  result += '#endif  // CEF_LIBCEF_DLL_CTOCPP_' + defname + '_CTOCPP_H_'
+  result += '#endif  // HONEYCOMB_LIBHONEYCOMB_DLL_CTOCPP_' + defname + '_CTOCPP_H_'
 
   return result
 

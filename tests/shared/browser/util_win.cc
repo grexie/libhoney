@@ -1,10 +1,10 @@
-// Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2015 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #include "tests/shared/browser/util_win.h"
 
-#include "include/base/cef_logging.h"
+#include "include/base/honey_logging.h"
 
 namespace client {
 
@@ -48,7 +48,7 @@ std::wstring GetResourceString(UINT id) {
   return buff;
 }
 
-int GetCefMouseModifiers(WPARAM wparam) {
+int GetHoneycombMouseModifiers(WPARAM wparam) {
   int modifiers = 0;
   if (wparam & MK_CONTROL) {
     modifiers |= EVENTFLAG_CONTROL_DOWN;
@@ -79,7 +79,7 @@ int GetCefMouseModifiers(WPARAM wparam) {
   return modifiers;
 }
 
-int GetCefKeyboardModifiers(WPARAM wparam, LPARAM lparam) {
+int GetHoneycombKeyboardModifiers(WPARAM wparam, LPARAM lparam) {
   int modifiers = 0;
   if (IsKeyDown(VK_SHIFT)) {
     modifiers |= EVENTFLAG_SHIFT_DOWN;

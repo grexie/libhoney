@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2017 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <memory>
 
-#include "include/base/cef_callback.h"
-#include "include/cef_parser.h"
-#include "include/cef_path_util.h"
-#include "include/wrapper/cef_closure_task.h"
+#include "include/base/honey_callback.h"
+#include "include/honey_parser.h"
+#include "include/honey_path_util.h"
+#include "include/wrapper/honey_closure_task.h"
 #include "tests/shared/browser/file_util.h"
 #include "tests/shared/browser/resource_util.h"
 #include "tests/shared/common/string_util.h"
@@ -21,8 +21,8 @@ namespace extension_util {
 namespace {
 
 std::string GetResourcesPath() {
-  CefString resources_dir;
-  if (CefGetPath(PK_DIR_RESOURCES, resources_dir) && !resources_dir.empty()) {
+  HoneycombString resources_dir;
+  if (HoneycombGetPath(PK_DIR_RESOURCES, resources_dir) && !resources_dir.empty()) {
     return resources_dir.ToString() + file_util::kPathSep;
   }
   return std::string();
@@ -57,13 +57,13 @@ std::string GetInternalPath(const std::string& extension_path) {
 }
 
 using ManifestCallback =
-    base::OnceCallback<void(CefRefPtr<CefDictionaryValue> /*manifest*/)>;
+    base::OnceCallback<void(HoneycombRefPtr<HoneycombDictionaryValue> /*manifest*/)>;
 
 void RunManifestCallback(ManifestCallback callback,
-                         CefRefPtr<CefDictionaryValue> manifest) {
-  if (!CefCurrentlyOn(TID_UI)) {
+                         HoneycombRefPtr<HoneycombDictionaryValue> manifest) {
+  if (!HoneycombCurrentlyOn(TID_UI)) {
     // Execute on the browser UI thread.
-    CefPostTask(TID_UI, base::BindOnce(std::move(callback), manifest));
+    HoneycombPostTask(TID_UI, base::BindOnce(std::move(callback), manifest));
     return;
   }
   std::move(callback).Run(manifest);
@@ -72,9 +72,9 @@ void RunManifestCallback(ManifestCallback callback,
 // Asynchronously reads the manifest and executes |callback| on the UI thread.
 void GetInternalManifest(const std::string& extension_path,
                          ManifestCallback callback) {
-  if (!CefCurrentlyOn(TID_FILE_USER_BLOCKING)) {
+  if (!HoneycombCurrentlyOn(TID_FILE_USER_BLOCKING)) {
     // Execute on the browser FILE thread.
-    CefPostTask(TID_FILE_USER_BLOCKING,
+    HoneycombPostTask(TID_FILE_USER_BLOCKING,
                 base::BindOnce(GetInternalManifest, extension_path,
                                std::move(callback)));
     return;
@@ -90,9 +90,9 @@ void GetInternalManifest(const std::string& extension_path,
     return;
   }
 
-  CefString error_msg;
-  CefRefPtr<CefValue> value =
-      CefParseJSONAndReturnError(manifest_contents, JSON_PARSER_RFC, error_msg);
+  HoneycombString error_msg;
+  HoneycombRefPtr<HoneycombValue> value =
+      HoneycombParseJSONAndReturnError(manifest_contents, JSON_PARSER_RFC, error_msg);
   if (!value || value->GetType() != VTYPE_DICTIONARY) {
     if (error_msg.empty()) {
       error_msg = "Incorrectly formatted dictionary contents.";
@@ -106,11 +106,11 @@ void GetInternalManifest(const std::string& extension_path,
   RunManifestCallback(std::move(callback), value->GetDictionary());
 }
 
-void LoadExtensionWithManifest(CefRefPtr<CefRequestContext> request_context,
+void LoadExtensionWithManifest(HoneycombRefPtr<HoneycombRequestContext> request_context,
                                const std::string& extension_path,
-                               CefRefPtr<CefExtensionHandler> handler,
-                               CefRefPtr<CefDictionaryValue> manifest) {
-  CEF_REQUIRE_UI_THREAD();
+                               HoneycombRefPtr<HoneycombExtensionHandler> handler,
+                               HoneycombRefPtr<HoneycombDictionaryValue> manifest) {
+  HONEYCOMB_REQUIRE_UI_THREAD();
 
   // Load the extension internally. Resource requests will be handled via
   // AddInternalExtensionToResourceManager.
@@ -155,7 +155,7 @@ std::string GetExtensionResourcePath(const std::string& extension_path,
 
 bool GetExtensionResourceContents(const std::string& extension_path,
                                   std::string& contents) {
-  CEF_REQUIRE_FILE_USER_BLOCKING_THREAD();
+  HONEYCOMB_REQUIRE_FILE_USER_BLOCKING_THREAD();
 
   if (IsInternalExtension(extension_path)) {
     const std::string& contents_path =
@@ -166,12 +166,12 @@ bool GetExtensionResourceContents(const std::string& extension_path,
   return file_util::ReadFileToString(extension_path, &contents);
 }
 
-void LoadExtension(CefRefPtr<CefRequestContext> request_context,
+void LoadExtension(HoneycombRefPtr<HoneycombRequestContext> request_context,
                    const std::string& extension_path,
-                   CefRefPtr<CefExtensionHandler> handler) {
-  if (!CefCurrentlyOn(TID_UI)) {
+                   HoneycombRefPtr<HoneycombExtensionHandler> handler) {
+  if (!HoneycombCurrentlyOn(TID_UI)) {
     // Execute on the browser UI thread.
-    CefPostTask(TID_UI, base::BindOnce(LoadExtension, request_context,
+    HoneycombPostTask(TID_UI, base::BindOnce(LoadExtension, request_context,
                                        extension_path, handler));
     return;
   }
@@ -189,13 +189,13 @@ void LoadExtension(CefRefPtr<CefRequestContext> request_context,
 }
 
 void AddInternalExtensionToResourceManager(
-    CefRefPtr<CefExtension> extension,
-    CefRefPtr<CefResourceManager> resource_manager) {
+    HoneycombRefPtr<HoneycombExtension> extension,
+    HoneycombRefPtr<HoneycombResourceManager> resource_manager) {
   DCHECK(IsInternalExtension(extension->GetPath()));
 
-  if (!CefCurrentlyOn(TID_IO)) {
+  if (!HoneycombCurrentlyOn(TID_IO)) {
     // Execute on the browser IO thread.
-    CefPostTask(TID_IO, base::BindOnce(AddInternalExtensionToResourceManager,
+    HoneycombPostTask(TID_IO, base::BindOnce(AddInternalExtensionToResourceManager,
                                        extension, resource_manager));
     return;
   }
@@ -224,8 +224,8 @@ std::string GetExtensionOrigin(const std::string& extension_id) {
   return "chrome-extension://" + extension_id + "/";
 }
 
-std::string GetExtensionURL(CefRefPtr<CefExtension> extension) {
-  CefRefPtr<CefDictionaryValue> browser_action =
+std::string GetExtensionURL(HoneycombRefPtr<HoneycombExtension> extension) {
+  HoneycombRefPtr<HoneycombDictionaryValue> browser_action =
       extension->GetManifest()->GetDictionary("browser_action");
   if (browser_action) {
     const std::string& default_popup =
@@ -238,9 +238,9 @@ std::string GetExtensionURL(CefRefPtr<CefExtension> extension) {
   return std::string();
 }
 
-std::string GetExtensionIconPath(CefRefPtr<CefExtension> extension,
+std::string GetExtensionIconPath(HoneycombRefPtr<HoneycombExtension> extension,
                                  bool* internal) {
-  CefRefPtr<CefDictionaryValue> browser_action =
+  HoneycombRefPtr<HoneycombDictionaryValue> browser_action =
       extension->GetManifest()->GetDictionary("browser_action");
   if (browser_action) {
     const std::string& default_icon = browser_action->GetString("default_icon");

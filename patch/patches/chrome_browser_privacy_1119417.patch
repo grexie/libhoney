@@ -19,7 +19,7 @@ index cd1f57e009f50..f93721e39e559 100644
    }
  }
 diff --git third_party/protobuf/proto_library.gni third_party/protobuf/proto_library.gni
-index a6943f5896cba..1561a868ccef9 100644
+index a6943f5896cba..1561a868choney9 100644
 --- third_party/protobuf/proto_library.gni
 +++ third_party/protobuf/proto_library.gni
 @@ -28,6 +28,9 @@

@@ -6,7 +6,7 @@ index aab483d6b00ce..ed3c1e10a7fe7 100644
      ":libxml_utils",
      ":xml_reader",
      ":xml_writer",
-+    "//cef:*",
++    "//honey:*",
      "//chromecast/internal",
      "//testing/libfuzzer/*",
      "//third_party/blink/renderer/*",

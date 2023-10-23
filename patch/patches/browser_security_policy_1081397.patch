@@ -34,9 +34,9 @@ index e91fb6b203b55..fdf1de970fe18 100644
 +  if (!origin_and_debug_info.first.GetURL().IsStandard()) {
 +    // Always return an opaque origin for non-standard URLs. Otherwise, the
 +    // CanAccessDataForOrigin() check may fail for unregistered custom scheme
-+    // requests in CEF.
++    // requests in Honeycomb.
 +    use_opaque_origin = true;
-+    origin_and_debug_info.second += ", cef_nonstandard";
++    origin_and_debug_info.second += ", honey_nonstandard";
 +  }
 +
    if (use_opaque_origin) {
@@ -52,11 +52,11 @@ index e91fb6b203b55..fdf1de970fe18 100644
                                       frame_tree_node_->current_frame_host()));
  
 +  if (origin_with_debug_info.first.opaque() &&
-+      origin_with_debug_info.second.find("cef_nonstandard") !=
++      origin_with_debug_info.second.find("honey_nonstandard") !=
 +          std::string::npos) {
 +    // Always return an opaque origin for non-standard URLs. Otherwise, the
 +    // below CanAccessDataForOrigin() check may fail for unregistered custom
-+    // scheme requests in CEF.
++    // scheme requests in Honeycomb.
 +    return origin_with_debug_info;
 +  }
 +

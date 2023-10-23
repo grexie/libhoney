@@ -6,7 +6,7 @@ index 6f842a7535a56..faaee032e82bd 100644
  #include "base/feature_list.h"
  #include "build/build_config.h"
  #include "build/buildflag.h"
-+#include "cef/libcef/features/runtime.h"
++#include "honey/libhoneycomb/features/runtime.h"
  #include "chrome/browser/content_settings/one_time_permission_provider.h"
  #include "chrome/browser/permissions/one_time_permissions_tracker_factory.h"
  #include "chrome/browser/profiles/off_the_record_profile_impl.h"
@@ -14,8 +14,8 @@ index 6f842a7535a56..faaee032e82bd 100644
  #include "extensions/buildflags/buildflags.h"
  #include "ui/webui/webui_allowlist_provider.h"
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/common/extensions/extensions_util.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/common/extensions/extensions_util.h"
 +#endif
 +
  #if BUILDFLAG(ENABLE_EXTENSIONS)
@@ -25,11 +25,11 @@ index 6f842a7535a56..faaee032e82bd 100644
    DependsOn(OneTimePermissionsTrackerFactory::GetInstance());
  #endif
  #if BUILDFLAG(ENABLE_EXTENSIONS)
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (!cef::IsAlloyRuntimeEnabled() || extensions::ExtensionsEnabled()) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (!honey::IsAlloyRuntimeEnabled() || extensions::ExtensionsEnabled()) {
 +#endif
    DependsOn(extensions::ContentSettingsService::GetFactoryInstance());
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  }
 +#endif
  #endif
@@ -39,8 +39,8 @@ index 6f842a7535a56..faaee032e82bd 100644
        std::move(allowlist_provider));
  
  #if BUILDFLAG(ENABLE_EXTENSIONS)
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (!cef::IsAlloyRuntimeEnabled() || extensions::ExtensionsEnabled()) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (!honey::IsAlloyRuntimeEnabled() || extensions::ExtensionsEnabled()) {
 +#endif
    // These must be registered before before the HostSettings are passed over to
    // the IOThread.  Simplest to do this on construction.
@@ -49,7 +49,7 @@ index 6f842a7535a56..faaee032e82bd 100644
            // the case where profile->IsOffTheRecord() is true? And what is the
            // interaction with profile->IsGuestSession()?
            false));
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  }
 +#endif
  #endif // BUILDFLAG(ENABLE_EXTENSIONS)

@@ -5,10 +5,10 @@ This binary distribution contains the below components.
 
 Required components:
 
-The following components are required. CEF will not function without them.
+The following components are required. Honeycomb will not function without them.
 
-* CEF core library.
-  * libcef.so
+* Honeycomb core library.
+  * libhoneycomb.so
 
 * Unicode support data.
   * icudtl.dat
@@ -19,16 +19,16 @@ The following components are required. CEF will not function without them.
 
 Optional components:
 
-The following components are optional. If they are missing CEF will continue to
+The following components are optional. If they are missing Honeycomb will continue to
 run but any related functionality may become broken or disabled.
 
 * Localized resources.
   Locale file loading can be disabled completely using
-  CefSettings.pack_loading_disabled. The locales directory path can be
-  customized using CefSettings.locales_dir_path. 
+  HoneycombSettings.pack_loading_disabled. The locales directory path can be
+  customized using HoneycombSettings.locales_dir_path. 
  
   * locales/
-    Directory containing localized resources used by CEF, Chromium and Blink. A
+    Directory containing localized resources used by Honeycomb, Chromium and Blink. A
     .pak file is loaded from this directory based on the value of environment
     variables which are read with the following precedence order: LANGUAGE,
     LC_ALL, LC_MESSAGES and LANG. Only configured locales need to be
@@ -38,13 +38,13 @@ run but any related functionality may become broken or disabled.
 
 * Other resources.
   Pack file loading can be disabled completely using
-  CefSettings.pack_loading_disabled. The resources directory path can be
-  customized using CefSettings.resources_dir_path.
+  HoneycombSettings.pack_loading_disabled. The resources directory path can be
+  customized using HoneycombSettings.resources_dir_path.
 
   * chrome_100_percent.pak
   * chrome_200_percent.pak
   * resources.pak
-    These files contain non-localized resources used by CEF, Chromium and Blink.
+    These files contain non-localized resources used by Honeycomb, Chromium and Blink.
     Without these files arbitrary Web components may display incorrectly.
 
 * ANGLE support.

@@ -1,5 +1,5 @@
 @echo off
-:: Copyright (c) 2022 The Chromium Embedded Framework Authors. All rights
+:: Copyright (c) 2022 The Honeycomb Authors. All rights
 :: reserved. Use of this source code is governed by a BSD-style license
 :: that can be found in the LICENSE file.
 
@@ -19,9 +19,9 @@ goto end
 :found_exe
 
 :: Environment variables inserted into the Doxyfile via `$(VAR_NAME)` syntax.
-for /F %%i in ('python.bat %~dp0\cef_version.py current') do set PROJECT_NUMBER=%%i
+for /F %%i in ('python.bat %~dp0\honey_version.py current') do set PROJECT_NUMBER=%%i
 
-:: Run from the top-level CEF directory so that relative paths resolve correctly.
+:: Run from the top-level Honeycomb directory so that relative paths resolve correctly.
 set CURRENT_PATH="%CD%"
 cd "%~dp0\.."
 

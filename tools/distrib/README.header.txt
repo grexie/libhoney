@@ -1,11 +1,11 @@
-Chromium Embedded Framework (CEF) $DISTRIB_TYPE$ Binary Distribution for $PLATFORM$
+Honeycomb (Honeycomb) $DISTRIB_TYPE$ Binary Distribution for $PLATFORM$
 -------------------------------------------------------------------------------
 
 Date:             $DATE$
 
-CEF Version:      $CEF_VER$
-CEF URL:          $CEF_URL$
-                  @$CEF_REV$
+Honeycomb Version:      $HONEYCOMB_VER$
+Honeycomb URL:          $HONEYCOMB_URL$
+                  @$HONEYCOMB_REV$
 
 Chromium Version: $CHROMIUM_VER$
 Chromium URL:     $CHROMIUM_URL$

@@ -6,7 +6,7 @@ index 01c93bf7e64af..858c5eb8e7e27 100644
  import("//build/config/buildflags_paint_preview.gni")
  import("//build/config/chromeos/ui_mode.gni")
  import("//build/config/features.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/common/features.gni")
  import("//components/nacl/features.gni")
  import("//components/offline_pages/buildflags/features.gni")
@@ -14,7 +14,7 @@ index 01c93bf7e64af..858c5eb8e7e27 100644
    deps = [
      "//base/allocator:buildflags",
      "//build:chromeos_buildflags",
-+    "//cef/libcef/features",
++    "//honey/libhoneycomb/features",
      "//chrome:resources",
      "//chrome:strings",
      "//chrome/common",
@@ -22,8 +22,8 @@ index 01c93bf7e64af..858c5eb8e7e27 100644
  
    configs += [ "//build/config/compiler:wexit_time_destructors" ]
  
-+  if (enable_cef) {
-+    configs += [ "//cef/libcef/features:config" ]
++  if (enable_honey) {
++    configs += [ "//honey/libhoneycomb/features:config" ]
 +  }
 +
    if (enable_nacl) {

@@ -1,20 +1,20 @@
-# Copyright 2016 The Chromium Embedded Framework Authors. Portions copyright
+# Copyright (C) 2023 Grexie. Portions copyright
 # 2012 Google Inc. All rights reserved. Use of this source code is governed by
 # a BSD-style license that can be found in the LICENSE file.
 
 # This script determines the contents of the per-configuration `args.gn` files
-# that are used to build CEF/Chromium with GN. See comments in CEF's top-level
+# that are used to build Honeycomb with GN. See comments in Honeycomb's top-level
 # BUILD.gn file for general GN usage instructions.
 #
 # This script performs the following tasks:
 #
-# - Defines CEF's default and required arg values in cases where they differ
+# - Defines Honeycomb's default and required arg values in cases where they differ
 #   from Chromium's.
 # - Accepts user-defined arg values via the GN_DEFINES environment variable.
-# - Verifies that user-defined arg values do not conflict with CEF's
+# - Verifies that user-defined arg values do not conflict with Honeycomb's
 #   requirements.
 # - Generates multiple configurations by combining user-defined arg values with
-#   CEF's default and required values.
+#   Honeycomb's default and required values.
 #
 # Before adding a new arg value in this script determine the following:
 #
@@ -22,40 +22,40 @@
 #   sections of *.gni files.
 # - Chromium's value requirements. Check for assert()s related to the value in
 #   Chromium code.
-# - Whether a particular value is optional or required for CEF.
-# - Under what conditions a particular value is required for CEF (platform,
+# - Whether a particular value is optional or required for Honeycomb.
+# - Under what conditions a particular value is required for Honeycomb (platform,
 #   build type, CPU architecture, etc).
 #
-# If CEF can use Chromium's default value and has no additional validation
+# If Honeycomb can use Chromium's default value and has no additional validation
 # requirements then do nothing.
 #
-# If CEF can use Chromium's default value but would like to enforce additional
+# If Honeycomb can use Chromium's default value but would like to enforce additional
 # validation requirements then go to 3B.
 #
-# If CEF cannot or should not use Chromium's default value then choose one of
+# If Honeycomb cannot or should not use Chromium's default value then choose one of
 # the following:
 #
-# 1. If CEF requires a different value either globally or based on the platform:
-#  - Add an assert() for the value in CEF's top-level BUILD.gn file.
+# 1. If Honeycomb requires a different value either globally or based on the platform:
+#  - Add an assert() for the value in Honeycomb's top-level BUILD.gn file.
 #  - Add the required value in GetRequiredArgs().
-#  - Result: CEF's required value will be used. The user cannot override the
+#  - Result: Honeycomb's required value will be used. The user cannot override the
 #    value via GN_DEFINES.
 #
-# 2. If CEF requires a different value based on the build type or CPU
+# 2. If Honeycomb requires a different value based on the build type or CPU
 #    architecture:
-#  - Add an assert() for the value in CEF's top-level BUILD.gn file.
+#  - Add an assert() for the value in Honeycomb's top-level BUILD.gn file.
 #  - Add the required value in GetConfigArgs().
-#  - Result: CEF's required value will be used. The user cannot override the
+#  - Result: Honeycomb's required value will be used. The user cannot override the
 #    value via GN_DEFINES.
 #
-# 3. If CEF recommends (but does not require) a different value either globally
+# 3. If Honeycomb recommends (but does not require) a different value either globally
 #    or based on the platform:
 #    A. Set the default value:
 #     - Add the recommended value in GetRecommendedDefaultArgs().
-#     - Result: CEF's recommended value will be used by default. The user can
+#     - Result: Honeycomb's recommended value will be used by default. The user can
 #       override the value via GN_DEFINES.
 #
-#    B. If CEF has additional validation requirements:
+#    B. If Honeycomb has additional validation requirements:
 #     - Add the default Chromium value in GetChromiumDefaultArgs().
 #     - Perform validation in ValidateArgs().
 #     - Result: An AssertionError will be thrown if validation fails.
@@ -67,10 +67,10 @@ import platform as python_platform
 import shlex
 import sys
 
-# The CEF directory is the parent directory of _this_ script.
-cef_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-# The src directory is the parent directory of the CEF directory.
-src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+# The Honeycomb directory is the parent directory of _this_ script.
+honey_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+# The src directory is the parent directory of the Honeycomb directory.
+src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
 
 # Determine the platform.
 if sys.platform == 'win32':
@@ -209,11 +209,11 @@ def GetRecommendedDefaultArgs():
       'enable_nacl': False,
 
       # Disable component builds. Default depends on the platform. True results
-      # in faster local builds but False is required to create a CEF binary
+      # in faster local builds but False is required to create a Honeycomb binary
       # distribution.
       'is_component_build': False,
 
-      # Disable support for background apps, which don't make sense with CEF.
+      # Disable support for background apps, which don't make sense with Honeycomb.
       # Default is enabled on desktop platforms. This feature was also causing
       # strange shutdown crashes when using the Chrome runtime with a Debug
       # component build on Windows.
@@ -221,12 +221,12 @@ def GetRecommendedDefaultArgs():
 
       # Disable support for resource allowlist generation. When enabled this
       # introduces a Windows official build dependency on the
-      # "//chrome:chrome_dll" target, which will fail to build with CEF.
+      # "//chrome:chrome_dll" target, which will fail to build with Honeycomb.
       'enable_resource_allowlist_generation': False,
 
       # Disable V8 sandboxed pointers to avoid crashing when using
-      # CefV8Value::CreateArrayBuffer with memory allocated outside of the V8
-      # sandbox. See https://github.com/chromiumembedded/cef/issues/3332.
+      # HoneycombV8Value::CreateArrayBuffer with memory allocated outside of the V8
+      # sandbox. See https://github.com/chromiumembedded/honey/issues/3332.
       'v8_enable_sandbox': False,
   }
 
@@ -238,7 +238,7 @@ def GetRecommendedDefaultArgs():
   if platform != 'windows':
     # Only allow non-component Debug builds on non-Windows platforms. These
     # builds will fail on Windows due to linker issues (running out of memory,
-    # etc). See https://github.com/chromiumembedded/cef/issues/2679.
+    # etc). See https://github.com/chromiumembedded/honey/issues/2679.
     result['forbid_non_component_debug_builds'] = False
 
   if platform == 'linux':
@@ -278,7 +278,7 @@ def GetGNEnvArgs():
 
 def GetRequiredArgs():
   """
-  Return required GN args. Also enforced by assert() in //cef/BUILD.gn.
+  Return required GN args. Also enforced by assert() in //honey/BUILD.gn.
   """
   result = {
       # Set ENABLE_PRINTING=1 ENABLE_BASIC_PRINTING=1.
@@ -303,7 +303,7 @@ def GetRequiredArgs():
 
   if platform == 'linux':
     # Don't generate Chromium installer packages. This avoids GN dependency
-    # errors with CEF (see issue #2301).
+    # errors with Honeycomb (see issue #2301).
     # Due to the way this variable is declared in chrome/installer/BUILD.gn it
     # can't be enforced by assert().
     result['enable_linux_installer'] = False
@@ -408,7 +408,7 @@ def ValidateArgs(args):
     #   DEPOT_TOOLS_WIN_TOOLCHAIN=0
     #   GYP_MSVS_OVERRIDE_PATH=<path to VS root, must match visual_studio_path>
     #   GYP_MSVS_VERSION=<VS version, must match visual_studio_version>
-    #   CEF_VCVARS=none
+    #   HONEYCOMB_VCVARS=none
     #
     # Optional environment variables (required if vcvarsall.bat does not exist):
     #   INCLUDE=<VS include paths>
@@ -434,8 +434,8 @@ def ValidateArgs(args):
       assert msvs_version == visual_studio_version, \
         "visual_studio_version requires matching GYP_MSVS_VERSION env variable"
 
-      assert os.environ.get('CEF_VCVARS', '') == 'none', \
-        "visual_studio_path requires CEF_VCVARS=none env variable"
+      assert os.environ.get('HONEYCOMB_VCVARS', '') == 'none', \
+        "visual_studio_path requires HONEYCOMB_VCVARS=none env variable"
 
       # If vcvarsall.bat exists then environment variables will be derived from
       # there and any specified INCLUDE/LIB values will be ignored by Chromium
@@ -496,7 +496,7 @@ def GetConfigArgs(args, is_debug, cpu):
 
 def GetConfigArgsSandbox(platform, args, is_debug, cpu):
   """
-  Return merged GN args for the cef_sandbox configuration and validate.
+  Return merged GN args for the honey_sandbox configuration and validate.
   """
   add_args = {
       # Avoid libucrt.lib linker errors.
@@ -514,8 +514,8 @@ def GetConfigArgsSandbox(platform, args, is_debug, cpu):
       'is_official_build': False,
 
       # Enable base target customizations necessary for distribution of the
-      # cef_sandbox static library.
-      'is_cef_sandbox_build': True,
+      # honey_sandbox static library.
+      'is_honey_sandbox_build': True,
 
       # Disable Rust dependencies.
       'enable_rust': False,
@@ -597,11 +597,11 @@ def GetAllPlatformConfigs(build_args):
     else:
       supported_cpus = ['x64']
   elif platform in ('windows', 'mac'):
-    if machine == 'amd64' or os.environ.get('CEF_ENABLE_AMD64', '') == '1':
+    if machine == 'amd64' or os.environ.get('HONEYCOMB_ENABLE_AMD64', '') == '1':
       supported_cpus.append('x64')
       if platform == 'windows':
         supported_cpus.append('x86')
-    if machine == 'arm64' or os.environ.get('CEF_ENABLE_ARM64', '') == '1':
+    if machine == 'arm64' or os.environ.get('HONEYCOMB_ENABLE_ARM64', '') == '1':
       supported_cpus.append('arm64')
   else:
     raise Exception('Unsupported platform')
@@ -616,7 +616,7 @@ def GetAllPlatformConfigs(build_args):
 
     if platform in ('windows', 'mac') and GetArgValue(args,
                                                       'is_official_build'):
-      # Build cef_sandbox.lib with a different configuration.
+      # Build honey_sandbox.lib with a different configuration.
       if create_debug:
         result['Debug_GN_' + cpu + '_sandbox'] = GetConfigArgsSandbox(
             platform, args, True, cpu)

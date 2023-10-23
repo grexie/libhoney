@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2016 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -6,8 +6,8 @@
 
 #include <climits>
 
-#include "include/cef_app.h"
-#include "include/wrapper/cef_helpers.h"
+#include "include/honey_app.h"
+#include "include/wrapper/honey_helpers.h"
 #include "tests/shared/browser/main_message_loop.h"
 
 namespace client {
@@ -86,7 +86,7 @@ void MainMessageLoopExternalPump::DoWork() {
 
 bool MainMessageLoopExternalPump::PerformMessageLoopWork() {
   if (is_active_) {
-    // When CefDoMessageLoopWork() is called there may be various callbacks
+    // When HoneycombDoMessageLoopWork() is called there may be various callbacks
     // (such as paint and IPC messages) that result in additional calls to this
     // method. If re-entrancy is detected we must repost a request again to the
     // owner thread to ensure that the discarded call is executed in the future.
@@ -97,7 +97,7 @@ bool MainMessageLoopExternalPump::PerformMessageLoopWork() {
   reentrancy_detected_ = false;
 
   is_active_ = true;
-  CefDoMessageLoopWork();
+  HoneycombDoMessageLoopWork();
   is_active_ = false;
 
   // |reentrancy_detected_| may have changed due to re-entrant calls to this

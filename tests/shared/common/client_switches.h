@@ -1,11 +1,11 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-// Defines all of the command line switches used by cefclient.
+// Defines all of the command line switches used by honeyclient.
 
-#ifndef CEF_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_
-#define CEF_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_
+#ifndef HONEYCOMB_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_
+#define HONEYCOMB_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_
 #pragma once
 
 namespace client {
@@ -55,4 +55,4 @@ extern const char kHideChromeBubbles[];
 }  // namespace switches
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_
+#endif  // HONEYCOMB_TESTS_SHARED_SHARED_COMMON_SWITCHES_H_

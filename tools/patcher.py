@@ -1,4 +1,4 @@
-# Copyright (c) 2009 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2009 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
@@ -15,10 +15,10 @@ if __name__ != "__main__":
   sys.stdout.write('This file cannot be loaded as a module!')
   sys.exit()
 
-# The CEF root directory is the parent directory of _this_ script.
-cef_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-cef_patch_dir = os.path.join(cef_dir, 'patch')
-src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+# The Honeycomb root directory is the parent directory of _this_ script.
+honey_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+honey_patch_dir = os.path.join(honey_dir, 'patch')
+src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
 
 
 def write_note(type, note):
@@ -31,7 +31,7 @@ def write_note(type, note):
 def apply_patch_file(patch_file, patch_dir):
   ''' Apply a specific patch file in optional patch directory. '''
   patch_name = patch_file + '.patch'
-  patch_path = os.path.join(cef_patch_dir, 'patches', patch_name)
+  patch_path = os.path.join(honey_patch_dir, 'patches', patch_name)
 
   if patch_dir is None or len(patch_dir) == 0:
     patch_dir = src_dir
@@ -54,7 +54,7 @@ def apply_patch_file(patch_file, patch_dir):
 
 def apply_patch_config():
   ''' Apply patch files based on a configuration file. '''
-  config_file = os.path.join(cef_patch_dir, 'patch.cfg')
+  config_file = os.path.join(honey_patch_dir, 'patch.cfg')
   if not os.path.isfile(config_file):
     raise Exception('Patch config file %s does not exist.' % config_file)
 

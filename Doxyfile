@@ -42,7 +42,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "Chromium Embedded Framework (CEF)"
+PROJECT_NAME           = "Honeycomb (Honeycomb)"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -1038,10 +1038,10 @@ EXCLUDE_PATTERNS       = *_internal.h
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        = base::cef_subtle \
+EXCLUDE_SYMBOLS        = base::honey_subtle \
                          base::internal \
-                         cef_trace_event \
-                         cef::logging
+                         honey_trace_event \
+                         honey::logging
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
@@ -1282,8 +1282,8 @@ ALPHABETICAL_INDEX     = YES
 # while generating the index headers.
 # This tag requires that the tag ALPHABETICAL_INDEX is set to YES.
 
-IGNORE_PREFIX          = Cef \
-                         cef_
+IGNORE_PREFIX          = Honeycomb \
+                         honey_
 
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
@@ -2263,7 +2263,7 @@ DOCBOOK_OUTPUT         = docbook
 #---------------------------------------------------------------------------
 
 # If the GENERATE_AUTOGEN_DEF tag is set to YES, doxygen will generate an
-# AutoGen Definitions (see http://autogen.sourceforge.net/) file that captures
+# AutoGen Definitions (see http://autogen.sourhoneyorge.net/) file that captures
 # the structure of the code including all documentation. Note that this feature
 # is still experimental and incomplete at the moment.
 # The default value is: NO.
@@ -2370,11 +2370,11 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             = USING_CEF_SHARED \
+PREDEFINED             = USING_HONEYCOMB_SHARED \
                          __cplusplus \
                          OS_WIN \
                          OS_LINUX \
-                         CEF_X11 \
+                         HONEYCOMB_X11 \
                          OS_MAC \
                          ARCH_CPU_32_BITS
 

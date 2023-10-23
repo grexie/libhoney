@@ -1,10 +1,10 @@
-# Copyright (c) 2009 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2009 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
 import sys
-from cef_parser import *
+from honey_parser import *
 from clang_util import clang_format
 from file_util import *
 import hashlib
@@ -15,7 +15,7 @@ from make_cpptoc_impl import *
 from make_ctocpp_header import *
 from make_ctocpp_impl import *
 from make_gypi_file import *
-from make_libcef_dll_dylib_impl import *
+from make_libhoneycomb_dll_dylib_impl import *
 from make_wrapper_types_header import *
 from optparse import OptionParser
 
@@ -26,7 +26,7 @@ if __name__ != "__main__":
 
 # parse command-line options
 disc = """
-This utility generates files for the CEF C++ to C API translation layer.
+This utility generates files for the Honeycomb C++ to C API translation layer.
 """
 
 parser = OptionParser(description=disc)
@@ -34,7 +34,7 @@ parser.add_option(
     '--root-dir',
     dest='rootdir',
     metavar='DIR',
-    help='CEF root directory [required]')
+    help='Honeycomb root directory [required]')
 parser.add_option(
     '--backup',
     action='store_true',
@@ -73,17 +73,17 @@ cpp_header_dir = os.path.join(root_dir, 'include')
 cpp_header_test_dir = os.path.join(cpp_header_dir, 'test')
 cpp_header_views_dir = os.path.join(cpp_header_dir, 'views')
 capi_header_dir = os.path.join(cpp_header_dir, 'capi')
-api_hash_header = os.path.join(cpp_header_dir, 'cef_api_hash.h')
-libcef_dll_dir = os.path.join(root_dir, 'libcef_dll')
-cpptoc_global_impl = os.path.join(libcef_dll_dir, 'libcef_dll.cc')
-ctocpp_global_impl = os.path.join(libcef_dll_dir, 'wrapper',
-                                  'libcef_dll_wrapper.cc')
-wrapper_types_header = os.path.join(libcef_dll_dir, 'wrapper_types.h')
-cpptoc_dir = os.path.join(libcef_dll_dir, 'cpptoc')
-ctocpp_dir = os.path.join(libcef_dll_dir, 'ctocpp')
-gypi_file = os.path.join(root_dir, 'cef_paths.gypi')
-libcef_dll_dylib_impl = os.path.join(libcef_dll_dir, 'wrapper',
-                                     'libcef_dll_dylib.cc')
+api_hash_header = os.path.join(cpp_header_dir, 'honey_api_hash.h')
+libhoneycomb_dll_dir = os.path.join(root_dir, 'libhoneycomb_dll')
+cpptoc_global_impl = os.path.join(libhoneycomb_dll_dir, 'libhoneycomb_dll.cc')
+ctocpp_global_impl = os.path.join(libhoneycomb_dll_dir, 'wrapper',
+                                  'libhoneycomb_dll_wrapper.cc')
+wrapper_types_header = os.path.join(libhoneycomb_dll_dir, 'wrapper_types.h')
+cpptoc_dir = os.path.join(libhoneycomb_dll_dir, 'cpptoc')
+ctocpp_dir = os.path.join(libhoneycomb_dll_dir, 'ctocpp')
+gypi_file = os.path.join(root_dir, 'honey_paths.gypi')
+libhoneycomb_dll_dylib_impl = os.path.join(libhoneycomb_dll_dir, 'wrapper',
+                                     'libhoneycomb_dll_dylib.cc')
 
 # make sure the header directory exists
 if not path_exists(cpp_header_dir):
@@ -97,7 +97,7 @@ header = obj_header()
 
 # add include files to be processed
 header.set_root_directory(cpp_header_dir)
-excluded_files = ['cef_api_hash.h', 'cef_application_mac.h', 'cef_version.h']
+excluded_files = ['honey_api_hash.h', 'honey_application_mac.h', 'honey_version.h']
 header.add_directory(cpp_header_dir, excluded_files)
 header.add_directory(cpp_header_test_dir)
 header.add_directory(cpp_header_views_dir)
@@ -226,10 +226,10 @@ if not options.quiet:
   sys.stdout.write('Generating ' + gypi_file + ' file...\n')
 update_file(*write_gypi_file(header, gypi_file))
 
-# output the libcef dll dylib file
+# output the libhoneycomb dll dylib file
 if not options.quiet:
-  sys.stdout.write('Generating ' + libcef_dll_dylib_impl + ' file...\n')
-update_file(*write_libcef_dll_dylib_impl(header, libcef_dll_dylib_impl))
+  sys.stdout.write('Generating ' + libhoneycomb_dll_dylib_impl + ' file...\n')
+update_file(*write_libhoneycomb_dll_dylib_impl(header, libhoneycomb_dll_dylib_impl))
 
 # Update the API hash header file if necessary. This must be done last because
 # it reads files that were potentially written by proceeding operations.

@@ -3,41 +3,41 @@ CONTENTS
 
 cmake       Contains CMake configuration files shared by all targets.
 
-Debug       Contains libcef.so and other components required to run the debug
-            version of CEF-based applications. By default these files should be
-            placed in the same directory as libcef.so and will be copied there
+Debug       Contains libhoneycomb.so and other components required to run the debug
+            version of Honeycomb-based applications. By default these files should be
+            placed in the same directory as libhoneycomb.so and will be copied there
             as part of the build process.
 
-include     Contains all required CEF header files.
+include     Contains all required Honeycomb header files.
 
-libcef_dll  Contains the source code for the libcef_dll_wrapper static library
-            that all applications using the CEF C++ API must link against.
+libhoneycomb_dll  Contains the source code for the libhoneycomb_dll_wrapper static library
+            that all applications using the Honeycomb C++ API must link against.
 
-Release     Contains libcef.so and other components required to run the release
-            version of CEF-based applications. By default these files should be
-            placed in the same directory as libcef.so and will be copied there
+Release     Contains libhoneycomb.so and other components required to run the release
+            version of Honeycomb-based applications. By default these files should be
+            placed in the same directory as libhoneycomb.so and will be copied there
             as part of the build process.
 
-Resources   Contains resources required by libcef.so. By default these files
-            should be placed in the same directory as libcef.so and will be
+Resources   Contains resources required by libhoneycomb.so. By default these files
+            should be placed in the same directory as libhoneycomb.so and will be
             copied there as part of the build process.
 
-tests/      Directory of tests that demonstrate CEF usage.
+tests/      Directory of tests that demonstrate Honeycomb usage.
 
-  cefclient Contains the cefclient sample application configured to build
+  honeyclient Contains the honeyclient sample application configured to build
             using the files in this distribution. This application demonstrates
-            a wide range of CEF functionalities.
+            a wide range of Honeycomb functionalities.
 
-  cefsimple Contains the cefsimple sample application configured to build
+  honeysimple Contains the honeysimple sample application configured to build
             using the files in this distribution. This application demonstrates
             the minimal functionality required to create a browser window.
 
-  ceftests  Contains unit tests that exercise the CEF APIs.
+  honeytests  Contains unit tests that exercise the Honeycomb APIs.
 
-  gtest     Contains the Google C++ Testing Framework used by the ceftests
+  gtest     Contains the Google C++ Testing Framework used by the honeytests
             target.
 
-  shared    Contains source code shared by the cefclient and ceftests targets.
+  shared    Contains source code shared by the honeyclient and honeytests targets.
 
 
 USAGE
@@ -47,6 +47,6 @@ Building using CMake:
   CMake can be used to generate project files in many different formats. See
   usage instructions at the top of the CMakeLists.txt file.
 
-Please visit the CEF Website for additional usage information.
+Please visit the Honeycomb Website for additional usage information.
 
-https://bitbucket.org/chromiumembedded/cef/
+https://bitbucket.org/chromiumembedded/honey/

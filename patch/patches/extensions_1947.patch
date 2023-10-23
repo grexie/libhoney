@@ -6,7 +6,7 @@ index cead7cfa14bae..24142c2e4896f 100644
  
  #include <utility>
  
-+#include "cef/libcef/features/runtime.h"
++#include "honey/libhoneycomb/features/runtime.h"
  #include "chrome/browser/extensions/extension_tab_util.h"
  #include "chrome/browser/preloading/prefetch/no_state_prefetch/chrome_no_state_prefetch_contents_delegate.h"
  #include "components/no_state_prefetch/browser/no_state_prefetch_contents.h"
@@ -14,8 +14,8 @@ index cead7cfa14bae..24142c2e4896f 100644
  #include "extensions/browser/guest_view/mime_handler_view/mime_handler_view_guest.h"
  #include "extensions/common/manifest_handlers/mime_types_handler.h"
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/browser/extensions/alloy_extensions_util.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/browser/extensions/alloy_extensions_util.h"
 +#endif
 +
  namespace extensions {
@@ -25,7 +25,7 @@ index cead7cfa14bae..24142c2e4896f 100644
    if (!web_contents)
      return;
  
-+  if (!cef::IsAlloyRuntimeEnabled()) {
++  if (!honey::IsAlloyRuntimeEnabled()) {
    // If the request was for NoStatePrefetch, abort the prefetcher and do not
    // continue. This is because plugins cancel NoStatePrefetch, see
    // http://crbug.com/343590.
@@ -48,11 +48,11 @@ index cead7cfa14bae..24142c2e4896f 100644
 +  if (web_contents->GetOuterWebContents()) {
 +    tab_id = SessionID::InvalidValue().id();
 +  } else
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef::IsAlloyRuntimeEnabled()) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey::IsAlloyRuntimeEnabled()) {
 +    tab_id = alloy::GetTabIdForWebContents(web_contents);
 +  } else
-+#endif  // BUILDFLAG(ENABLE_CEF)
++#endif  // BUILDFLAG(ENABLE_HONEYCOMB)
 +  {
 +    tab_id = ExtensionTabUtil::GetTabId(web_contents);
 +  }
@@ -174,12 +174,12 @@ index c3197eb4790fa..1e7ae767b0582 100644
  
  #include "base/observer_list.h"
  #include "base/strings/string_util.h"
-+#include "cef/libcef/features/runtime.h"
++#include "honey/libhoneycomb/features/runtime.h"
  #include "extensions/browser/extension_registry_factory.h"
  #include "extensions/browser/extension_registry_observer.h"
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/common/extensions/extensions_util.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/common/extensions/extensions_util.h"
 +#endif
 +
  namespace extensions {
@@ -189,8 +189,8 @@ index c3197eb4790fa..1e7ae767b0582 100644
  
  // static
  ExtensionRegistry* ExtensionRegistry::Get(content::BrowserContext* context) {
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef::IsAlloyRuntimeEnabled() && !extensions::ExtensionsEnabled()) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey::IsAlloyRuntimeEnabled() && !extensions::ExtensionsEnabled()) {
 +    return nullptr;
 +  }
 +#endif
@@ -221,7 +221,7 @@ index 058367b7ab78d..99a9e901566ce 100644
    virtual std::unique_ptr<ExtensionHostDelegate>
    CreateExtensionHostDelegate() = 0;
  
-+  // CEF creates a custom ExtensionHost for background pages. If the return
++  // Honeycomb creates a custom ExtensionHost for background pages. If the return
 +  // value is true and |host| is NULL then fail the background host creation.
 +  virtual bool CreateBackgroundExtensionHost(
 +      const Extension* extension,
@@ -264,7 +264,7 @@ index a8108350ddde2..7ae49e78b4327 100644
  
  ExtensionsClient* ExtensionsClient::Get() {
 -  DCHECK(g_client);
-+  // May be nullptr if using CEF Alloy with extensions disabled.
++  // May be nullptr if using Honeycomb Alloy with extensions disabled.
    return g_client;
  }
  

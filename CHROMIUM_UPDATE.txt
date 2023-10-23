@@ -1,6 +1,6 @@
-# The Chromium Embedded Framework (CEF) project is built on top of the Chromium
+# The Honeycomb (Honeycomb) project is built on top of the Chromium
 # project source tree. When updating Chromium to a new version certain files and
-# patterns should be observed for changes. If changes are detected then the CEF
+# patterns should be observed for changes. If changes are detected then the Honeycomb
 # source code or patch files will likely need to be updated.
 #
 # Add `--log-chromium-changes` to the automate-git.py command-line to output
@@ -21,11 +21,11 @@
 #   during update.
 #
 # For complete update instructions see:
-# https://bitbucket.org/chromiumembedded/cef/wiki/ChromiumUpdate.md
+# https://bitbucket.org/chromiumembedded/honey/wiki/ChromiumUpdate.md
 
 {
   # Files in the chromium/src directory that should be evaluated for changes.
-  # Similar changes may need to be applied to the CEF source code.
+  # Similar changes may need to be applied to the Honeycomb source code.
   'files': [
     'chrome/browser/browser_process.h',
     'chrome/browser/extensions/api/tabs/tabs_api.*',

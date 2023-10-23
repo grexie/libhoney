@@ -6,7 +6,7 @@ index c957a691efcac..127872ce6c249 100644
  #include "base/version.h"
  #include "build/branding_buildflags.h"
  #include "build/build_config.h"
-+#include "cef/libcef/features/features.h"
++#include "honey/libhoneycomb/features/features.h"
  #include "components/embedder_support/pref_names.h"
  #include "components/embedder_support/switches.h"
  #include "components/policy/core/common/policy_pref_names.h"
@@ -14,8 +14,8 @@ index c957a691efcac..127872ce6c249 100644
  #include "base/win/windows_version.h"
  #endif  // BUILDFLAG(IS_WIN)
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/common/cef_switches.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/common/honey_switches.h"
 +#endif
 +
  namespace embedder_support {
@@ -25,7 +25,7 @@ index c957a691efcac..127872ce6c249 100644
  
  std::string GetProductAndVersion(
      UserAgentReductionEnterprisePolicyState user_agent_reduction) {
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
 +  if (command_line->HasSwitch(switches::kUserAgentProductAndVersion)) {
 +    return command_line->GetSwitchValueASCII(

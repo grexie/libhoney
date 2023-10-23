@@ -1,10 +1,10 @@
-# Copyright (c) 2016 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2016 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 #
-# Resort order of object files in libcef.ninja file.
+# Resort order of object files in libhoneycomb.ninja file.
 #
-# See: https://github.com/chromiumembedded/cef/issues/1999
+# See: https://github.com/chromiumembedded/honey/issues/1999
 #
 # Usage:
 #   import issue_1999
@@ -69,7 +69,7 @@ def obj_compare(x, y):
 
 
 def process_line(line):
-  if line.startswith("build ./libcef.dll ./libcef.dll.lib: solink "):
+  if line.startswith("build ./libhoneycomb.dll ./libhoneycomb.dll.lib: solink "):
     index = line.find("solink")
     if index >= 0:
       part1 = line[0:index + 6]
@@ -104,4 +104,4 @@ def process_file(path):
 
 
 def apply(confpath):
-  process_file(os.path.join(confpath, "obj", "cef", "libcef.ninja"))
+  process_file(os.path.join(confpath, "obj", "honey", "libhoneycomb.ninja"))

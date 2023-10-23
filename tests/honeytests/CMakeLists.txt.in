@@ -1,0 +1,261 @@
+# Copyright (c) 2014 The Honeycomb Authors. All rights
+# reserved. Use of this source code is governed by a BSD-style license that
+# can be found in the LICENSE file.
+
+#
+# Source files.
+#
+
+# honeytests sources.
+{{
+  'prefix': 'honeytests',
+  'set': 'UNITTESTS_SRCS',
+  'includes': [
+    'shared_sources_browser',
+    'shared_sources_common',
+    'shared_sources_linux:LINUX',
+    'shared_sources_mac:MAC',
+    'shared_sources_renderer:WINDOWS',
+    'shared_sources_renderer:LINUX',
+    'shared_sources_win:WINDOWS',
+    'honeytests_sources_common',
+    'honeytests_sources_linux:LINUX',
+    'honeytests_sources_mac:MAC',
+    'honeytests_sources_win:WINDOWS',
+  ],
+}}
+
+# honeytests helper sources.
+{{
+  'prefix': 'honeytests_helper',
+  'set': 'UNITTESTS_HELPER_SRCS',
+  'includes': [
+    'shared_sources_common',
+    'shared_sources_mac_helper:MAC',
+    'shared_sources_renderer',
+    'honeytests_sources_mac_helper:MAC',
+  ],
+}}
+
+# honeytests resources.
+{{
+  'prefix': 'honeytests_resources',
+  'set': 'UNITTESTS_RESOURCES_SRCS',
+  'includes': [
+    'shared_sources_resources',
+    'honeytests_bundle_resources_mac:MAC',
+  ],
+}}
+
+# honeytests data resources.
+{{
+  'prefix': 'honeytests_data_resources',
+  'set': 'UNITTESTS_DATA_RESOURCES_SRCS',
+  'includes': [
+    'honeytests_data_resources',
+  ],
+}}
+
+#
+# Shared configuration.
+#
+
+# Target executable names.
+set(HONEYCOMB_TARGET "honeytests")
+if(OS_MAC)
+  set(HONEYCOMB_HELPER_TARGET "honeytests_Helper")
+  set(HONEYCOMB_HELPER_OUTPUT_NAME "honeytests Helper")
+else()
+  # Logical target used to link the libhoneycomb library.
+  ADD_LOGICAL_TARGET("libhoneycomb_lib" "${HONEYCOMB_LIB_DEBUG}" "${HONEYCOMB_LIB_RELEASE}")
+endif()
+
+# Determine the target output directory.
+SET_HONEYCOMB_TARGET_OUT_DIR()
+
+
+#
+# Linux configuration.
+#
+
+if(OS_LINUX)
+  # Find required libraries and update compiler/linker variables.
+  FIND_LINUX_LIBRARIES("glib-2.0")
+
+  # Executable target.
+  add_executable(${HONEYCOMB_TARGET} ${UNITTESTS_SRCS} ${UNITTESTS_RESOURCES_SRCS})
+  SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
+  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper honey_gtest)
+  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_lib libhoneycomb_dll_wrapper honey_gtest ${HONEYCOMB_STANDARD_LIBS})
+
+  # Set rpath so that libraries can be placed next to the executable.
+  set_target_properties(${HONEYCOMB_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
+  set_target_properties(${HONEYCOMB_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+  set_target_properties(${HONEYCOMB_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${HONEYCOMB_TARGET_OUT_DIR})
+
+  # Copy binary and resource files to the target output directory.
+  COPY_FILES("${HONEYCOMB_TARGET}" "${HONEYCOMB_BINARY_FILES}" "${HONEYCOMB_BINARY_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}")
+  COPY_FILES("${HONEYCOMB_TARGET}" "${HONEYCOMB_RESOURCE_FILES}" "${HONEYCOMB_RESOURCE_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}")
+
+  # Copy honeytests resource files to the target output directory.
+  COPY_FILES("${HONEYCOMB_TARGET}" "${UNITTESTS_RESOURCES_SRCS}" "${CMAKE_CURRENT_SOURCE_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}/honeytests_files")
+
+  # Copy honeytests data resource files to the target output directory.
+  # Remove these prefixes from input file paths.
+  set(PREFIXES
+    "resources/"
+    )
+  COPY_RESOURCES("${HONEYCOMB_TARGET}" "${UNITTESTS_DATA_RESOURCES_SRCS}" "${PREFIXES}" "${CMAKE_CURRENT_SOURCE_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}/honeytests_files")
+
+  # Set SUID permissions on the chrome-sandbox target.
+  SET_LINUX_SUID_PERMISSIONS("${HONEYCOMB_TARGET}" "${HONEYCOMB_TARGET_OUT_DIR}/chrome-sandbox")
+endif()
+
+
+#
+# Mac OS X configuration.
+#
+
+if(OS_MAC)
+  option(OPTION_USE_ARC "Build with ARC (automatic Reference Counting) on macOS." ON)
+  if(OPTION_USE_ARC)
+    list(APPEND HONEYCOMB_COMPILER_FLAGS
+      -fobjc-arc
+      )
+    set_target_properties(${target} PROPERTIES
+      CLANG_ENABLE_OBJC_ARC "YES"
+      )
+  endif()
+
+  # Output path for the main app bundle.
+  set(HONEYCOMB_APP "${HONEYCOMB_TARGET_OUT_DIR}/${HONEYCOMB_TARGET}.app")
+
+  # Variables referenced from the main Info.plist file.
+  set(EXECUTABLE_NAME "${HONEYCOMB_TARGET}")
+  set(PRODUCT_NAME "${HONEYCOMB_TARGET}")
+
+  if(USE_SANDBOX)
+    # Logical target used to link the honey_sandbox library.
+    ADD_LOGICAL_TARGET("honey_sandbox_lib" "${HONEYCOMB_SANDBOX_LIB_DEBUG}" "${HONEYCOMB_SANDBOX_LIB_RELEASE}")
+  endif()
+
+  # Main app bundle target.
+  add_executable(${HONEYCOMB_TARGET} MACOSX_BUNDLE ${UNITTESTS_RESOURCES_SRCS} ${UNITTESTS_SRCS})
+  SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
+  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper honey_gtest)
+  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper honey_gtest ${HONEYCOMB_STANDARD_LIBS})
+  set_target_properties(${HONEYCOMB_TARGET} PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/Info.plist
+    )
+
+  # Copy the Honeycomb framework into the Frameworks directory.
+  add_custom_command(
+    TARGET ${HONEYCOMB_TARGET}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${HONEYCOMB_BINARY_DIR}/Honeycomb.framework"
+            "${HONEYCOMB_APP}/Contents/Frameworks/Honeycomb.framework"
+    VERBATIM
+    )
+
+  # Create the multiple Helper app bundle targets.
+  foreach(_suffix_list ${HONEYCOMB_HELPER_APP_SUFFIXES})
+    # Convert to a list and extract the suffix values.
+    string(REPLACE ":" ";" _suffix_list ${_suffix_list})
+    list(GET _suffix_list 0 _name_suffix)
+    list(GET _suffix_list 1 _target_suffix)
+    list(GET _suffix_list 2 _plist_suffix)
+
+    # Define Helper target and output names.
+    set(_helper_target "${HONEYCOMB_HELPER_TARGET}${_target_suffix}")
+    set(_helper_output_name "${HONEYCOMB_HELPER_OUTPUT_NAME}${_name_suffix}")
+
+    # Create Helper-specific variants of the helper-Info.plist file. Do this
+    # manually because the configure_file command (which is executed as part of
+    # MACOSX_BUNDLE_INFO_PLIST) uses global env variables and would insert the
+    # wrong values with multiple targets.
+    set(_helper_info_plist "${CMAKE_CURRENT_BINARY_DIR}/helper-Info${_target_suffix}.plist")
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/helper-Info.plist" _plist_contents)
+    string(REPLACE "\${EXECUTABLE_NAME}" "${_helper_output_name}" _plist_contents ${_plist_contents})
+    string(REPLACE "\${PRODUCT_NAME}" "${_helper_output_name}" _plist_contents ${_plist_contents})
+    string(REPLACE "\${BUNDLE_ID_SUFFIX}" "${_plist_suffix}" _plist_contents ${_plist_contents})
+    file(WRITE ${_helper_info_plist} ${_plist_contents})
+
+    # Create Helper executable target.
+    add_executable(${_helper_target} MACOSX_BUNDLE ${UNITTESTS_HELPER_SRCS})
+    SET_EXECUTABLE_TARGET_PROPERTIES(${_helper_target})
+    add_dependencies(${_helper_target} libhoneycomb_dll_wrapper honey_gtest)
+    target_link_libraries(${_helper_target} libhoneycomb_dll_wrapper honey_gtest ${HONEYCOMB_STANDARD_LIBS})
+    set_target_properties(${_helper_target} PROPERTIES
+      MACOSX_BUNDLE_INFO_PLIST ${_helper_info_plist}
+      OUTPUT_NAME ${_helper_output_name}
+      )
+
+    if(USE_SANDBOX)
+      target_link_libraries(${_helper_target} honey_sandbox_lib)
+    endif()
+
+    # Add the Helper as a dependency of the main executable target.
+    add_dependencies(${HONEYCOMB_TARGET} "${_helper_target}")
+
+    # Copy the Helper app bundle into the Frameworks directory.
+    add_custom_command(
+      TARGET ${HONEYCOMB_TARGET}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+              "${HONEYCOMB_TARGET_OUT_DIR}/${_helper_output_name}.app"
+              "${HONEYCOMB_APP}/Contents/Frameworks/${_helper_output_name}.app"
+      VERBATIM
+      )
+  endforeach()
+
+  # Manually process and copy over resource files.
+  # The Xcode generator can support this via the set_target_properties RESOURCE
+  # directive but that doesn't properly handle nested resource directories.
+  # Remove these prefixes from input file paths.
+  set(PREFIXES
+    "resources/mac/"
+    "resources/"
+    "../shared/resources/"
+    )
+  set(RESOURCES ${UNITTESTS_RESOURCES_SRCS} ${UNITTESTS_DATA_RESOURCES_SRCS})
+  COPY_MAC_RESOURCES("${RESOURCES}" "${PREFIXES}" "${HONEYCOMB_TARGET}" "${CMAKE_CURRENT_SOURCE_DIR}" "${HONEYCOMB_APP}")
+endif()
+
+
+#
+# Windows configuration.
+#
+
+if(OS_WINDOWS)
+  # Executable target.
+  add_executable(${HONEYCOMB_TARGET} WIN32 ${UNITTESTS_SRCS} ${UNITTESTS_RESOURCES_SRCS})
+  add_dependencies(${HONEYCOMB_TARGET} libhoneycomb_dll_wrapper honey_gtest)
+
+  list(APPEND HONEYCOMB_EXE_LINKER_FLAGS
+    /SUBSYSTEM:CONSOLE  # Configure as a console application.
+  )
+
+  SET_EXECUTABLE_TARGET_PROPERTIES(${HONEYCOMB_TARGET})
+  target_link_libraries(${HONEYCOMB_TARGET} libhoneycomb_lib libhoneycomb_dll_wrapper honey_gtest ${HONEYCOMB_STANDARD_LIBS})
+
+  if(USE_SANDBOX)
+    # Logical target used to link the honey_sandbox library.
+    ADD_LOGICAL_TARGET("honey_sandbox_lib" "${HONEYCOMB_SANDBOX_LIB_DEBUG}" "${HONEYCOMB_SANDBOX_LIB_RELEASE}")
+    target_link_libraries(${HONEYCOMB_TARGET} honey_sandbox_lib ${HONEYCOMB_SANDBOX_STANDARD_LIBS})
+  endif()
+
+  # Add the custom manifest files to the executable.
+  ADD_WINDOWS_MANIFEST("${CMAKE_CURRENT_SOURCE_DIR}/resources/win" "${HONEYCOMB_TARGET}" "exe")
+
+  # Copy Honeycomb binary and resource files to the target output directory.
+  COPY_FILES("${HONEYCOMB_TARGET}" "${HONEYCOMB_BINARY_FILES}" "${HONEYCOMB_BINARY_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}")
+  COPY_FILES("${HONEYCOMB_TARGET}" "${HONEYCOMB_RESOURCE_FILES}" "${HONEYCOMB_RESOURCE_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}")
+
+  # Copy honeytests data resource files to the target output directory.
+  # Remove these prefixes from input file paths.
+  set(PREFIXES
+    "resources/"
+    )
+  COPY_RESOURCES("${HONEYCOMB_TARGET}" "${UNITTESTS_DATA_RESOURCES_SRCS}" "${PREFIXES}" "${CMAKE_CURRENT_SOURCE_DIR}" "${HONEYCOMB_TARGET_OUT_DIR}/honeytests_files")
+endif()

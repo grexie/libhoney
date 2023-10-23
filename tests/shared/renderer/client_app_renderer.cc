@@ -1,10 +1,10 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #include "tests/shared/renderer/client_app_renderer.h"
 
-#include "include/base/cef_logging.h"
+#include "include/base/honey_logging.h"
 
 namespace client {
 
@@ -20,23 +20,23 @@ void ClientAppRenderer::OnWebKitInitialized() {
 }
 
 void ClientAppRenderer::OnBrowserCreated(
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefDictionaryValue> extra_info) {
+    HoneycombRefPtr<HoneycombBrowser> browser,
+    HoneycombRefPtr<HoneycombDictionaryValue> extra_info) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnBrowserCreated(this, browser, extra_info);
   }
 }
 
-void ClientAppRenderer::OnBrowserDestroyed(CefRefPtr<CefBrowser> browser) {
+void ClientAppRenderer::OnBrowserDestroyed(HoneycombRefPtr<HoneycombBrowser> browser) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnBrowserDestroyed(this, browser);
   }
 }
 
-CefRefPtr<CefLoadHandler> ClientAppRenderer::GetLoadHandler() {
-  CefRefPtr<CefLoadHandler> load_handler;
+HoneycombRefPtr<HoneycombLoadHandler> ClientAppRenderer::GetLoadHandler() {
+  HoneycombRefPtr<HoneycombLoadHandler> load_handler;
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end() && !load_handler.get(); ++it) {
     load_handler = (*it)->GetLoadHandler(this);
@@ -45,18 +45,18 @@ CefRefPtr<CefLoadHandler> ClientAppRenderer::GetLoadHandler() {
   return load_handler;
 }
 
-void ClientAppRenderer::OnContextCreated(CefRefPtr<CefBrowser> browser,
-                                         CefRefPtr<CefFrame> frame,
-                                         CefRefPtr<CefV8Context> context) {
+void ClientAppRenderer::OnContextCreated(HoneycombRefPtr<HoneycombBrowser> browser,
+                                         HoneycombRefPtr<HoneycombFrame> frame,
+                                         HoneycombRefPtr<HoneycombV8Context> context) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnContextCreated(this, browser, frame, context);
   }
 }
 
-void ClientAppRenderer::OnContextReleased(CefRefPtr<CefBrowser> browser,
-                                          CefRefPtr<CefFrame> frame,
-                                          CefRefPtr<CefV8Context> context) {
+void ClientAppRenderer::OnContextReleased(HoneycombRefPtr<HoneycombBrowser> browser,
+                                          HoneycombRefPtr<HoneycombFrame> frame,
+                                          HoneycombRefPtr<HoneycombV8Context> context) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnContextReleased(this, browser, frame, context);
@@ -64,11 +64,11 @@ void ClientAppRenderer::OnContextReleased(CefRefPtr<CefBrowser> browser,
 }
 
 void ClientAppRenderer::OnUncaughtException(
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefFrame> frame,
-    CefRefPtr<CefV8Context> context,
-    CefRefPtr<CefV8Exception> exception,
-    CefRefPtr<CefV8StackTrace> stackTrace) {
+    HoneycombRefPtr<HoneycombBrowser> browser,
+    HoneycombRefPtr<HoneycombFrame> frame,
+    HoneycombRefPtr<HoneycombV8Context> context,
+    HoneycombRefPtr<HoneycombV8Exception> exception,
+    HoneycombRefPtr<HoneycombV8StackTrace> stackTrace) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnUncaughtException(this, browser, frame, context, exception,
@@ -76,9 +76,9 @@ void ClientAppRenderer::OnUncaughtException(
   }
 }
 
-void ClientAppRenderer::OnFocusedNodeChanged(CefRefPtr<CefBrowser> browser,
-                                             CefRefPtr<CefFrame> frame,
-                                             CefRefPtr<CefDOMNode> node) {
+void ClientAppRenderer::OnFocusedNodeChanged(HoneycombRefPtr<HoneycombBrowser> browser,
+                                             HoneycombRefPtr<HoneycombFrame> frame,
+                                             HoneycombRefPtr<HoneycombDOMNode> node) {
   DelegateSet::iterator it = delegates_.begin();
   for (; it != delegates_.end(); ++it) {
     (*it)->OnFocusedNodeChanged(this, browser, frame, node);
@@ -86,10 +86,10 @@ void ClientAppRenderer::OnFocusedNodeChanged(CefRefPtr<CefBrowser> browser,
 }
 
 bool ClientAppRenderer::OnProcessMessageReceived(
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefFrame> frame,
-    CefProcessId source_process,
-    CefRefPtr<CefProcessMessage> message) {
+    HoneycombRefPtr<HoneycombBrowser> browser,
+    HoneycombRefPtr<HoneycombFrame> frame,
+    HoneycombProcessId source_process,
+    HoneycombRefPtr<HoneycombProcessMessage> message) {
   DCHECK_EQ(source_process, PID_BROWSER);
 
   bool handled = false;

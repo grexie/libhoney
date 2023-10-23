@@ -928,7 +928,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 # if defined(__MINGW_PRINTF_FORMAT)
 // MinGW has two different printf implementations. Ensure the format macro
 // matches the selected implementation. See
-// https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/.
+// https://sourhoneyorge.net/p/mingw-w64/wiki2/gnu%20printf/.
 #  define GTEST_ATTRIBUTE_PRINTF_(string_index, first_to_check) \
        __attribute__((__format__(__MINGW_PRINTF_FORMAT, string_index, \
                                  first_to_check)))

@@ -1,5 +1,5 @@
-# Copyright (c) 2011 The Chromium Embedded Framework Authors.
-# Portions copyright (c) 2006-2008 The Chromium Authors. All rights reserved.
+# Copyright (c) 2011 The Honeycomb Authors.
+# Portions copyright (c) 2006-2008 The Chromium Authors and 2016 the CEF Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -12,10 +12,10 @@ import issue_1999
 import os
 import sys
 
-# The CEF directory is the parent directory of _this_ script.
-cef_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-# The src directory is the parent directory of the CEF directory.
-src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+# The Honeycomb directory is the parent directory of _this_ script.
+honey_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+# The src directory is the parent directory of the Honeycomb directory.
+src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
 
 # Determine the platform.
 if sys.platform == 'win32':
@@ -28,16 +28,16 @@ else:
   print('Unknown operating system platform')
   sys.exit()
 
-print("\nGenerating CEF version header file...")
-cmd = [sys.executable, 'tools/make_version_header.py', 'include/cef_version.h']
-RunAction(cef_dir, cmd)
+print("\nGenerating Honeycomb version header file...")
+cmd = [sys.executable, 'tools/make_version_header.py', 'include/honey_version.h']
+RunAction(honey_dir, cmd)
 
-print("\nPatching build configuration and source files for CEF...")
+print("\nPatching build configuration and source files for Honeycomb...")
 cmd = [sys.executable, 'tools/patcher.py']
-RunAction(cef_dir, cmd)
+RunAction(honey_dir, cmd)
 
-if platform == 'linux' and 'CEF_INSTALL_SYSROOT' in os.environ:
-  for arch in os.environ['CEF_INSTALL_SYSROOT'].split(','):
+if platform == 'linux' and 'HONEYCOMB_INSTALL_SYSROOT' in os.environ:
+  for arch in os.environ['HONEYCOMB_INSTALL_SYSROOT'].split(','):
     if len(arch) == 0:
       continue
     print("\nInstalling %s sysroot environment..." % arch)
@@ -47,7 +47,7 @@ if platform == 'linux' and 'CEF_INSTALL_SYSROOT' in os.environ:
     ]
     RunAction(src_dir, cmd)
 
-print("\nGenerating CEF project files...")
+print("\nGenerating Honeycomb project files...")
 
 gn_args = {}
 
@@ -66,10 +66,10 @@ if platform == 'windows':
   #   set WIN_CUSTOM_TOOLCHAIN=1
   #
   # o Used by tools/msvs_env.bat to configure the MSVS tools environment.
-  #   Should be set to "none" because VC variables for CEF will be set via
+  #   Should be set to "none" because VC variables for Honeycomb will be set via
   #   INCLUDE/LIB/PATH.
   #
-  #   set CEF_VCVARS=none
+  #   set HONEYCOMB_VCVARS=none
   #
   # o Used by the following scripts:
   #   (a) build/vs_toolchain.py SetEnvironmentAndGetRuntimeDllDirs when
@@ -83,7 +83,7 @@ if platform == 'windows':
   #   (PATH is retained because it might contain required VS runtime libraries).
   #   If this file does not exist then the INCLUDE/LIB/PATH values are also
   #   required by Chromium.
-  #   TODO(cef): Rename to VS_ROOT and VS_VERSION after Chromium cleans up GYP
+  #   TODO(honey): Rename to VS_ROOT and VS_VERSION after Chromium cleans up GYP
   #   dependencies.
   #
   #   set GYP_MSVS_OVERRIDE_PATH=<VS root directory>
@@ -111,11 +111,11 @@ if platform == 'windows':
   #     installed (e.g. not discoverable via the Windows registry) then
   #     "%GYP_MSVS_OVERRIDE_PATH%\Common7\Tools\vsdevcmd\core\winsdk.bat" must be
   #     patched to support discovery via SDK_ROOT as described in
-  #     https://github.com/chromiumembedded/cef/issues/2773#issuecomment-1465019898.
+  #     https://github.com/chromiumembedded/honey/issues/2773#issuecomment-1465019898.
   #
   if bool(int(os.environ.get('WIN_CUSTOM_TOOLCHAIN', '0'))):
     required_vars = [
-        'CEF_VCVARS',
+        'HONEYCOMB_VCVARS',
         'GYP_MSVS_OVERRIDE_PATH',
         'GYP_MSVS_VERSION',
         'VS_CRT_ROOT',

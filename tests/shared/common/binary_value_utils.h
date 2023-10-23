@@ -1,15 +1,15 @@
-// Copyright (c) 2022 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2022 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS
-#define CEF_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS
+#ifndef HONEYCOMB_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS
+#define HONEYCOMB_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS
 #pragma once
 
 #include <chrono>
 #include <cstdint>
 #include <vector>
-#include "include/cef_values.h"
+#include "include/honey_values.h"
 
 namespace bv_utils {
 
@@ -32,18 +32,18 @@ struct BrowserMessage {
 
 TimePoint Now();
 
-CefRefPtr<CefBinaryValue> CreateCefBinaryValue(
+HoneycombRefPtr<HoneycombBinaryValue> CreateHoneycombBinaryValue(
     const std::vector<uint8_t>& data);
 
 void CopyDataIntoMemory(const std::vector<uint8_t>& data, void* dst);
 
 RendererMessage GetRendererMsgFromBinary(
-    const CefRefPtr<CefBinaryValue>& value);
+    const HoneycombRefPtr<HoneycombBinaryValue>& value);
 
-BrowserMessage GetBrowserMsgFromBinary(const CefRefPtr<CefBinaryValue>& value);
+BrowserMessage GetBrowserMsgFromBinary(const HoneycombRefPtr<HoneycombBinaryValue>& value);
 
 std::string ToMicroSecString(const Duration& duration);
 
 }  // namespace bv_utils
 
-#endif  // CEF_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS
+#endif  // HONEYCOMB_TESTS_SHARED_COMMON_BINARY_VALUE_UTILS

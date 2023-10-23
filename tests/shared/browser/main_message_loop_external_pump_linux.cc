@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2016 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -11,8 +11,8 @@
 
 #include <memory>
 
-#include "include/base/cef_logging.h"
-#include "include/cef_app.h"
+#include "include/base/honey_logging.h"
+#include "include/honey_app.h"
 
 // From base/posix/eintr_wrapper.h.
 // This provides a wrapper around system calls which may be interrupted by a
@@ -92,7 +92,7 @@ class MainMessageLoopExternalPumpLinux : public MainMessageLoopExternalPump {
   GSource* work_source_;
 
   // The time when we need to do delayed work.
-  CefTime delayed_work_time_;
+  HoneycombTime delayed_work_time_;
 
   // We use a wakeup pipe to make sure we'll get out of the glib polling phase
   // when another thread has scheduled us to do some work. There is a glib
@@ -108,15 +108,15 @@ class MainMessageLoopExternalPumpLinux : public MainMessageLoopExternalPump {
 
 // Return a timeout suitable for the glib loop, -1 to block forever,
 // 0 to return right away, or a timeout in milliseconds from now.
-int GetTimeIntervalMilliseconds(const CefTime& from) {
+int GetTimeIntervalMilliseconds(const HoneycombTime& from) {
   if (from.GetDoubleT() == 0.0) {
     return -1;
   }
 
-  CefTime now;
+  HoneycombTime now;
   now.Now();
 
-  // Be careful here. CefTime has a precision of microseconds, but we want a
+  // Be careful here. HoneycombTime has a precision of microseconds, but we want a
   // value in milliseconds. If there are 5.5ms left, should the delay be 5 or
   // 6?  It should be 6 to avoid executing delayed work too early.
   int delay =
@@ -216,9 +216,9 @@ int MainMessageLoopExternalPumpLinux::Run() {
   // that information here so we run the message loop "for a while".
   for (int i = 0; i < 10; ++i) {
     // Do some work.
-    CefDoMessageLoopWork();
+    HoneycombDoMessageLoopWork();
 
-    // Sleep to allow the CEF proc to do work.
+    // Sleep to allow the Honeycomb proc to do work.
     usleep(50000);
   }
 
@@ -280,15 +280,15 @@ void MainMessageLoopExternalPumpLinux::HandleDispatch() {
 void MainMessageLoopExternalPumpLinux::SetTimer(int64_t delay_ms) {
   DCHECK_GT(delay_ms, 0);
 
-  CefTime now;
+  HoneycombTime now;
   now.Now();
 
   delayed_work_time_ =
-      CefTime(now.GetDoubleT() + static_cast<double>(delay_ms) / 1000.0);
+      HoneycombTime(now.GetDoubleT() + static_cast<double>(delay_ms) / 1000.0);
 }
 
 void MainMessageLoopExternalPumpLinux::KillTimer() {
-  delayed_work_time_ = CefTime();
+  delayed_work_time_ = HoneycombTime();
 }
 
 bool MainMessageLoopExternalPumpLinux::IsTimerPending() {

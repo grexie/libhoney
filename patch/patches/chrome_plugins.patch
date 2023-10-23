@@ -6,7 +6,7 @@ index 95cd290b601a3..89e8ab892e5ea 100644
      extensions::ExtensionRegistry* extension_registry,
      int process_id,
      const GURL& resource) {
-+  // May be nullptr if using CEF Alloy with extensions disabled.
++  // May be nullptr if using Honeycomb Alloy with extensions disabled.
 +  if (!extension_registry)
 +    return false;
 +
@@ -21,7 +21,7 @@ index 438276b719c2f..69635e429be78 100644
      content::BrowserContext* browser_context) {
    base::flat_map<std::string, std::string> mime_type_to_extension_id_map;
  #if BUILDFLAG(ENABLE_EXTENSIONS)
-+  // May be nullptr if using CEF Alloy with extensions disabled.
++  // May be nullptr if using Honeycomb Alloy with extensions disabled.
 +  extensions::ExtensionRegistry* registry =
 +      extensions::ExtensionRegistry::Get(browser_context);
 +  if (!registry) {

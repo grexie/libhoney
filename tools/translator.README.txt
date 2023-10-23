@@ -1,4 +1,4 @@
-Chromium Embedded Framework (CEF) Translator Tool -- translator.py
+Honeycomb (Honeycomb) Translator Tool -- translator.py
 -------------------------------------------------------------------------------
 
 Document Last Updated: February 14, 2012
@@ -7,10 +7,10 @@ Document Last Updated: February 14, 2012
 OVERVIEW
 --------
 
-The CEF translator tool automatically generates CEF source code based on the
-contents of the CEF header file (cef.h). The generated source code includes the
-main C API header file (cef_capi.h) and all files in the libcef_dll/cpptoc and
-libcef_dll/ctocpp directories.
+The Honeycomb translator tool automatically generates Honeycomb source code based on the
+contents of the Honeycomb header file (honey.h). The generated source code includes the
+main C API header file (honey_capi.h) and all files in the libhoneycomb_dll/cpptoc and
+libhoneycomb_dll/ctocpp directories.
 
 If any differences are detected between the new translator-generated output and
 the file that currently exists on disk a backup of the existing file will be
@@ -33,13 +33,13 @@ output file.
    #pragma message("Warning: " __FILE__ ": MyFunction prototype has changed")
 
 Auto-generated implementations will be added in the new output file for any
-methods/functions that exist in the CEF header file but did not exist in the
+methods/functions that exist in the Honeycomb header file but did not exist in the
 current on-disk implementation file. Each time the translator re-generates the
 implementation file it will warn if an implementation could not be auto-
 generated. Delete the indicated portion of the generated code after adding the
 implementation manually.
 
-   size_t CEF_CALLBACK frame_new_func(struct _cef_frame_t* self)
+   size_t HONEYCOMB_CALLBACK frame_new_func(struct _honey_frame_t* self)
    {
      // BEGIN DELETE BEFORE MODIFYING
      // AUTO-GENERATED CONTENT
@@ -53,10 +53,10 @@ body of the function or method will contain the following comment.
    // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
 
 If you edit the implementation manually you should remove this comment so that
-CEF will not discard your changes on the next run of the translator tool.
+Honeycomb will not discard your changes on the next run of the translator tool.
 
 The 'translator.[bat|sh]' file can be used to run the translator tool with
-command- line arguments that match the default CEF directory structure and
+command- line arguments that match the default Honeycomb directory structure and
 output options. Run 'translator.py -h' for a complete list of available command-
 line arguments.
 
@@ -65,13 +65,13 @@ HEADER ATTRIBUTES
 -----------------
 
 Comment-based attribute tags are added before each function, class and method
-definition in the CEF header file to provide the translator with additional
+definition in the Honeycomb header file to provide the translator with additional
 information about how the output should be generated. The attribute tags must
 be in the form of a comma-delimited list of name=value pairs. Attribute names
 and values must contain only alpha-numeric characters, numbers and underscores,
 and must all exist on a single line.
 
-   /*--cef(name1=value1,name2=value2,name3=value3)--*/
+   /*--honey(name1=value1,name2=value2,name3=value3)--*/
 
 Supported method/function attributes:
 
@@ -102,26 +102,26 @@ Supported class attributes:
 TRANSLATION RULES
 -----------------
 
-All C++ names in the CEF header file are written in CamelCaps format and all
+All C++ names in the Honeycomb header file are written in CamelCaps format and all
 C API translations are generated in lowercase_underscore format.
 
 
 Translating Classes and Methods
 -------------------------------
 
-Class names and global function names must be prefixed with the 'Cef' string.
+Class names and global function names must be prefixed with the 'Honeycomb' string.
 
    Global function translation
-      C++:   void CefShutdown()
-      C API: void cef_shutdown()
+      C++:   void HoneycombShutdown()
+      C API: void honey_shutdown()
 
 The translation of a C++ class name to a C API structure name is prefixed with
 '_' and postfixed with '_t'.  A typedef of the C API structure to a value
 without the prefixed '_' is also provided and may be used interchangeably.
 
    Class name translation
-      C++:   class CefPostData
-      C API: typedef struct _cef_post_data_t { ... } cef_post_data_t
+      C++:   class HoneycombPostData
+      C API: typedef struct _honey_post_data_t { ... } honey_post_data_t
 
 The translation of a C++ virtual class method to a C API member function adds a
 'self' structure pointer as the first parameter. This will always be a pointer
@@ -129,23 +129,23 @@ to the structure that contains the member function.
 
    Virtual method translation
       C++:   virtual void SetFocus(bool enable)
-      C API: void set_focus(struct _cef_browser_t* self, int enable)
+      C API: void set_focus(struct _honey_browser_t* self, int enable)
 
 The translation of a C++ static class method to a C API global function
-is prefixed with 'cef_classname_' where 'classname' is the
+is prefixed with 'honey_classname_' where 'classname' is the
 lowercase_underscore name of the class that contains the static method.  Any
 repeat of 'classname' in the function name is removed.
 
    Static method translation
-      C++:   static CefRefPtr<CefRequest> CreateRequest()
-      C API: struct _cef_request_t* cef_request_create()
+      C++:   static HoneycombRefPtr<HoneycombRequest> CreateRequest()
+      C API: struct _honey_request_t* honey_request_create()
 
 Implementation of the wrapper method/function body is generally formatted as
 follows.
 
    Static/Global CppToC (without Return):
 
-      CEF_EXPORT void cef_function(capi_params)
+      HONEYCOMB_EXPORT void honey_function(capi_params)
       {
         // Parameter Verification (Optional)
         // Verify the C parameter values.
@@ -156,7 +156,7 @@ follows.
         // ...
 
         // Execution
-        CefFunction(cpp_arams);
+        HoneycombFunction(cpp_arams);
         
         // Parameter Restoration (Optional)
         // Retore the C parameter values if changed.
@@ -165,7 +165,7 @@ follows.
    
    Static/Global CppToC (with Return):
 
-      CEF_EXPORT capi_retval cef_function(capi_params)
+      HONEYCOMB_EXPORT capi_retval honey_function(capi_params)
       {
         // Parameter Verification (Optional)
         // Verify the C parameter values.
@@ -176,7 +176,7 @@ follows.
         // ...
 
         // Execution
-        cpp_retval _rv = CefFunction(cpp_params);
+        cpp_retval _rv = HoneycombFunction(cpp_params);
         
         // Parameter Restoration (Optional)
         // Restore the C parameter values if changed.
@@ -189,7 +189,7 @@ follows.
    
    Static/Global CToCpp (without Return):
    
-      void CefFunction(cpp_params)
+      void HoneycombFunction(cpp_params)
       {
         // Parameter Verification (Optional)
         // Verify the C++ parameter values.
@@ -200,7 +200,7 @@ follows.
         // ...
         
         // Execution
-        cef_function(capi_params);
+        honey_function(capi_params);
         
         // Parameter Restoration (Optional)
         // Restore the C++ parameter values if changed.
@@ -209,7 +209,7 @@ follows.
    
    Static/Global CToCpp (with Return):
    
-      cpp_retval CefFunction(cpp_params)
+      cpp_retval HoneycombFunction(cpp_params)
       {
         // Parameter Verification (Optional)
         // Verify the C++ parameter values.
@@ -220,7 +220,7 @@ follows.
         // ...
         
         // Execution
-        capi_retval _rv = cef_function(capi_params);
+        capi_retval _rv = honey_function(capi_params);
         
         // Parameter Restoration (Optional)
         // Restore the C++ parameter values if changed.
@@ -233,7 +233,7 @@ follows.
    
    Member CppToC (without Return):
    
-      CEF_CALLBACK void class_function(cef_class_t* self, capi_params)
+      HONEYCOMB_CALLBACK void class_function(honey_class_t* self, capi_params)
       {
         // Parameter Verification.
         // Verify the C parameter values.
@@ -247,7 +247,7 @@ follows.
         // ...
 
         // Execution
-        CefClassCppToC::Get(self)->CefFunction(cpp_params);
+        HoneycombClassCppToC::Get(self)->HoneycombFunction(cpp_params);
         
         // Parameter Restoration (Optional)
         // Restore the C parameter values if changed.
@@ -256,7 +256,7 @@ follows.
 
    Member CppToC (with Return):
    
-      CEF_CALLBACK capi_retval class_function(cef_class_t* self, capi_params)
+      HONEYCOMB_CALLBACK capi_retval class_function(honey_class_t* self, capi_params)
       {
         // Parameter Verification.
         // Verify the C parameter values.
@@ -270,7 +270,7 @@ follows.
         // ...
 
         // Execution
-        cpp_retval _rv = CefClassCppToC::Get(self)->CefFunction(cpp_params);
+        cpp_retval _rv = HoneycombClassCppToC::Get(self)->HoneycombFunction(cpp_params);
         
         // Parameter Restoration (Optional)
         // Restore the C parameter values if changed.
@@ -283,10 +283,10 @@ follows.
 
    Member CToCpp (without Return):
 
-      void CefClassCToCpp::Function(cpp_params)
+      void HoneycombClassCToCpp::Function(cpp_params)
       {
         // Structure Verification
-        if (CEF_MEMBER_MISSING(struct_, function))
+        if (HONEYCOMB_MEMBER_MISSING(struct_, function))
           return;
 
         // Parameter Verification (Optional)
@@ -307,10 +307,10 @@ follows.
 
    Member CToCpp (with Return):
 
-      cpp_retval CefClassCToCpp::Function(cpp_params)
+      cpp_retval HoneycombClassCToCpp::Function(cpp_params)
       {
         // Structure Verification
-        if (CEF_MEMBER_MISSING(struct_, function))
+        if (HONEYCOMB_MEMBER_MISSING(struct_, function))
           return default_retval; // Configured or defaulted automatically.
 
         // Parameter Verification (Optional)
@@ -350,17 +350,17 @@ Parameters:
       C API: int value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int value)
+      HONEYCOMB_EXPORT void honey_function(int value)
       {
         // Execution
-        CefFunction(value);
+        HoneycombFunction(value);
       }
 
       // CToCpp Example
-      void CefFunction(int value)
+      void HoneycombFunction(int value)
       {
         // Execution
-        cef_function(value);
+        honey_function(value);
       }
 
    Simple/enumeration type by reference (simple_byref):
@@ -368,7 +368,7 @@ Parameters:
       C API: int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int* value)
+      HONEYCOMB_EXPORT void honey_function(int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -379,7 +379,7 @@ Parameters:
         int valueVal = value?*value:0;
           
         // Execution
-        CefFunction(valueVal);
+        HoneycombFunction(valueVal);
         
         // Parameter Restoration
         if (value)
@@ -387,10 +387,10 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(int& value)
+      void HoneycombFunction(int& value)
       {
         // Execution
-        cef_function(&value);
+        honey_function(&value);
       }
 
    Simple/enumeration const type by reference (simple_byref_const):
@@ -398,7 +398,7 @@ Parameters:
       C API: const int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(const int* value)
+      HONEYCOMB_EXPORT void honey_function(const int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -409,14 +409,14 @@ Parameters:
         int valueVal = value?*value:0;
           
         // Execution
-        CefFunction(valueVal);
+        HoneycombFunction(valueVal);
       }
 
       // CToCpp Example
-      void CefFunction(const int& value)
+      void HoneycombFunction(const int& value)
       {
         // Execution
-        cef_function(&value);
+        honey_function(&value);
       }
 
    Simple/enumeration type by address (simple_byaddr):
@@ -424,7 +424,7 @@ Parameters:
       C API: int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int* value)
+      HONEYCOMB_EXPORT void honey_function(int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -432,11 +432,11 @@ Parameters:
           return;
           
         // Execution
-        CefFunction(value);
+        HoneycombFunction(value);
       }
 
       // CToCpp Example
-      void CefFunction(int* value)
+      void HoneycombFunction(int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -444,7 +444,7 @@ Parameters:
           return;
           
         // Execution
-        cef_function(value);
+        honey_function(value);
       }
 
    Boolean type by value (bool_byval):
@@ -452,17 +452,17 @@ Parameters:
       C API: int value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int value)
+      HONEYCOMB_EXPORT void honey_function(int value)
       {
         // Execution
-        CefFunction(value?true:false);
+        HoneycombFunction(value?true:false);
       }
 
       // CToCpp Example
-      void CefFunction(bool value)
+      void HoneycombFunction(bool value)
       {
         // Execution
-        cef_function(value);
+        honey_function(value);
       }
 
    Boolean type by reference (bool_byref):
@@ -470,7 +470,7 @@ Parameters:
       C API: int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int* value)
+      HONEYCOMB_EXPORT void honey_function(int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -481,7 +481,7 @@ Parameters:
         bool valueBool = (value && *value)?true:false;
           
         // Execution
-        CefFunction(valueBool);
+        HoneycombFunction(valueBool);
         
         // Parameter Restoration
         if (value)
@@ -489,13 +489,13 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(bool& value)
+      void HoneycombFunction(bool& value)
       {
         // Parameter Translation
         int valueInt = value;
 
         // Execution
-        cef_function(&valueInt);
+        honey_function(&valueInt);
         
         // Parameter Restoration
         value = valueInt?true:false;
@@ -506,7 +506,7 @@ Parameters:
       C API: int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(int* value)
+      HONEYCOMB_EXPORT void honey_function(int* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -517,7 +517,7 @@ Parameters:
         bool valueBool = (value && *value)?true:false;
           
         // Execution
-        CefFunction(&valueBool);
+        HoneycombFunction(&valueBool);
         
         // Parameter Restoration
         if (value)
@@ -525,7 +525,7 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(bool* value)
+      void HoneycombFunction(bool* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -536,7 +536,7 @@ Parameters:
         int valueInt = value?*value:0;
 
         // Execution
-        cef_function(&valueInt);
+        honey_function(&valueInt);
         
         // Parameter Restoration
         if (value)
@@ -544,11 +544,11 @@ Parameters:
       }
 
    Structure const type by reference (struct_byref_const):
-      C++:   const CefPopupFeatures& value
-      C API: const cef_popup_features_t* value
+      C++:   const HoneycombPopupFeatures& value
+      C API: const honey_popup_features_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(const cef_popup_features_t* value)
+      HONEYCOMB_EXPORT void honey_function(const honey_popup_features_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -556,28 +556,28 @@ Parameters:
           return;
           
         // Parameter Translation
-        CefPopupFeatures valueObj;
+        HoneycombPopupFeatures valueObj;
         // Reference the existing values instead of copying.
         if (value)
           valueObj.Set(*value, false);
           
         // Execution
-        CefFunction(valueObj);
+        HoneycombFunction(valueObj);
       }
 
       // CToCpp Example
-      void CefFunction(const CefPopupFeatures& value)
+      void HoneycombFunction(const HoneycombPopupFeatures& value)
       {
         // Execution
-        cef_function(&value);
+        honey_function(&value);
       }
 
    Structure non-const type by reference (struct_byref):
-      C++:   CefWindowInfo& value
-      C API: cef_window_info_t* value
+      C++:   HoneycombWindowInfo& value
+      C API: honey_window_info_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_window_info_t* value)
+      HONEYCOMB_EXPORT void honey_function(honey_window_info_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -585,13 +585,13 @@ Parameters:
           return;
 
         // Parameter Translation
-        CefWindowInfo valueObj;
+        HoneycombWindowInfo valueObj;
         // Take ownership of the values.
         if (value)
           valueObj.AttachTo(*value);
 
         // Execution
-        CefFunction(valueObj);
+        HoneycombFunction(valueObj);
 
         // Parameter Restoration
         // Return the values to the structure.
@@ -600,18 +600,18 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(CefWindowInfo& value)
+      void HoneycombFunction(HoneycombWindowInfo& value)
       {
         // Execution
-        cef_function(&value);
+        honey_function(&value);
       }
       
    String const type by reference (string_byref_const):
-      C++:   const CefString& value
-      C API: const cef_string_t* value
+      C++:   const HoneycombString& value
+      C API: const honey_string_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(const cef_string_t* value)
+      HONEYCOMB_EXPORT void honey_function(const honey_string_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -619,22 +619,22 @@ Parameters:
           return;
 
         // Execution
-        CefFunction(CefString(value));
+        HoneycombFunction(HoneycombString(value));
       }
 
       // CToCpp Example
-      void CefFunction(const CefString& value)
+      void HoneycombFunction(const HoneycombString& value)
       {
         // Execution
-        cef_function(value.GetStruct());
+        honey_function(value.GetStruct());
       }
 
    String non-const type by reference (string_byref):
-      C++:   CefString& value
-      C API: cef_string_t* value
+      C++:   HoneycombString& value
+      C API: honey_string_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_t* value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -642,25 +642,25 @@ Parameters:
           return;
 
         // Parameter Translation
-        CefString valueStr(value);
+        HoneycombString valueStr(value);
 
         // Execution
-        CefFunction(valueStr);
+        HoneycombFunction(valueStr);
       }
 
       // CToCpp Example
-      void CefFunction(CefString& value)
+      void HoneycombFunction(HoneycombString& value)
       {
         // Execution
-        cef_function(value.GetWritableStruct());
+        honey_function(value.GetWritableStruct());
       }
 
    Smart pointer type same boundary side (refptr_same):
-      C++:   CefRefPtr<CefBrowser> value
-      C API: cef_browser_t* value
+      C++:   HoneycombRefPtr<HoneycombBrowser> value
+      C API: honey_browser_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_browser_t* value)
+      HONEYCOMB_EXPORT void honey_function(honey_browser_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -668,22 +668,22 @@ Parameters:
           return;
 
         // Execution
-        CefFunction(CefBrowserCppToC::Unwrap(value));
+        HoneycombFunction(HoneycombBrowserCppToC::Unwrap(value));
       }
 
       // CToCpp Example
-      void CefFunction(CefRefPtr<CefBrowser> value)
+      void HoneycombFunction(HoneycombRefPtr<HoneycombBrowser> value)
       {
         // Execution
-        cef_function(CefBrowserCToCpp::Unwrap(value));
+        honey_function(HoneycombBrowserCToCpp::Unwrap(value));
       }
 
    Smart pointer type same boundary side by reference (refptr_same_byref):
-      C++:   CefRefPtr<CefClient>& value
-      C API: cef_client_t** value
+      C++:   HoneycombRefPtr<HoneycombClient>& value
+      C API: honey_client_t** value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_client_t** value)
+      HONEYCOMB_EXPORT void honey_function(honey_client_t** value)
       {
         // Parameter Verification
         DHECK(value);
@@ -691,20 +691,20 @@ Parameters:
           return;
 
         // Parameter Translation
-        CefRefPtr<CefClient> valuePtr;
+        HoneycombRefPtr<HoneycombClient> valuePtr;
         if (value && *value)
-          valuePtr = CefClientCppToC::Unwrap(*value);
-        CefClient* valueOrig = valuePtr.get();
+          valuePtr = HoneycombClientCppToC::Unwrap(*value);
+        HoneycombClient* valueOrig = valuePtr.get();
 
         // Execution
-        CefFunction(valuePtr);
+        HoneycombFunction(valuePtr);
 
         // Parameter Restoration
         if (value) {
           if (valuePtr.get()) {
             if (valuePtr.get() != valueOrig) {
               // The value has been changed.
-              *value = CefClientCppToC::Wrap(valuePtr);
+              *value = HoneycombClientCppToC::Wrap(valuePtr);
             }
           } else {
             *value = NULL;
@@ -713,22 +713,22 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(CefRefPtr<CefClient>& value)
+      void HoneycombFunction(HoneycombRefPtr<HoneycombClient>& value)
       {
         // Parameter Translation
-        cef_client_t* valueStruct = NULL;
+        honey_client_t* valueStruct = NULL;
         if(value.get())
-          valueStruct = CefClientCToCpp::Unwrap(value);
-        cef_client_t* valueOrig = valueStruct;
+          valueStruct = HoneycombClientCToCpp::Unwrap(value);
+        honey_client_t* valueOrig = valueStruct;
 
         // Execution
-        cef_function(valueStuct);
+        honey_function(valueStuct);
         
         // Parameter Restoration
         if (valueStruct) {
           if (valueStruct != valueOrig) {
             // The value was changed.
-            value = CefClientCToCpp::Wrap(valueStruct);
+            value = HoneycombClientCToCpp::Wrap(valueStruct);
           }
         } else {
           value = NULL;
@@ -736,11 +736,11 @@ Parameters:
       }
 
    Smart pointer type different boundary side (refptr_diff):
-      C++:   CefRefPtr<CefBrowser> value
-      C API: cef_browser_t* value
+      C++:   HoneycombRefPtr<HoneycombBrowser> value
+      C API: honey_browser_t* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_browser_t* value)
+      HONEYCOMB_EXPORT void honey_function(honey_browser_t* value)
       {
         // Parameter Verification
         DHECK(value);
@@ -748,22 +748,22 @@ Parameters:
           return;
 
         // Execution
-        CefFunction(CefBrowserCToCpp::Wrap(value));
+        HoneycombFunction(HoneycombBrowserCToCpp::Wrap(value));
       }
 
       // CToCpp Example
-      void CefFunction(CefRefPtr<CefBrowser> value)
+      void HoneycombFunction(HoneycombRefPtr<HoneycombBrowser> value)
       {
         // Execution
-        cef_function(CefBrowserCppToC::Wrap(value));
+        honey_function(HoneycombBrowserCppToC::Wrap(value));
       }
 
    Smart pointer type different boundary side by reference (refptr_diff_byref):
-      C++:   CefRefPtr<CefClient>& value
-      C API: cef_client_t** value
+      C++:   HoneycombRefPtr<HoneycombClient>& value
+      C API: honey_client_t** value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_client_t** value)
+      HONEYCOMB_EXPORT void honey_function(honey_client_t** value)
       {
         // Parameter Verification
         DHECK(value);
@@ -771,20 +771,20 @@ Parameters:
           return;
 
         // Parameter Translation
-        CefRefPtr<CefClient> valuePtr;
+        HoneycombRefPtr<HoneycombClient> valuePtr;
         if (value && *value)
-          valuePtr = CefClientCToCpp::Wrap(*value);
-        CefClient* valueOrig = valuePtr.get();
+          valuePtr = HoneycombClientCToCpp::Wrap(*value);
+        HoneycombClient* valueOrig = valuePtr.get();
 
         // Execution
-        CefFunction(valuePtr);
+        HoneycombFunction(valuePtr);
 
         // Parameter Restoration
         if (value) {
           if (valuePtr.get()) {
             if (valuePtr.get() != valueOrig) {
               // The value has been changed.
-              *value = CefClientCToCpp::Unwrap(valuePtr);
+              *value = HoneycombClientCToCpp::Unwrap(valuePtr);
             }
           } else {
             *value = NULL;
@@ -793,22 +793,22 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(CefRefPtr<CefClient>& value)
+      void HoneycombFunction(HoneycombRefPtr<HoneycombClient>& value)
       {
         // Parameter Translation
-        cef_client_t* valueStruct = NULL;
+        honey_client_t* valueStruct = NULL;
         if(value.get())
-          valueStruct = CefClientCppToC::Wrap(value);
-        cef_client_t* valueOrig = valueStruct;
+          valueStruct = HoneycombClientCppToC::Wrap(value);
+        honey_client_t* valueOrig = valueStruct;
 
         // Execution
-        cef_function(valueStuct);
+        honey_function(valueStuct);
         
         // Parameter Restoration
         if (valueStruct) {
           if (valueStruct != valueOrig) {
             // The value was changed.
-            value = CefClientCppToC::Unwrap(valueStruct);
+            value = HoneycombClientCppToC::Unwrap(valueStruct);
           }
         } else {
           value = NULL;
@@ -816,11 +816,11 @@ Parameters:
       }
 
    String vector type by reference (string_vec_byref):
-      C++:   std::vector<CefString>& value
-      C API: cef_string_list_t value
+      C++:   std::vector<HoneycombString>& value
+      C API: honey_string_list_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_list_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_list_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -828,43 +828,43 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::vector<CefString> valueList;
+        std::vector<HoneycombString> valueList;
         transfer_string_list_contents(value, valueList);
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
         
         // Parameter Restoration
-        cef_string_list_clear(value);
+        honey_string_list_clear(value);
         transfer_string_list_contents(valueList, value);
       }
 
       // CToCpp Example
-      void CefFunction(std::vector<CefString>& value)
+      void HoneycombFunction(std::vector<HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_list_t valueList = cef_string_list_alloc();
+        honey_string_list_t valueList = honey_string_list_alloc();
         DCHECK(valueList);
         if (valueList)
           transfer_string_list_contents(value, valueList);
 
         // Execution
-        cef_function(valueList);
+        honey_function(valueList);
         
         // Parameter Restoration
         if (valueList) {
           value.clear();
           transfer_string_list_contents(valueList, value);
-          cef_string_list_free(valueList);
+          honey_string_list_free(valueList);
         }
       }
 
    String vector const type by reference (string_vec_byref_const):
-      C++:   const std::vector<CefString>& value
-      C API: cef_string_list_t value
+      C++:   const std::vector<HoneycombString>& value
+      C API: honey_string_list_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_list_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_list_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -872,36 +872,36 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::vector<CefString> valueList;
+        std::vector<HoneycombString> valueList;
         transfer_string_list_contents(value, valueList);
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
       }
 
       // CToCpp Example
-      void CefFunction(const std::vector<CefString>& value)
+      void HoneycombFunction(const std::vector<HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_list_t valueList = cef_string_list_alloc();
+        honey_string_list_t valueList = honey_string_list_alloc();
         DCHECK(valueList);
         if (valueList)
           transfer_string_list_contents(value, valueList);
 
         // Execution
-        cef_function(valueList);
+        honey_function(valueList);
         
         // Parameter Restoration
         if (valueList)
-          cef_string_list_free(valueList);
+          honey_string_list_free(valueList);
       }
 
    String-to-string single map type by reference (string_map_single_byref):
-      C++:   std::map<CefString,CefString>& value
-      C API: cef_string_map_t value
+      C++:   std::map<HoneycombString,HoneycombString>& value
+      C API: honey_string_map_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_map_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_map_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -909,44 +909,44 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::map<CefString,CefString> valueMap;
+        std::map<HoneycombString,HoneycombString> valueMap;
         transfer_string_map_contents(value, valueMap);
 
         // Execution
-        CefFunction(valueMap);
+        HoneycombFunction(valueMap);
         
         // Parameter Restoration
-        cef_string_map_clear(value);
+        honey_string_map_clear(value);
         transfer_string_map_contents(valueMap, value);
       }
 
       // CToCpp Example
-      void CefFunction(std::map<CefString,CefString>& value)
+      void HoneycombFunction(std::map<HoneycombString,HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_map_t valueMap = cef_string_map_alloc();
+        honey_string_map_t valueMap = honey_string_map_alloc();
         DCHECK(valueMap);
         if (valueMap)
           transfer_string_map_contents(value, valueMap);
 
         // Execution
-        cef_function(valueMap);
+        honey_function(valueMap);
         
         // Parameter Restoration
         if (valueMap) {
           value.clear();
           transfer_string_map_contents(valueMap, value);
-          cef_string_map_free(valueMap);
+          honey_string_map_free(valueMap);
         }
       }
 
    String-to-string single map const type by reference
      (string_map_single_byref_const):
-      C++:   const std::map<CefString,CefString>& value
-      C API: cef_string_map_t value
+      C++:   const std::map<HoneycombString,HoneycombString>& value
+      C API: honey_string_map_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_map_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_map_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -954,36 +954,36 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::map<CefString,CefString> valueMap;
+        std::map<HoneycombString,HoneycombString> valueMap;
         transfer_string_map_contents(value, valueMap);
 
         // Execution
-        CefFunction(valueMap);
+        HoneycombFunction(valueMap);
       }
 
       // CToCpp Example
-      void CefFunction(const std::map<CefString,CefString>& value)
+      void HoneycombFunction(const std::map<HoneycombString,HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_map_t valueMap = cef_string_map_alloc();
+        honey_string_map_t valueMap = honey_string_map_alloc();
         DCHECK(valueMap);
         if (valueMap)
           transfer_string_map_contents(value, valueMap);
 
         // Execution
-        cef_function(valueMap);
+        honey_function(valueMap);
         
         // Parameter Restoration
         if (valueMap)
-          cef_string_map_free(valueMap);
+          honey_string_map_free(valueMap);
       }
 
    String-to-string multi map type by reference (string_map_multi_byref):
-      C++:   std::multimap<CefString,CefString>& value
-      C API: cef_string_multimap_t value
+      C++:   std::multimap<HoneycombString,HoneycombString>& value
+      C API: honey_string_multimap_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_multimap_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_multimap_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -991,44 +991,44 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::multimap<CefString,CefString> valueMultimap;
+        std::multimap<HoneycombString,HoneycombString> valueMultimap;
         transfer_string_multimap_contents(value, valueMultimap);
 
         // Execution
-        CefFunction(valueMultimap);
+        HoneycombFunction(valueMultimap);
         
         // Parameter Restoration
-        cef_string_multimap_clear(value);
+        honey_string_multimap_clear(value);
         transfer_string_multimap_contents(valueMultimap, value);
       }
 
       // CToCpp Example
-      void CefFunction(std::multimap<CefString,CefString>& value)
+      void HoneycombFunction(std::multimap<HoneycombString,HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_multimap_t valueMultimap = cef_string_multimap_alloc();
+        honey_string_multimap_t valueMultimap = honey_string_multimap_alloc();
         DCHECK(valueMultimap);
         if (valueMultimap)
           transfer_string_multimap_contents(value, valueMultimap);
 
         // Execution
-        cef_function(valueMultimap);
+        honey_function(valueMultimap);
         
         // Parameter Restoration
         if (valueMultimap) {
           value.clear();
           transfer_string_multimap_contents(valueMultimap, value);
-          cef_string_multimap_free(valueMultimap);
+          honey_string_multimap_free(valueMultimap);
         }
       }
    
    String-to-string multi map const type by reference
    (string_map_multi_byref_const):
-      C++:   const std::multimap<CefString,CefString>& value
-      C API: cef_string_multimap_t value
+      C++:   const std::multimap<HoneycombString,HoneycombString>& value
+      C API: honey_string_multimap_t value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(cef_string_multimap_t value)
+      HONEYCOMB_EXPORT void honey_function(honey_string_multimap_t value)
       {
         // Parameter Verification
         DHECK(value);
@@ -1036,28 +1036,28 @@ Parameters:
           return;
 
         // Parameter Translation
-        std::multimap<CefString,CefString> valueMultimap;
+        std::multimap<HoneycombString,HoneycombString> valueMultimap;
         transfer_string_multimap_contents(value, valueMultimap);
 
         // Execution
-        CefFunction(valueMultimap);
+        HoneycombFunction(valueMultimap);
       }
 
       // CToCpp Example
-      void CefFunction(const std::multimap<CefString,CefString>& value)
+      void HoneycombFunction(const std::multimap<HoneycombString,HoneycombString>& value)
       {
         // Parameter Translation
-        cef_string_multimap_t valueMultimap = cef_string_multimap_alloc();
+        honey_string_multimap_t valueMultimap = honey_string_multimap_alloc();
         DCHECK(valueMultimap);
         if (valueMultimap)
           transfer_string_multimap_contents(value, valueMultimap);
 
         // Execution
-        cef_function(valueMultimap);
+        honey_function(valueMultimap);
         
         // Parameter Restoration
         if (valueMultimap)
-          cef_string_multimap_free(valueMultimap);
+          honey_string_multimap_free(valueMultimap);
       }
    
    Simple/Enumeration vector non-const type by reference (simple_vec_byref):
@@ -1065,7 +1065,7 @@ Parameters:
       C API: size_t* valueCount, int* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t* valueCount, int* value)
+      HONEYCOMB_EXPORT void honey_function(size_t* valueCount, int* value)
       {
         // Parameter Verification
         DCHECK(valueCount && (*valueCount == 0 || value));
@@ -1080,7 +1080,7 @@ Parameters:
         }
         
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
         
         // Parameter Restoration
         if (valueCount && value) {
@@ -1093,7 +1093,7 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(std::vector<int>& value)
+      void HoneycombFunction(std::vector<int>& value)
       {
         // Parameter Translation
         // Function identified by the "count_func" method attribute.
@@ -1113,7 +1113,7 @@ Parameters:
         }
 
         // Execution
-        cef_function(&valueCount, valueList);
+        honey_function(&valueCount, valueList);
         
         // Parameter Restoration
         value.clear();
@@ -1129,7 +1129,7 @@ Parameters:
       C API: size_t valueCount, int const* value
 
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t valueCount, int const* value)
+      HONEYCOMB_EXPORT void honey_function(size_t valueCount, int const* value)
       {
         // Parameter Verification
         DCHECK(valueCount == 0 || value);
@@ -1144,11 +1144,11 @@ Parameters:
         }
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
       }
 
       // CToCpp Example
-      void CefFunction(const std::vector<int>& value)
+      void HoneycombFunction(const std::vector<int>& value)
       {
         // Parameter Translation
         const size_t valueCount = value.size();
@@ -1163,7 +1163,7 @@ Parameters:
         }
         
         // Execution
-        cef_function(valueCount, valueList);
+        honey_function(valueCount, valueList);
 
         // Parameter Restoration
         if (valueList)
@@ -1175,7 +1175,7 @@ Parameters:
       C API: size_t* valueCount, int* value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t* valueCount, int* value)
+      HONEYCOMB_EXPORT void honey_function(size_t* valueCount, int* value)
       {
         // Parameter Verification
         DCHECK(valueCount && (*valueCount == 0 || value));
@@ -1190,7 +1190,7 @@ Parameters:
         }
         
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
         
         // Parameter Restoration
         if (valueCount && value) {
@@ -1203,7 +1203,7 @@ Parameters:
       }
 
       // CToCpp Example
-      void CefFunction(std::vector<bool>& value)
+      void HoneycombFunction(std::vector<bool>& value)
       {
         // Parameter Translation
         // Function identified by the "count_func" method attribute.
@@ -1223,7 +1223,7 @@ Parameters:
         }
 
         // Execution
-        cef_function(&valueCount, valueList);
+        honey_function(&valueCount, valueList);
         
         // Parameter Restoration
         value.clear();
@@ -1239,7 +1239,7 @@ Parameters:
       C API: size_t valueCount, int const* value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t valueCount, int const* value)
+      HONEYCOMB_EXPORT void honey_function(size_t valueCount, int const* value)
       {
         // Parameter Verification
         DCHECK(valueCount == 0 || value);
@@ -1254,11 +1254,11 @@ Parameters:
         }
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
       }
 
       // CToCpp Example
-      void CefFunction(const std::vector<bool>& value)
+      void HoneycombFunction(const std::vector<bool>& value)
       {
         // Parameter Translation
         const size_t valueCount = value.size();
@@ -1273,7 +1273,7 @@ Parameters:
         }
         
         // Execution
-        cef_function(valueCount, valueList);
+        honey_function(valueCount, valueList);
 
         // Parameter Restoration
         if (valueList)
@@ -1282,12 +1282,12 @@ Parameters:
 
    Smart pointer vector non-const type same boundary side by reference
       (refptr_vec_same_byref):
-      C++:   std::vector<CefRefPtr<CefPostDataElement>>& value
-      C API: size_t* valueCount, cef_post_data_element_t** value
+      C++:   std::vector<HoneycombRefPtr<HoneycombPostDataElement>>& value
+      C API: size_t* valueCount, honey_post_data_element_t** value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t* valueCount,
-                                   cef_post_data_element_t** value)
+      HONEYCOMB_EXPORT void honey_function(size_t* valueCount,
+                                   honey_post_data_element_t** value)
       {
         // Parameter Verification
         DCHECK(valueCount && (*valueCount == 0 || value));
@@ -1295,65 +1295,65 @@ Parameters:
           return;
         
         // Parameter Translation
-        std::vector<CefRefPtr<CefPostDataElement>> valueList;
+        std::vector<HoneycombRefPtr<HoneycombPostDataElement>> valueList;
         if (valueCount && *valueCount > 0 && value) {
           for (size_t i = 0; i < *valueCount; ++i)
-            valueList.push_back(CefPostDataElementCppToC::Unwrap(value[i]));
+            valueList.push_back(HoneycombPostDataElementCppToC::Unwrap(value[i]));
         }
         
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
         
         // Parameter Restoration
         if (valueCount && value) {
           *valueCount = std::min(valueList.size(), *valueCount);
           if (*valueCount > 0) {
             for (size_t i = 0; i < *valueCount; ++i)
-              value[i] = CefPostDataElementCppToC::Wrap(valueList[i]);
+              value[i] = HoneycombPostDataElementCppToC::Wrap(valueList[i]);
           }
         }
       }
 
       // CToCpp Example
-      void CefFunction(std::vector<bool>& value)
+      void HoneycombFunction(std::vector<bool>& value)
       {
         // Parameter Translation
         // Function identified by the "count_func" method attribute.
         size_t valueSize = value.size();
         size_t valueCount = std::max(GetFunctionCount(), valueSize);
-        cef_post_data_element_t** valueList = NULL;
+        honey_post_data_element_t** valueList = NULL;
         if (valueCount > 0) {
-          valueList = new cef_post_data_element_t*[valueCount];
+          valueList = new honey_post_data_element_t*[valueCount];
           DCHECK(valueList);
           if (valueList)
-            memset(valueList, 0, sizeof(cef_post_data_element_t*)*valueCount);
+            memset(valueList, 0, sizeof(honey_post_data_element_t*)*valueCount);
           if (valueList && valueSize > 0) {
             for (size_t i = 0; i < valueSize; ++i) {
-              valueList[i] = CefPostDataElementCToCpp::Unwrap(value[i]);
+              valueList[i] = HoneycombPostDataElementCToCpp::Unwrap(value[i]);
             }
           }
         }
 
         // Execution
-        cef_function(&valueCount, valueList);
+        honey_function(&valueCount, valueList);
         
         // Parameter Restoration
         value.clear();
         if (valueCount > 0 && valueList) {
           for (size_t i = 0; i < valueCount; ++i)
-            value.push_back(CefPostDataElementCToCpp::Wrap(valueList[i]));
+            value.push_back(HoneycombPostDataElementCToCpp::Wrap(valueList[i]));
           delete [] valueList;
         }
       }
 
    Smart pointer vector const type same boundary side by reference
       (refptr_vec_same_byref_const):
-      C++:   const std::vector<CefRefPtr<CefV8Value>>& value
-      C API: size_t valueCount, const cef_v8value_t** value
+      C++:   const std::vector<HoneycombRefPtr<HoneycombV8Value>>& value
+      C API: size_t valueCount, const honey_v8value_t** value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t valueCount,
-                                   const cef_v8value_t** value)
+      HONEYCOMB_EXPORT void honey_function(size_t valueCount,
+                                   const honey_v8value_t** value)
       {
         // Parameter Verification
         DCHECK(valueCount == 0 || value);
@@ -1361,33 +1361,33 @@ Parameters:
           return;
         
         // Parameter Translation
-        std::vector<CefRefPtr<CefV8Value>> valueList;
+        std::vector<HoneycombRefPtr<HoneycombV8Value>> valueList;
         if (valueCount > 0) {
           for (size_t i = 0; i < valueCount; ++i)
-            valueList.push_back(CefV8ValueCppToC::Unwrap(value[i]));
+            valueList.push_back(HoneycombV8ValueCppToC::Unwrap(value[i]));
         }
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
       }
 
       // CToCpp Example
-      void CefFunction(const std::vector<bool>& value)
+      void HoneycombFunction(const std::vector<bool>& value)
       {
         // Parameter Translation
         const size_t valueCount = value.size();
-        cef_v8value_t** valueList = NULL;
+        honey_v8value_t** valueList = NULL;
         if (valueCount > 0) {
           valueList = new int[valueCount];
           DCHECK(valueList);
           if (valueList) {
             for (size_t i = 0; i < valueCount; ++i)
-              valueList[i] = CefV8ValueCToCpp::Unwrap(value[i]);
+              valueList[i] = HoneycombV8ValueCToCpp::Unwrap(value[i]);
           }
         }
         
         // Execution
-        cef_function(valueCount, valueList);
+        honey_function(valueCount, valueList);
 
         // Parameter Restoration
         if (valueList)
@@ -1396,12 +1396,12 @@ Parameters:
 
    Smart pointer vector non-const type different boundary side by reference
       (refptr_vec_diff_byref):
-      C++:   std::vector<CefRefPtr<CefPostDataElement>>& value
-      C API: size_t* valueCount, cef_post_data_element_t** value
+      C++:   std::vector<HoneycombRefPtr<HoneycombPostDataElement>>& value
+      C API: size_t* valueCount, honey_post_data_element_t** value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t* valueCount,
-                                   cef_post_data_element_t** value)
+      HONEYCOMB_EXPORT void honey_function(size_t* valueCount,
+                                   honey_post_data_element_t** value)
       {
         // Parameter Verification
         DCHECK(valueCount && (*valueCount == 0 || value));
@@ -1409,65 +1409,65 @@ Parameters:
           return;
         
         // Parameter Translation
-        std::vector<CefRefPtr<CefPostDataElement>> valueList;
+        std::vector<HoneycombRefPtr<HoneycombPostDataElement>> valueList;
         if (valueCount && *valueCount > 0 && value) {
           for (size_t i = 0; i < *valueCount; ++i)
-            valueList.push_back(CefPostDataElementCToCpp::Wrap(value[i]));
+            valueList.push_back(HoneycombPostDataElementCToCpp::Wrap(value[i]));
         }
         
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
         
         // Parameter Restoration
         if (valueCount && value) {
           *valueCount = std::min(valueList.size(), *valueCount);
           if (*valueCount > 0) {
             for (size_t i = 0; i < *valueCount; ++i)
-              value[i] = CefPostDataElementCToCpp::Unwrap(valueList[i]);
+              value[i] = HoneycombPostDataElementCToCpp::Unwrap(valueList[i]);
           }
         }
       }
 
       // CToCpp Example
-      void CefFunction(std::vector<bool>& value)
+      void HoneycombFunction(std::vector<bool>& value)
       {
         // Parameter Translation
         // Function identified by the "count_func" method attribute.
         size_t valueSize = value.size();
         size_t valueCount = std::max(GetFunctionCount(), valueSize);
-        cef_post_data_element_t** valueList = NULL;
+        honey_post_data_element_t** valueList = NULL;
         if (valueCount > 0) {
-          valueList = new cef_post_data_element_t*[valueCount];
+          valueList = new honey_post_data_element_t*[valueCount];
           DCHECK(valueList);
           if (valueList)
-            memset(valueList, 0, sizeof(cef_post_data_element_t*)*valueCount);
+            memset(valueList, 0, sizeof(honey_post_data_element_t*)*valueCount);
           if (valueList && valueSize > 0) {
             for (size_t i = 0; i < valueSize; ++i) {
-              valueList[i] = CefPostDataElementCppToC::Wrap(value[i]);
+              valueList[i] = HoneycombPostDataElementCppToC::Wrap(value[i]);
             }
           }
         }
 
         // Execution
-        cef_function(&valueCount, valueList);
+        honey_function(&valueCount, valueList);
         
         // Parameter Restoration
         value.clear();
         if (valueCount > 0 && valueList) {
           for (size_t i = 0; i < valueCount; ++i)
-            value.push_back(CefPostDataElementCppToC::Unwrap(valueList[i]));
+            value.push_back(HoneycombPostDataElementCppToC::Unwrap(valueList[i]));
           delete [] valueList;
         }
       }
 
    Smart pointer vector const type different boundary side by reference
       (refptr_vec_diff_byref_const):
-      C++:   const std::vector<CefRefPtr<CefV8Value>>& value
-      C API: size_t valueCount, const cef_v8value_t** value
+      C++:   const std::vector<HoneycombRefPtr<HoneycombV8Value>>& value
+      C API: size_t valueCount, const honey_v8value_t** value
       
       // CppToC Example
-      CEF_EXPORT void cef_function(size_t valueCount,
-                                   const cef_v8value_t** value)
+      HONEYCOMB_EXPORT void honey_function(size_t valueCount,
+                                   const honey_v8value_t** value)
       {
         // Parameter Verification
         DCHECK(valueCount == 0 || value);
@@ -1475,33 +1475,33 @@ Parameters:
           return;
         
         // Parameter Translation
-        std::vector<CefRefPtr<CefV8Value>> valueList;
+        std::vector<HoneycombRefPtr<HoneycombV8Value>> valueList;
         if (valueCount > 0) {
           for (size_t i = 0; i < valueCount; ++i)
-            valueList.push_back(CefV8ValueCToCpp::Wrap(value[i]));
+            valueList.push_back(HoneycombV8ValueCToCpp::Wrap(value[i]));
         }
 
         // Execution
-        CefFunction(valueList);
+        HoneycombFunction(valueList);
       }
 
       // CToCpp Example
-      void CefFunction(const std::vector<bool>& value)
+      void HoneycombFunction(const std::vector<bool>& value)
       {
         // Parameter Translation
         const size_t valueCount = value.size();
-        cef_v8value_t** valueList = NULL;
+        honey_v8value_t** valueList = NULL;
         if (valueCount > 0) {
           valueList = new int[valueCount];
           DCHECK(valueList);
           if (valueList) {
             for (size_t i = 0; i < valueCount; ++i)
-              valueList[i] = CefV8ValueCppToC::Wrap(value[i]);
+              valueList[i] = HoneycombV8ValueCppToC::Wrap(value[i]);
           }
         }
         
         // Execution
-        cef_function(valueCount, valueList);
+        honey_function(valueCount, valueList);
 
         // Parameter Restoration
         if (valueList)
@@ -1515,20 +1515,20 @@ Return Values:
       C API: int
 
       // CppToC Example
-      CEF_EXPORT int cef_function()
+      HONEYCOMB_EXPORT int honey_function()
       {
         // Execution
-        int _rv = CefFunction();
+        int _rv = HoneycombFunction();
         
         // Return Translation
         return _rv;
       }
 
       // CToCpp Example
-      int CefFunction()
+      int HoneycombFunction()
       {
         // Execution
-        int _rv = cef_function();
+        int _rv = honey_function();
         
         // Return Translation
         return _rv;
@@ -1539,124 +1539,124 @@ Return Values:
       C API: int
 
       // CppToC Example
-      CEF_EXPORT int cef_function()
+      HONEYCOMB_EXPORT int honey_function()
       {
         // Execution
-        bool _rv = CefFunction();
+        bool _rv = HoneycombFunction();
         
         // Return Translation
         return _rv;
       }
 
       // CToCpp Example
-      bool CefFunction()
+      bool HoneycombFunction()
       {
         // Execution
-        int _rv = cef_function();
+        int _rv = honey_function();
         
         // Return Translation
         return _rv?true:false;
       }
 
    String non-const by reference type (string):
-      C++:   CefString
-      C API: cef_string_userfree_t
+      C++:   HoneycombString
+      C API: honey_string_userfree_t
 
       // CppToC Example
-      CEF_EXPORT cef_string_userfree_t cef_function()
+      HONEYCOMB_EXPORT honey_string_userfree_t honey_function()
       {
         // Execution
-        CefString _rv = CefFunction();
+        HoneycombString _rv = HoneycombFunction();
         
         // Return Translation
         return _rv.DetachToUserFree();
       }
 
       // CToCpp Example
-      CefString CefFunction()
+      HoneycombString HoneycombFunction()
       {
         // Execution
-        cef_string_userfree_t _rv = cef_function();
+        honey_string_userfree_t _rv = honey_function();
         
         // Return Translation
-        CefString _rvStr;
+        HoneycombString _rvStr;
         _rvStr.AttachToUserFree(_rv);
         return _rvStr;
       }
 
    Smart pointer type same boundary side (refptr_same):
-      C++:   CefRefPtr<CefBrowser>
-      C API: cef_browser_t*
+      C++:   HoneycombRefPtr<HoneycombBrowser>
+      C API: honey_browser_t*
 
       // CppToC Example
-      CEF_EXPORT cef_browser_t* cef_function()
+      HONEYCOMB_EXPORT honey_browser_t* honey_function()
       {
         // Execution
-        CefRefPtr<CefBrowser> _rv = CefFunction();
+        HoneycombRefPtr<HoneycombBrowser> _rv = HoneycombFunction();
         
         // Return Translation
-        return CefBrowserCppToC::Wrap(_rv);
+        return HoneycombBrowserCppToC::Wrap(_rv);
       }
 
       // CToCpp Example
-      CefString CefFunction()
+      HoneycombString HoneycombFunction()
       {
         // Execution
-        cef_browser_t* _rv = cef_function();
+        honey_browser_t* _rv = honey_function();
         
         // Return Translation
-        return CefBrowserCToCpp::Wrap(_rv);
+        return HoneycombBrowserCToCpp::Wrap(_rv);
       }
 
    Smart pointer type different boundary side (refptr_diff):
-      C++:   CefRefPtr<CefBrowser>
-      C API: cef_browser_t*
+      C++:   HoneycombRefPtr<HoneycombBrowser>
+      C API: honey_browser_t*
 
       // CppToC Example
-      CEF_EXPORT cef_browser_t* cef_function()
+      HONEYCOMB_EXPORT honey_browser_t* honey_function()
       {
         // Execution
-        CefRefPtr<CefBrowser> _rv = CefFunction();
+        HoneycombRefPtr<HoneycombBrowser> _rv = HoneycombFunction();
         
         // Return Translation
-        return CefBrowserCToCpp::Unwrap(_rv);
+        return HoneycombBrowserCToCpp::Unwrap(_rv);
       }
 
       // CToCpp Example
-      CefString CefFunction()
+      HoneycombString HoneycombFunction()
       {
         // Execution
-        cef_browser_t* _rv = cef_function();
+        honey_browser_t* _rv = honey_function();
         
         // Return Translation
-        return CefBrowserCppToC::Unwrap(_rv);
+        return HoneycombBrowserCppToC::Unwrap(_rv);
       }
 
 
 Translating Comments
 --------------------
 
-Comments from the CEF header file are reproduced in the C API header file with
+Comments from the Honeycomb header file are reproduced in the C API header file with
 any referenced C++ types and terminology changed to reflect C API types and
 terminology.
 
 C++:
-// Create a new CefV8Value object of the specified type.  These methods
+// Create a new HoneycombV8Value object of the specified type.  These methods
 // should only be called from within the JavaScript context -- either in a
-// CefV8Handler::Execute() callback or a CefHandler::HandleJSBinding()
+// HoneycombV8Handler::Execute() callback or a HoneycombHandler::HandleJSBinding()
 // callback.
 
 C API:
-// Create a new cef_v8value_t object of the specified type.  These functions
+// Create a new honey_v8value_t object of the specified type.  These functions
 // should only be called from within the JavaScript context -- either in a
-// cef_v8handler_t::execute() callback or a cef_handler_t::handle_jsbinding()
+// honey_v8handler_t::execute() callback or a honey_handler_t::handle_jsbinding()
 // callback.
 
 Situations where the user is responsible for freeing strings allocated and
 returned by the library are also noted by comments in the C API header file.
 
 C API:
-   // The resulting string must be freed by calling cef_string_free().
+   // The resulting string must be freed by calling honey_string_free().
 
 A comment must occur immediately before the function, class or method that it
 documents with no extra space in between.  Comments may span multiple lines
@@ -1665,7 +1665,7 @@ but each line must start with the '//' comment identifier.
 C++:
    // Set focus for the browser window.  If |enable| is true focus will be set
    // to the window.  Otherwise, focus will be removed.
-   /*--cef()--*/
+   /*--honey()--*/
    virtual void SetFocus(bool enable) =0;
 
 If two comments are separated by an empty line it will be assumed that the
@@ -1676,7 +1676,7 @@ C++:
    // ARRAY METHODS - These methods are only available on arrays.
    
    // Returns the number of elements in the array.
-   /*--cef()--*/
+   /*--honey()--*/
    virtual int GetArrayLength() =0;
 
 Empty lines and lines with the comment identifier but no content are considered

@@ -1,10 +1,10 @@
-# The Chromium Embedded Framework (CEF) project is built on top of the Chromium
+# The Honeycomb (Honeycomb) project is built on top of the Chromium
 # project source tree. Chromium should be updated to the URL and revision listed
-# below before building CEF. Chromium compatibility information for older CEF
+# below before building Honeycomb. Chromium compatibility information for older Honeycomb
 # revisions is available by viewing this file's change history.
 #
-# Instructions for building CEF are available at:
-# https://bitbucket.org/chromiumembedded/cef/wiki/BranchesAndBuilding
+# Instructions for building Honeycomb are available at:
+# https://bitbucket.org/chromiumembedded/honey/wiki/BranchesAndBuilding
 
 {
   'chromium_checkout': 'refs/tags/118.0.5993.0'

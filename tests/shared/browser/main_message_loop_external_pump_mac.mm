@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2016 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "include/cef_app.h"
+#include "include/honey_app.h"
 
 @class EventHandler;
 
@@ -118,9 +118,9 @@ int MainMessageLoopExternalPumpMac::Run() {
     CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.001, 1);
 
     // Do some work.
-    CefDoMessageLoopWork();
+    HoneycombDoMessageLoopWork();
 
-    // Sleep to allow the CEF proc to do work.
+    // Sleep to allow the Honeycomb proc to do work.
     [NSThread sleepForTimeInterval:0.05];
   }
 

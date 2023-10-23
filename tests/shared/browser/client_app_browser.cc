@@ -1,11 +1,11 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #include "tests/shared/browser/client_app_browser.h"
 
-#include "include/base/cef_logging.h"
-#include "include/cef_cookie.h"
+#include "include/base/honey_logging.h"
+#include "include/honey_cookie.h"
 #include "tests/shared/browser/main_message_loop_external_pump.h"
 #include "tests/shared/common/client_switches.h"
 
@@ -16,8 +16,8 @@ ClientAppBrowser::ClientAppBrowser() {
 }
 
 // static
-void ClientAppBrowser::PopulateSettings(CefRefPtr<CefCommandLine> command_line,
-                                        CefSettings& settings) {
+void ClientAppBrowser::PopulateSettings(HoneycombRefPtr<HoneycombCommandLine> command_line,
+                                        HoneycombSettings& settings) {
 #if (defined(OS_WIN) || defined(OS_LINUX))
   settings.multi_threaded_message_loop =
       command_line->HasSwitch(client::switches::kMultiThreadedMessageLoop);
@@ -38,13 +38,13 @@ void ClientAppBrowser::PopulateSettings(CefRefPtr<CefCommandLine> command_line,
       }
       list_str += scheme;
     }
-    CefString(&settings.cookieable_schemes_list) = list_str;
+    HoneycombString(&settings.cookieable_schemes_list) = list_str;
   }
 }
 
 void ClientAppBrowser::OnBeforeCommandLineProcessing(
-    const CefString& process_type,
-    CefRefPtr<CefCommandLine> command_line) {
+    const HoneycombString& process_type,
+    HoneycombRefPtr<HoneycombCommandLine> command_line) {
   // Pass additional command-line flags to the browser process.
   if (process_type.empty()) {
     // Pass additional command-line flags when off-screen rendering is enabled.
@@ -53,7 +53,7 @@ void ClientAppBrowser::OnBeforeCommandLineProcessing(
       // Use software rendering and compositing (disable GPU) for increased FPS
       // and decreased CPU usage. This will also disable WebGL so remove these
       // switches if you need that capability.
-      // See https://github.com/chromiumembedded/cef/issues/1257 for details.
+      // See https://github.com/chromiumembedded/honey/issues/1257 for details.
       if (!command_line->HasSwitch(switches::kEnableGPU)) {
         command_line->AppendSwitch("disable-gpu");
         command_line->AppendSwitch("disable-gpu-compositing");
@@ -87,8 +87,8 @@ void ClientAppBrowser::OnBeforeCommandLineProcessing(
 }
 
 void ClientAppBrowser::OnRegisterCustomPreferences(
-    cef_preferences_type_t type,
-    CefRawPtr<CefPreferenceRegistrar> registrar) {
+    honey_preferences_type_t type,
+    HoneycombRawPtr<HoneycombPreferenceRegistrar> registrar) {
   for (auto& delegate : delegates_) {
     delegate->OnRegisterCustomPreferences(this, type, registrar);
   }
@@ -101,7 +101,7 @@ void ClientAppBrowser::OnContextInitialized() {
 }
 
 void ClientAppBrowser::OnBeforeChildProcessLaunch(
-    CefRefPtr<CefCommandLine> command_line) {
+    HoneycombRefPtr<HoneycombCommandLine> command_line) {
   for (auto& delegate : delegates_) {
     delegate->OnBeforeChildProcessLaunch(this, command_line);
   }
@@ -116,7 +116,7 @@ void ClientAppBrowser::OnScheduleMessagePumpWork(int64_t delay) {
   }
 }
 
-CefRefPtr<CefClient> ClientAppBrowser::GetDefaultClient() {
+HoneycombRefPtr<HoneycombClient> ClientAppBrowser::GetDefaultClient() {
   for (auto& delegate : delegates_) {
     if (auto client = delegate->GetDefaultClient(this)) {
       return client;

@@ -1,4 +1,4 @@
-# Copyright (c) 2014 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2014 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
@@ -13,7 +13,7 @@ from exec_util import exec_cmd
 from file_util import copy_file, move_file, read_file, remove_file
 import git_util as git
 
-backup_ext = '.cefbak'
+backup_ext = '.honeybak'
 
 
 def msg(message):
@@ -131,15 +131,15 @@ if len(options.add) > 0 and (len(options.patch) != 1 or not options.resave):
   parser.print_help(sys.stderr)
   sys.exit()
 
-# The CEF root directory is the parent directory of _this_ script.
-cef_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+# The Honeycomb root directory is the parent directory of _this_ script.
+honey_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
 
 # Determine the type of Chromium checkout.
 if not git.is_checkout(src_dir):
   raise Exception('Not a valid checkout: %s' % src_dir)
 
-patch_dir = os.path.join(cef_dir, 'patch')
+patch_dir = os.path.join(honey_dir, 'patch')
 patch_cfg = os.path.join(patch_dir, 'patch.cfg')
 if not os.path.isfile(patch_cfg):
   raise Exception('File does not exist: %s' % patch_cfg)

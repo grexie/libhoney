@@ -1,0 +1,14 @@
+# Copyright (C) 2023 Grexie. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+declare_args() {
+  enable_honey = true
+
+  # Enables base target customizations necessary for distribution of the
+  # honey_sandbox static library. This value will be set via gn_args.py for the
+  # official sandbox build configurations only. DO NOT SET THIS VALUE MANUALLY
+  # FOR OTHER CHROMIUM/Honeycomb BUILD CONFIGURATIONS AS ITS USE MAY HAVE SIGNIFICANT
+  # PERFORMANCE AND/OR SECURITY IMPLICATIONS.
+  is_honey_sandbox_build = false
+}

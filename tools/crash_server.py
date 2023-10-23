@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# Copyright 2017 The Chromium Embedded Framework Authors. All rights reserved.
+# Copyright 2017 The Honeycomb Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be found
 # in the LICENSE file.
 """
 This script implements a simple HTTP server for receiving crash report uploads
-from a Breakpad/Crashpad client (any CEF-based application). This script is
+from a Breakpad/Crashpad client (any Honeycomb-based application). This script is
 intended for testing purposes only. An HTTPS server and a system such as Socorro
 (https://wiki.mozilla.org/Socorro) should be used when uploading crash reports
 from production applications.
@@ -23,7 +23,7 @@ Usage of this script is as follows:
    app bundle Resources directory (e.g. "<appname>.app/Contents/Resources"). At
    a minimum it must contain a "ServerURL=http://localhost:8080" line under the
    "[Config]" section (make sure the port number matches the value specified in
-   step 1). See comments in include/cef_crash_util.h for a complete
+   step 1). See comments in include/honey_crash_util.h for a complete
    specification of this file.
 
    Example file contents:
@@ -35,7 +35,7 @@ Usage of this script is as follows:
    MaxUploadsPerDay=0
 
    [CrashKeys]
-   # The cefclient sample application sets these values (see step 5 below).
+   # The honeyclient sample application sets these values (see step 5 below).
    testkey_small1=small
    testkey_small2=small
    testkey_medium1=medium
@@ -43,7 +43,7 @@ Usage of this script is as follows:
    testkey_large1=large
    testkey_large2=large
 
-3. Load one of the following URLs in the CEF-based application to cause a crash:
+3. Load one of the following URLs in the Honeycomb-based application to cause a crash:
 
    Main (browser) process crash:   chrome://inducebrowsercrashforrealz
    Renderer process crash:         chrome://crash
@@ -89,26 +89,26 @@ Usage of this script is as follows:
      <true/>
    </dict>
 
-5. The cefclient sample application sets test crash key values in the browser
+5. The honeyclient sample application sets test crash key values in the browser
    and renderer processes. To work properly these values must also be defined
    in the "[CrashKeys]" section of "crash_reporter.cfg" as shown above.
 
-   In tests/cefclient/browser/client_browser.cc (browser process):
+   In tests/honeyclient/browser/client_browser.cc (browser process):
 
-   CefSetCrashKeyValue("testkey1", "value1_browser");
-   CefSetCrashKeyValue("testkey2", "value2_browser");
-   CefSetCrashKeyValue("testkey3", "value3_browser");
+   HoneycombSetCrashKeyValue("testkey1", "value1_browser");
+   HoneycombSetCrashKeyValue("testkey2", "value2_browser");
+   HoneycombSetCrashKeyValue("testkey3", "value3_browser");
 
-   In tests/cefclient/renderer/client_renderer.cc (renderer process):
+   In tests/honeyclient/renderer/client_renderer.cc (renderer process):
 
-   CefSetCrashKeyValue("testkey1", "value1_renderer");
-   CefSetCrashKeyValue("testkey2", "value2_renderer");
-   CefSetCrashKeyValue("testkey3", "value3_renderer");
+   HoneycombSetCrashKeyValue("testkey1", "value1_renderer");
+   HoneycombSetCrashKeyValue("testkey2", "value2_renderer");
+   HoneycombSetCrashKeyValue("testkey3", "value3_renderer");
 
-   When crashing the browser or renderer processes with cefclient you should
+   When crashing the browser or renderer processes with honeyclient you should
    verify that the test crash key values are included in the metadata
    ("<id>.json") file. Some values may be chunked as described in
-   include/cef_crash_util.h.
+   include/honey_crash_util.h.
 """
 
 from __future__ import absolute_import

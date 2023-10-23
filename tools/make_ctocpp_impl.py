@@ -1,9 +1,9 @@
-# Copyright (c) 2011 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2011 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
-from cef_parser import *
+from honey_parser import *
 
 
 def make_ctocpp_impl_proto(clsname, name, func, parts):
@@ -11,7 +11,7 @@ def make_ctocpp_impl_proto(clsname, name, func, parts):
 
   proto = 'NO_SANITIZE("cfi-icall") '
   if clsname is None:
-    proto += 'CEF_GLOBAL ' + parts['retval'] + ' '
+    proto += 'HONEYCOMB_GLOBAL ' + parts['retval'] + ' '
   else:
     proto += parts['retval'] + ' ' + clsname
     if isinstance(func, obj_function_virtual):
@@ -40,8 +40,8 @@ def make_ctocpp_function_impl_existing(clsname, name, func, impl):
 
 
 def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
-  # Special handling for the CefShutdown global function.
-  is_cef_shutdown = name == 'CefShutdown' and isinstance(
+  # Special handling for the HoneycombShutdown global function.
+  is_honey_shutdown = name == 'HoneycombShutdown' and isinstance(
       func.parent, obj_header)
 
   # build the C++ prototype
@@ -85,16 +85,16 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
 
   # add API hash check
   if func.has_attrib('api_hash_check'):
-    result += '\n  const char* api_hash = cef_api_hash(0);'\
-              '\n  if (strcmp(api_hash, CEF_API_HASH_PLATFORM)) {'\
-              '\n    // The libcef API hash does not match the current header API hash.'\
+    result += '\n  const char* api_hash = honey_api_hash(0);'\
+              '\n  if (strcmp(api_hash, HONEYCOMB_API_HASH_PLATFORM)) {'\
+              '\n    // The libhoneycomb API hash does not match the current header API hash.'\
               '\n    DCHECK(false);'\
               '\n    return'+retval_default+';'\
               '\n  }\n'
 
   if isinstance(func, obj_function_virtual):
     # add the structure size check
-    result += '\n  if (CEF_MEMBER_MISSING(_struct, ' + func.get_capi_name() + ')) {'\
+    result += '\n  if (HONEYCOMB_MEMBER_MISSING(_struct, ' + func.get_capi_name() + ')) {'\
               '\n    return' + retval_default + ';\n'\
               '\n  }\n'
 
@@ -226,7 +226,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
     elif arg_type == 'rawptr_diff':
       ptr_class = arg.get_type().get_ptr_type()
       result += comment+\
-                '\n  CefOwnPtr<'+ptr_class+'CppToC> '+arg_name+'Ptr('+ptr_class+'CppToC::WrapRaw('+arg_name+'));'
+                '\n  HoneycombOwnPtr<'+ptr_class+'CppToC> '+arg_name+'Ptr('+ptr_class+'CppToC::WrapRaw('+arg_name+'));'
       params.append(arg_name + 'Ptr->GetStruct()')
     elif arg_type == 'refptr_same_byref' or arg_type == 'refptr_diff_byref':
       ptr_class = arg.get_type().get_ptr_type()
@@ -244,7 +244,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
       params.append('&' + arg_name + 'Struct')
     elif arg_type == 'string_vec_byref' or arg_type == 'string_vec_byref_const':
       result += comment+\
-                '\n  cef_string_list_t '+arg_name+'List = cef_string_list_alloc();'\
+                '\n  honey_string_list_t '+arg_name+'List = honey_string_list_alloc();'\
                 '\n  DCHECK('+arg_name+'List);'\
                 '\n  if ('+arg_name+'List) {'\
                 '\n    transfer_string_list_contents('+arg_name+', '+arg_name+'List);'\
@@ -252,7 +252,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
       params.append(arg_name + 'List')
     elif arg_type == 'string_map_single_byref' or arg_type == 'string_map_single_byref_const':
       result += comment+\
-                '\n  cef_string_map_t '+arg_name+'Map = cef_string_map_alloc();'\
+                '\n  honey_string_map_t '+arg_name+'Map = honey_string_map_alloc();'\
                 '\n  DCHECK('+arg_name+'Map);'\
                 '\n  if ('+arg_name+'Map) {'\
                 '\n    transfer_string_map_contents('+arg_name+', '+arg_name+'Map);'\
@@ -260,7 +260,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
       params.append(arg_name + 'Map')
     elif arg_type == 'string_map_multi_byref' or arg_type == 'string_map_multi_byref_const':
       result += comment+\
-                '\n  cef_string_multimap_t '+arg_name+'Multimap = cef_string_multimap_alloc();'\
+                '\n  honey_string_multimap_t '+arg_name+'Multimap = honey_string_multimap_alloc();'\
                 '\n  DCHECK('+arg_name+'Multimap);'\
                 '\n  if ('+arg_name+'Multimap) {'\
                 '\n    transfer_string_multimap_contents('+arg_name+', '+arg_name+'Multimap);'\
@@ -335,7 +335,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
     result += '\n'
   result_len = len(result)
 
-  if is_cef_shutdown:
+  if is_honey_shutdown:
     result += '\n\n#if DCHECK_IS_ON()'\
               '\n  shutdown_checker::SetIsShutdown();'\
               '\n#endif\n'
@@ -348,7 +348,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
     if retval_type == 'simple' or retval_type == 'bool':
       result += retval.get_type().get_result_simple_type_root()
     elif retval_type == 'string':
-      result += 'cef_string_userfree_t'
+      result += 'honey_string_userfree_t'
     elif retval_type == 'refptr_same' or retval_type == 'refptr_diff' or \
          retval_type == 'ownptr_same' or retval_type == 'ownptr_diff':
       ptr_struct = retval.get_type().get_result_ptr_type_root()
@@ -406,36 +406,36 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
                 '\n  if ('+arg_name+'List) {'\
                 '\n    '+arg_name+'.clear();'\
                 '\n    transfer_string_list_contents('+arg_name+'List, '+arg_name+');'\
-                '\n    cef_string_list_free('+arg_name+'List);'\
+                '\n    honey_string_list_free('+arg_name+'List);'\
                 '\n  }'
     elif arg_type == 'string_vec_byref_const':
       result += comment+\
                 '\n  if ('+arg_name+'List) {'\
-                '\n    cef_string_list_free('+arg_name+'List);'\
+                '\n    honey_string_list_free('+arg_name+'List);'\
                 '\n  }'
     elif arg_type == 'string_map_single_byref':
       result += comment+\
                 '\n  if ('+arg_name+'Map) {'\
                 '\n    '+arg_name+'.clear();'\
                 '\n    transfer_string_map_contents('+arg_name+'Map, '+arg_name+');'\
-                '\n    cef_string_map_free('+arg_name+'Map);'\
+                '\n    honey_string_map_free('+arg_name+'Map);'\
                 '\n  }'
     elif arg_type == 'string_map_single_byref_const':
       result += comment+\
                 '\n  if ('+arg_name+'Map) {'\
-                '\n    cef_string_map_free('+arg_name+'Map);'\
+                '\n    honey_string_map_free('+arg_name+'Map);'\
                 '\n  }'
     elif arg_type == 'string_map_multi_byref':
       result += comment+\
                 '\n  if ('+arg_name+'Multimap) {'\
                 '\n    '+arg_name+'.clear();'\
                 '\n    transfer_string_multimap_contents('+arg_name+'Multimap, '+arg_name+');'\
-                '\n    cef_string_multimap_free('+arg_name+'Multimap);'\
+                '\n    honey_string_multimap_free('+arg_name+'Multimap);'\
                 '\n  }'
     elif arg_type == 'string_map_multi_byref_const':
       result += comment+\
                 '\n  if ('+arg_name+'Multimap) {'\
-                '\n    cef_string_multimap_free('+arg_name+'Multimap);'\
+                '\n    honey_string_multimap_free('+arg_name+'Multimap);'\
                 '\n  }'
     elif arg_type == 'simple_vec_byref' or arg_type == 'bool_vec_byref' or \
          arg_type == 'refptr_vec_same_byref' or arg_type == 'refptr_vec_diff_byref':
@@ -490,7 +490,7 @@ def make_ctocpp_function_impl_new(clsname, name, func, base_scoped):
     elif retval_type == 'bool':
       result += '\n  return _retval?true:false;'
     elif retval_type == 'string':
-      result += '\n  CefString _retvalStr;'\
+      result += '\n  HoneycombString _retvalStr;'\
                 '\n  _retvalStr.AttachToUserFree(_retval);'\
                 '\n  return _retvalStr;'
     elif retval_type == 'refptr_same' or retval_type == 'ownptr_same':
@@ -568,11 +568,11 @@ def make_ctocpp_unwrap_derived(header, cls, base_scoped):
     for clsname in derived_classes:
       impl[0] += '  if (type == '+get_wrapper_type_enum(clsname)+') {\n'+\
                  '    return reinterpret_cast<'+get_capi_name(cls.get_name(), True)+'*>('+\
-                 clsname+'CToCpp::UnwrapOwn(CefOwnPtr<'+clsname+'>(reinterpret_cast<'+clsname+'*>(c.release()))));\n'+\
+                 clsname+'CToCpp::UnwrapOwn(HoneycombOwnPtr<'+clsname+'>(reinterpret_cast<'+clsname+'*>(c.release()))));\n'+\
                  '  }\n'
       impl[1] += '  if (type == '+get_wrapper_type_enum(clsname)+') {\n'+\
                  '    return reinterpret_cast<'+get_capi_name(cls.get_name(), True)+'*>('+\
-                 clsname+'CToCpp::UnwrapRaw(CefRawPtr<'+clsname+'>(reinterpret_cast<'+clsname+'*>(c))));\n'+\
+                 clsname+'CToCpp::UnwrapRaw(HoneycombRawPtr<'+clsname+'>(reinterpret_cast<'+clsname+'*>(c))));\n'+\
                  '  }\n'
   else:
     impl = ''
@@ -595,11 +595,11 @@ def make_ctocpp_class_impl(header, clsname, impl):
   existing = get_function_impls(impl, clsname + 'CToCpp::')
 
   base_class_name = header.get_base_class_name(clsname)
-  base_scoped = True if base_class_name == 'CefBaseScoped' else False
+  base_scoped = True if base_class_name == 'HoneycombBaseScoped' else False
   if base_scoped:
-    template_class = 'CefCToCppScoped'
+    template_class = 'HoneycombCToCppScoped'
   else:
-    template_class = 'CefCToCppRefCounted'
+    template_class = 'HoneycombCToCppRefCounted'
 
   # generate virtual functions
   virtualimpl = make_ctocpp_virtual_function_impl(header, cls, existing,
@@ -647,24 +647,24 @@ def make_ctocpp_class_impl(header, clsname, impl):
   parent_sig = template_class + '<' + clsname + 'CToCpp, ' + clsname + ', ' + capiname + '>'
 
   if base_scoped:
-    const += 'template<> '+capiname+'* '+parent_sig+'::UnwrapDerivedOwn(CefWrapperType type, CefOwnPtr<'+clsname+'> c) {\n'+ \
+    const += 'template<> '+capiname+'* '+parent_sig+'::UnwrapDerivedOwn(HoneycombWrapperType type, HoneycombOwnPtr<'+clsname+'> c) {\n'+ \
              unwrapderived[0] + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
              '  return nullptr;\n'+ \
              '}\n\n' + \
-             'template<> '+capiname+'* '+parent_sig+'::UnwrapDerivedRaw(CefWrapperType type, CefRawPtr<'+clsname+'> c) {\n'+ \
+             'template<> '+capiname+'* '+parent_sig+'::UnwrapDerivedRaw(HoneycombWrapperType type, HoneycombRawPtr<'+clsname+'> c) {\n'+ \
              unwrapderived[1] + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
              '  return nullptr;\n'+ \
              '}\n\n'
   else:
-    const += 'template<> '+capiname+'* '+parent_sig+'::UnwrapDerived(CefWrapperType type, '+clsname+'* c) {\n'+ \
+    const += 'template<> '+capiname+'* '+parent_sig+'::UnwrapDerived(HoneycombWrapperType type, '+clsname+'* c) {\n'+ \
              unwrapderived + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
              '  return nullptr;\n'+ \
              '}\n\n'
 
-  const += 'template<> CefWrapperType ' + parent_sig + '::kWrapperType = ' + get_wrapper_type_enum(
+  const += 'template<> HoneycombWrapperType ' + parent_sig + '::kWrapperType = ' + get_wrapper_type_enum(
       clsname) + ';'
 
   result += const
@@ -674,7 +674,7 @@ def make_ctocpp_class_impl(header, clsname, impl):
 
 def make_ctocpp_global_impl(header, impl):
   # retrieve the existing global function implementations
-  existing = get_function_impls(impl, 'CEF_GLOBAL')
+  existing = get_function_impls(impl, 'HONEYCOMB_GLOBAL')
 
   # generate static functions
   impl = make_ctocpp_function_impl(None, header.get_funcs(), existing, False)
@@ -699,7 +699,7 @@ def make_ctocpp_global_impl(header, impl):
   # build the final output
   result = get_copyright()
 
-  result += includes + '\n// Define used to facilitate parsing.\n#define CEF_GLOBAL\n\n' + impl
+  result += includes + '\n// Define used to facilitate parsing.\n#define HONEYCOMB_GLOBAL\n\n' + impl
 
   return result
 

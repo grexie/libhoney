@@ -1,9 +1,9 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_
-#define CEF_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_
+#ifndef HONEYCOMB_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_
+#define HONEYCOMB_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_
 #pragma once
 
 #include <set>
@@ -13,101 +13,101 @@
 namespace client {
 
 // Client app implementation for the renderer process.
-class ClientAppRenderer : public ClientApp, public CefRenderProcessHandler {
+class ClientAppRenderer : public ClientApp, public HoneycombRenderProcessHandler {
  public:
   // Interface for renderer delegates. All Delegates must be returned via
   // CreateDelegates. Do not perform work in the Delegate
-  // constructor. See CefRenderProcessHandler for documentation.
-  class Delegate : public virtual CefBaseRefCounted {
+  // constructor. See HoneycombRenderProcessHandler for documentation.
+  class Delegate : public virtual HoneycombBaseRefCounted {
    public:
-    virtual void OnWebKitInitialized(CefRefPtr<ClientAppRenderer> app) {}
+    virtual void OnWebKitInitialized(HoneycombRefPtr<ClientAppRenderer> app) {}
 
-    virtual void OnBrowserCreated(CefRefPtr<ClientAppRenderer> app,
-                                  CefRefPtr<CefBrowser> browser,
-                                  CefRefPtr<CefDictionaryValue> extra_info) {}
+    virtual void OnBrowserCreated(HoneycombRefPtr<ClientAppRenderer> app,
+                                  HoneycombRefPtr<HoneycombBrowser> browser,
+                                  HoneycombRefPtr<HoneycombDictionaryValue> extra_info) {}
 
-    virtual void OnBrowserDestroyed(CefRefPtr<ClientAppRenderer> app,
-                                    CefRefPtr<CefBrowser> browser) {}
+    virtual void OnBrowserDestroyed(HoneycombRefPtr<ClientAppRenderer> app,
+                                    HoneycombRefPtr<HoneycombBrowser> browser) {}
 
-    virtual CefRefPtr<CefLoadHandler> GetLoadHandler(
-        CefRefPtr<ClientAppRenderer> app) {
+    virtual HoneycombRefPtr<HoneycombLoadHandler> GetLoadHandler(
+        HoneycombRefPtr<ClientAppRenderer> app) {
       return nullptr;
     }
 
-    virtual void OnContextCreated(CefRefPtr<ClientAppRenderer> app,
-                                  CefRefPtr<CefBrowser> browser,
-                                  CefRefPtr<CefFrame> frame,
-                                  CefRefPtr<CefV8Context> context) {}
+    virtual void OnContextCreated(HoneycombRefPtr<ClientAppRenderer> app,
+                                  HoneycombRefPtr<HoneycombBrowser> browser,
+                                  HoneycombRefPtr<HoneycombFrame> frame,
+                                  HoneycombRefPtr<HoneycombV8Context> context) {}
 
-    virtual void OnContextReleased(CefRefPtr<ClientAppRenderer> app,
-                                   CefRefPtr<CefBrowser> browser,
-                                   CefRefPtr<CefFrame> frame,
-                                   CefRefPtr<CefV8Context> context) {}
+    virtual void OnContextReleased(HoneycombRefPtr<ClientAppRenderer> app,
+                                   HoneycombRefPtr<HoneycombBrowser> browser,
+                                   HoneycombRefPtr<HoneycombFrame> frame,
+                                   HoneycombRefPtr<HoneycombV8Context> context) {}
 
-    virtual void OnUncaughtException(CefRefPtr<ClientAppRenderer> app,
-                                     CefRefPtr<CefBrowser> browser,
-                                     CefRefPtr<CefFrame> frame,
-                                     CefRefPtr<CefV8Context> context,
-                                     CefRefPtr<CefV8Exception> exception,
-                                     CefRefPtr<CefV8StackTrace> stackTrace) {}
+    virtual void OnUncaughtException(HoneycombRefPtr<ClientAppRenderer> app,
+                                     HoneycombRefPtr<HoneycombBrowser> browser,
+                                     HoneycombRefPtr<HoneycombFrame> frame,
+                                     HoneycombRefPtr<HoneycombV8Context> context,
+                                     HoneycombRefPtr<HoneycombV8Exception> exception,
+                                     HoneycombRefPtr<HoneycombV8StackTrace> stackTrace) {}
 
-    virtual void OnFocusedNodeChanged(CefRefPtr<ClientAppRenderer> app,
-                                      CefRefPtr<CefBrowser> browser,
-                                      CefRefPtr<CefFrame> frame,
-                                      CefRefPtr<CefDOMNode> node) {}
+    virtual void OnFocusedNodeChanged(HoneycombRefPtr<ClientAppRenderer> app,
+                                      HoneycombRefPtr<HoneycombBrowser> browser,
+                                      HoneycombRefPtr<HoneycombFrame> frame,
+                                      HoneycombRefPtr<HoneycombDOMNode> node) {}
 
     // Called when a process message is received. Return true if the message was
     // handled and should not be passed on to other handlers. Delegates
     // should check for unique message names to avoid interfering with each
     // other.
     virtual bool OnProcessMessageReceived(
-        CefRefPtr<ClientAppRenderer> app,
-        CefRefPtr<CefBrowser> browser,
-        CefRefPtr<CefFrame> frame,
-        CefProcessId source_process,
-        CefRefPtr<CefProcessMessage> message) {
+        HoneycombRefPtr<ClientAppRenderer> app,
+        HoneycombRefPtr<HoneycombBrowser> browser,
+        HoneycombRefPtr<HoneycombFrame> frame,
+        HoneycombProcessId source_process,
+        HoneycombRefPtr<HoneycombProcessMessage> message) {
       return false;
     }
   };
 
-  typedef std::set<CefRefPtr<Delegate>> DelegateSet;
+  typedef std::set<HoneycombRefPtr<Delegate>> DelegateSet;
 
   ClientAppRenderer();
 
  private:
-  // Creates all of the Delegate objects. Implemented by cefclient in
+  // Creates all of the Delegate objects. Implemented by honeyclient in
   // client_app_delegates_renderer.cc
   static void CreateDelegates(DelegateSet& delegates);
 
-  // CefApp methods.
-  CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() override {
+  // HoneycombApp methods.
+  HoneycombRefPtr<HoneycombRenderProcessHandler> GetRenderProcessHandler() override {
     return this;
   }
 
-  // CefRenderProcessHandler methods.
+  // HoneycombRenderProcessHandler methods.
   void OnWebKitInitialized() override;
-  void OnBrowserCreated(CefRefPtr<CefBrowser> browser,
-                        CefRefPtr<CefDictionaryValue> extra_info) override;
-  void OnBrowserDestroyed(CefRefPtr<CefBrowser> browser) override;
-  CefRefPtr<CefLoadHandler> GetLoadHandler() override;
-  void OnContextCreated(CefRefPtr<CefBrowser> browser,
-                        CefRefPtr<CefFrame> frame,
-                        CefRefPtr<CefV8Context> context) override;
-  void OnContextReleased(CefRefPtr<CefBrowser> browser,
-                         CefRefPtr<CefFrame> frame,
-                         CefRefPtr<CefV8Context> context) override;
-  void OnUncaughtException(CefRefPtr<CefBrowser> browser,
-                           CefRefPtr<CefFrame> frame,
-                           CefRefPtr<CefV8Context> context,
-                           CefRefPtr<CefV8Exception> exception,
-                           CefRefPtr<CefV8StackTrace> stackTrace) override;
-  void OnFocusedNodeChanged(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            CefRefPtr<CefDOMNode> node) override;
-  bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                CefRefPtr<CefFrame> frame,
-                                CefProcessId source_process,
-                                CefRefPtr<CefProcessMessage> message) override;
+  void OnBrowserCreated(HoneycombRefPtr<HoneycombBrowser> browser,
+                        HoneycombRefPtr<HoneycombDictionaryValue> extra_info) override;
+  void OnBrowserDestroyed(HoneycombRefPtr<HoneycombBrowser> browser) override;
+  HoneycombRefPtr<HoneycombLoadHandler> GetLoadHandler() override;
+  void OnContextCreated(HoneycombRefPtr<HoneycombBrowser> browser,
+                        HoneycombRefPtr<HoneycombFrame> frame,
+                        HoneycombRefPtr<HoneycombV8Context> context) override;
+  void OnContextReleased(HoneycombRefPtr<HoneycombBrowser> browser,
+                         HoneycombRefPtr<HoneycombFrame> frame,
+                         HoneycombRefPtr<HoneycombV8Context> context) override;
+  void OnUncaughtException(HoneycombRefPtr<HoneycombBrowser> browser,
+                           HoneycombRefPtr<HoneycombFrame> frame,
+                           HoneycombRefPtr<HoneycombV8Context> context,
+                           HoneycombRefPtr<HoneycombV8Exception> exception,
+                           HoneycombRefPtr<HoneycombV8StackTrace> stackTrace) override;
+  void OnFocusedNodeChanged(HoneycombRefPtr<HoneycombBrowser> browser,
+                            HoneycombRefPtr<HoneycombFrame> frame,
+                            HoneycombRefPtr<HoneycombDOMNode> node) override;
+  bool OnProcessMessageReceived(HoneycombRefPtr<HoneycombBrowser> browser,
+                                HoneycombRefPtr<HoneycombFrame> frame,
+                                HoneycombProcessId source_process,
+                                HoneycombRefPtr<HoneycombProcessMessage> message) override;
 
  private:
   // Set of supported Delegates.
@@ -119,4 +119,4 @@ class ClientAppRenderer : public ClientApp, public CefRenderProcessHandler {
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_
+#endif  // HONEYCOMB_TESTS_SHARED_RENDERER_CLIENT_APP_RENDERER_H_

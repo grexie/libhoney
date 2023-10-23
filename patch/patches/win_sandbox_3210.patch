@@ -6,7 +6,7 @@ index 3add6ba6997a3..c6cedeed4da7b 100644
      const base::HandlesToInheritVector& handles_to_inherit,
      SandboxDelegate* delegate,
      base::Process* process) {
-+  // Will be nullptr if SandboxInterfaceInfo was not initialized by the CEF
++  // Will be nullptr if SandboxInterfaceInfo was not initialized by the Honeycomb
 +  // client, meaning that the sandbox is implicitly disabled.
 +  if (!g_broker_services) {
 +    return LaunchWithoutSandbox(cmd_line, handles_to_inherit, delegate,

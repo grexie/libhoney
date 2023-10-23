@@ -7,7 +7,7 @@ index 4fc3870bcfbc8..24c6d32d4a8d8 100644
  // another origin.
  LOAD_FLAG(DISABLE_SHARED_DICTIONARY_AFTER_CROSS_ORIGIN_REDIRECT, 1 << 18)
 +
-+// This load will not send any cookies. For CEF usage.
++// This load will not send any cookies. For Honeycomb usage.
 +LOAD_FLAG(DO_NOT_SEND_COOKIES, 1 << 19)
 diff --git net/url_request/url_request_http_job.cc net/url_request/url_request_http_job.cc
 index eac944172789c..313c46b8088ed 100644

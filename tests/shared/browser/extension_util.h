@@ -1,16 +1,16 @@
-// Copyright (c) 2017 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2017 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_CEFCLIENT_BROWSER_EXTENSION_UTIL_H_
-#define CEF_TESTS_CEFCLIENT_BROWSER_EXTENSION_UTIL_H_
+#ifndef HONEYCOMB_TESTS_HONEYCOMBCLIENT_BROWSER_EXTENSION_UTIL_H_
+#define HONEYCOMB_TESTS_HONEYCOMBCLIENT_BROWSER_EXTENSION_UTIL_H_
 #pragma once
 
 #include <string>
 
-#include "include/cef_extension.h"
-#include "include/cef_extension_handler.h"
-#include "include/wrapper/cef_resource_manager.h"
+#include "include/honey_extension.h"
+#include "include/honey_extension_handler.h"
+#include "include/wrapper/honey_resource_manager.h"
 
 namespace client {
 namespace extension_util {
@@ -49,15 +49,15 @@ bool GetExtensionResourceContents(const std::string& extension_path,
 // Load |extension_path| in |request_context|. May be an internal or external
 // extension. Internal extensions must be on the hard-coded list enforced by
 // IsInternalExtension.
-void LoadExtension(CefRefPtr<CefRequestContext> request_context,
+void LoadExtension(HoneycombRefPtr<HoneycombRequestContext> request_context,
                    const std::string& extension_path,
-                   CefRefPtr<CefExtensionHandler> handler);
+                   HoneycombRefPtr<HoneycombExtensionHandler> handler);
 
 // Register an internal handler for extension resources. Internal extensions
 // must be on the hard-coded list enforced by IsInternalExtension.
 void AddInternalExtensionToResourceManager(
-    CefRefPtr<CefExtension> extension,
-    CefRefPtr<CefResourceManager> resource_manager);
+    HoneycombRefPtr<HoneycombExtension> extension,
+    HoneycombRefPtr<HoneycombResourceManager> resource_manager);
 
 // Returns the URL origin for |extension_id|.
 std::string GetExtensionOrigin(const std::string& extension_id);
@@ -66,15 +66,15 @@ std::string GetExtensionOrigin(const std::string& extension_id);
 // https://developer.chrome.com/extensions/browserAction
 
 // Look for a browser_action.default_popup manifest value.
-std::string GetExtensionURL(CefRefPtr<CefExtension> extension);
+std::string GetExtensionURL(HoneycombRefPtr<HoneycombExtension> extension);
 
 // Look for a browser_action.default_icon manifest value and return the resource
 // path. If |internal| is non-nullptr it will be set to true if the extension is
 // handled internally.
-std::string GetExtensionIconPath(CefRefPtr<CefExtension> extension,
+std::string GetExtensionIconPath(HoneycombRefPtr<HoneycombExtension> extension,
                                  bool* internal);
 
 }  // namespace extension_util
 }  // namespace client
 
-#endif  // CEF_TESTS_CEFCLIENT_BROWSER_EXTENSION_UTIL_H_
+#endif  // HONEYCOMB_TESTS_HONEYCOMBCLIENT_BROWSER_EXTENSION_UTIL_H_

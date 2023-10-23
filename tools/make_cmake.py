@@ -1,4 +1,4 @@
-# Copyright (c) 2014 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2014 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
@@ -10,8 +10,8 @@ import sys
 # script directory.
 script_dir = os.path.dirname(__file__)
 
-# CEF root directory.
-cef_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+# Honeycomb root directory.
+honey_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
 
 
 def get_files_for_variable(cmake_path, variables, variable):
@@ -25,17 +25,17 @@ def get_files_for_variable(cmake_path, variables, variable):
 
   # Return path values relative to the cmake file directory.
   # Example 1:
-  #   cmake file   = "/path/to/libcef_dll/CMakeLists.txt"
-  #   include path = "/path/to/libcef_dll/wrapper/cef_browser_info_map.h"
-  #   return path  = "wrapper/cef_browser_info_map.h"
+  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   include path = "/path/to/libhoneycomb_dll/wrapper/honey_browser_info_map.h"
+  #   return path  = "wrapper/honey_browser_info_map.h"
   # Example 2:
-  #   cmake file   = "/path/to/libcef_dll/CMakeLists.txt"
-  #   include path = "/path/to/include/internal/cef_export.h"
-  #   return path  = "../include/internal/cef_export.h"
+  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   include path = "/path/to/include/internal/honey_export.h"
+  #   return path  = "../include/internal/honey_export.h"
   new_paths = []
   paths = variables[variable]
   for path in paths:
-    abspath = os.path.join(cef_dir, path)
+    abspath = os.path.join(honey_dir, path)
     newpath = normalize_path(os.path.relpath(abspath, cmake_dirname))
     new_paths.append(newpath)
   return new_paths
@@ -55,12 +55,12 @@ def format_cmake_group(cmake_path, name, files, platform_sep, append_macro):
   # Folder will be the cmake parent directory name combined with the path to
   # first file in the files list.
   # Example 1:
-  #   cmake file   = "/path/to/libcef_dll/CMakeLists.txt"
-  #   include path = "wrapper/cef_browser_info_map.h"
-  #   folder       = "libcef_dll\\\\wrapper"
+  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   include path = "wrapper/honey_browser_info_map.h"
+  #   folder       = "libhoneycomb_dll\\\\wrapper"
   # Example 2:
-  #   cmake file   = "/path/to/libcef_dll/CMakeLists.txt"
-  #   include path = "../include/internal/cef_export.h"
+  #   cmake file   = "/path/to/libhoneycomb_dll/CMakeLists.txt"
+  #   include path = "../include/internal/honey_export.h"
   #   folder       = "include\\\\internal"
   folder = os.path.basename(os.path.dirname(cmake_path))
   folder = os.path.dirname(os.path.normpath(os.path.join(folder, files[0])))
@@ -110,12 +110,12 @@ def process_cmake_template_segment(segment, segment_ct, cmake_path, variables):
   append_macro = 'APPEND_PLATFORM_SOURCES'  # CMake macro name.
 
   # Extract values from |segment|. Example |segment| contents:
-  #  'prefix': 'cefsimple',
+  #  'prefix': 'honeysimple',
   #  'includes': [
-  #    'cefsimple_sources_common',
-  #    'cefsimple_sources_win:WINDOWS',
-  #    'cefsimple_sources_mac:MAC',
-  #    'cefsimple_sources_linux:LINUX',
+  #    'honeysimple_sources_common',
+  #    'honeysimple_sources_win:WINDOWS',
+  #    'honeysimple_sources_mac:MAC',
+  #    'honeysimple_sources_linux:LINUX',
   #  ],
   values = eval('{' + segment + '}', {'__builtins__': None}, None)
   if 'prefix' in values:
@@ -229,7 +229,7 @@ def process_cmake_template(input, output, variables, quiet=False):
 
 def read_gypi_variables(source):
   """ Read the |source| gypi file and extract the variables section. """
-  path = os.path.join(cef_dir, source + '.gypi')
+  path = os.path.join(honey_dir, source + '.gypi')
   if not os.path.exists(path):
     raise Exception('File %s does not exist' % path)
   contents = eval_file(path)
@@ -246,8 +246,8 @@ if __name__ == "__main__":
     sys.exit()
 
   # Read the gypi files and combine into a single dictionary.
-  variables1 = read_gypi_variables('cef_paths')
-  variables2 = read_gypi_variables('cef_paths2')
+  variables1 = read_gypi_variables('honey_paths')
+  variables2 = read_gypi_variables('honey_paths2')
   variables = dict(variables1.items() + variables2.items())
 
   # Process the cmake template.

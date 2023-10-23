@@ -1,16 +1,16 @@
-# Copyright (c) 2011 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2011 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
-from cef_parser import *
+from honey_parser import *
 
 
 def make_cpptoc_impl_proto(name, func, parts):
   if isinstance(func, obj_function_virtual):
-    proto = parts['retval'] + ' CEF_CALLBACK'
+    proto = parts['retval'] + ' HONEYCOMB_CALLBACK'
   else:
-    proto = 'CEF_EXPORT ' + parts['retval']
+    proto = 'HONEYCOMB_EXPORT ' + parts['retval']
 
   proto += ' ' + name + '(' + ', '.join(parts['args']) + ')'
   return proto
@@ -31,8 +31,8 @@ def make_cpptoc_function_impl_existing(cls, name, func, impl, defined_names):
 
 
 def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
-  # Special handling for the cef_shutdown global function.
-  is_cef_shutdown = name == 'cef_shutdown' and isinstance(
+  # Special handling for the honey_shutdown global function.
+  is_honey_shutdown = name == 'honey_shutdown' and isinstance(
       func.parent, obj_header)
 
   # retrieve the C API prototype parts
@@ -211,10 +211,10 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
                 '\n  }'
       params.append(arg_name + 'Obj')
     elif arg_type == 'string_byref_const':
-      params.append('CefString(' + arg_name + ')')
+      params.append('HoneycombString(' + arg_name + ')')
     elif arg_type == 'string_byref':
       result += comment+\
-                '\n  CefString '+arg_name+'Str('+arg_name+');'
+                '\n  HoneycombString '+arg_name+'Str('+arg_name+');'
       params.append(arg_name + 'Str')
     elif arg_type == 'refptr_same' or arg_type == 'refptr_diff':
       ptr_class = arg.get_type().get_ptr_type()
@@ -231,7 +231,7 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
     elif arg_type == 'ownptr_diff' or arg_type == 'rawptr_diff':
       ptr_class = arg.get_type().get_ptr_type()
       result += comment+\
-                '\n  CefOwnPtr<'+ptr_class+'> '+arg_name+'Ptr('+ptr_class+'CToCpp::Wrap('+arg_name+'));'
+                '\n  HoneycombOwnPtr<'+ptr_class+'> '+arg_name+'Ptr('+ptr_class+'CToCpp::Wrap('+arg_name+'));'
       if arg_type == 'ownptr_diff':
         params.append('std::move(' + arg_name + 'Ptr)')
       else:
@@ -243,7 +243,7 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
       else:
         assign = ptr_class + 'CToCpp::Wrap(*' + arg_name + ')'
       result += comment+\
-                '\n  CefRefPtr<'+ptr_class+'> '+arg_name+'Ptr;'\
+                '\n  HoneycombRefPtr<'+ptr_class+'> '+arg_name+'Ptr;'\
                 '\n  if ('+arg_name+' && *'+arg_name+') {'\
                 '\n    '+arg_name+'Ptr = '+assign+';'\
                 '\n  }'\
@@ -251,17 +251,17 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
       params.append(arg_name + 'Ptr')
     elif arg_type == 'string_vec_byref' or arg_type == 'string_vec_byref_const':
       result += comment+\
-                '\n  std::vector<CefString> '+arg_name+'List;'\
+                '\n  std::vector<HoneycombString> '+arg_name+'List;'\
                 '\n  transfer_string_list_contents('+arg_name+', '+arg_name+'List);'
       params.append(arg_name + 'List')
     elif arg_type == 'string_map_single_byref' or arg_type == 'string_map_single_byref_const':
       result += comment+\
-                '\n  std::map<CefString, CefString> '+arg_name+'Map;'\
+                '\n  std::map<HoneycombString, HoneycombString> '+arg_name+'Map;'\
                 '\n  transfer_string_map_contents('+arg_name+', '+arg_name+'Map);'
       params.append(arg_name + 'Map')
     elif arg_type == 'string_map_multi_byref' or arg_type == 'string_map_multi_byref_const':
       result += comment+\
-                '\n  std::multimap<CefString, CefString> '+arg_name+'Multimap;'\
+                '\n  std::multimap<HoneycombString, HoneycombString> '+arg_name+'Multimap;'\
                 '\n  transfer_string_multimap_contents('+arg_name+', '+arg_name+'Multimap);'
       params.append(arg_name + 'Multimap')
     elif arg_type == 'simple_vec_byref' or arg_type == 'bool_vec_byref' or \
@@ -320,7 +320,7 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
     result += '\n'
   result_len = len(result)
 
-  if is_cef_shutdown:
+  if is_honey_shutdown:
     result += '\n\n#if DCHECK_IS_ON()'\
               '\n  shutdown_checker::SetIsShutdown();'\
               '\n#endif\n'
@@ -397,15 +397,15 @@ def make_cpptoc_function_impl_new(cls, name, func, defined_names, base_scoped):
                 '\n  }'
     elif arg_type == 'string_vec_byref':
       result += comment+\
-                '\n  cef_string_list_clear('+arg_name+');'\
+                '\n  honey_string_list_clear('+arg_name+');'\
                 '\n  transfer_string_list_contents('+arg_name+'List, '+arg_name+');'
     elif arg_type == 'string_map_single_byref':
       result += comment+\
-                '\n  cef_string_map_clear('+arg_name+');'\
+                '\n  honey_string_map_clear('+arg_name+');'\
                 '\n  transfer_string_map_contents('+arg_name+'Map, '+arg_name+');'
     elif arg_type == 'string_map_multi_byref':
       result += comment+\
-                '\n  cef_string_multimap_clear('+arg_name+');'\
+                '\n  honey_string_multimap_clear('+arg_name+');'\
                 '\n  transfer_string_multimap_contents('+arg_name+'Multimap, '+arg_name+');'
     elif arg_type == 'simple_vec_byref' or arg_type == 'bool_vec_byref' or \
         arg_type == 'refptr_vec_same_byref' or arg_type == 'refptr_vec_diff_byref':
@@ -592,14 +592,14 @@ def make_cpptoc_class_impl(header, clsname, impl):
   prefixname = get_capi_name(clsname[3:], False)
 
   # retrieve the existing virtual function implementations
-  existing = get_function_impls(impl, 'CEF_CALLBACK')
+  existing = get_function_impls(impl, 'HONEYCOMB_CALLBACK')
 
   base_class_name = header.get_base_class_name(clsname)
-  base_scoped = True if base_class_name == 'CefBaseScoped' else False
+  base_scoped = True if base_class_name == 'HoneycombBaseScoped' else False
   if base_scoped:
-    template_class = 'CefCppToCScoped'
+    template_class = 'HoneycombCppToCScoped'
   else:
-    template_class = 'CefCppToCRefCounted'
+    template_class = 'HoneycombCppToCRefCounted'
 
   # generate virtual functions
   virtualimpl = make_cpptoc_virtual_function_impl(
@@ -611,7 +611,7 @@ def make_cpptoc_class_impl(header, clsname, impl):
   defined_names.append(cls.get_capi_name())
 
   # retrieve the existing static function implementations
-  existing = get_function_impls(impl, 'CEF_EXPORT')
+  existing = get_function_impls(impl, 'HONEYCOMB_EXPORT')
 
   # generate static functions
   staticimpl = make_cpptoc_function_impl(cls,
@@ -652,24 +652,24 @@ def make_cpptoc_class_impl(header, clsname, impl):
   parent_sig = template_class + '<' + clsname + 'CppToC, ' + clsname + ', ' + capiname + '>'
 
   if base_scoped:
-    const += 'template<> CefOwnPtr<'+clsname+'> '+parent_sig+'::UnwrapDerivedOwn(CefWrapperType type, '+capiname+'* s) {\n' + \
+    const += 'template<> HoneycombOwnPtr<'+clsname+'> '+parent_sig+'::UnwrapDerivedOwn(HoneycombWrapperType type, '+capiname+'* s) {\n' + \
              unwrapderived[0] + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
-             '  return CefOwnPtr<'+clsname+'>();\n'+ \
+             '  return HoneycombOwnPtr<'+clsname+'>();\n'+ \
              '}\n\n' + \
-             'template<> CefRawPtr<'+clsname+'> '+parent_sig+'::UnwrapDerivedRaw(CefWrapperType type, '+capiname+'* s) {\n' + \
+             'template<> HoneycombRawPtr<'+clsname+'> '+parent_sig+'::UnwrapDerivedRaw(HoneycombWrapperType type, '+capiname+'* s) {\n' + \
              unwrapderived[1] + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
              '  return nullptr;\n'+ \
              '}\n\n'
   else:
-    const += 'template<> CefRefPtr<'+clsname+'> '+parent_sig+'::UnwrapDerived(CefWrapperType type, '+capiname+'* s) {\n' + \
+    const += 'template<> HoneycombRefPtr<'+clsname+'> '+parent_sig+'::UnwrapDerived(HoneycombWrapperType type, '+capiname+'* s) {\n' + \
              unwrapderived + \
              '  DCHECK(false) << "Unexpected class type: " << type;\n'+ \
              '  return nullptr;\n'+ \
              '}\n\n'
 
-  const += 'template<> CefWrapperType ' + parent_sig + '::kWrapperType = ' + get_wrapper_type_enum(
+  const += 'template<> HoneycombWrapperType ' + parent_sig + '::kWrapperType = ' + get_wrapper_type_enum(
       clsname) + ';'
 
   result += '\n\n' + const
@@ -682,7 +682,7 @@ def make_cpptoc_global_impl(header, impl):
   defined_names = header.get_defined_structs()
 
   # retrieve the existing global function implementations
-  existing = get_function_impls(impl, 'CEF_EXPORT')
+  existing = get_function_impls(impl, 'HONEYCOMB_EXPORT')
 
   # generate global functions
   impl = make_cpptoc_function_impl(None,

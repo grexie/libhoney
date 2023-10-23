@@ -1,0 +1,39 @@
+# Copyright (c) 2016 The Honeycomb Authors. All rights
+# reserved. Use of this source code is governed by a BSD-style license that
+# can be found in the LICENSE file.
+
+#
+# This file is the Honeycomb CMake configuration entry point and should be loaded
+# using `find_package(Honeycomb REQUIRED)`. See the top-level CMakeLists.txt file
+# included with the Honeycomb binary distribution for usage information.
+#
+
+# Find the Honeycomb binary distribution root directory.
+set(_HONEYCOMB_ROOT "")
+if(HONEYCOMB_ROOT AND IS_DIRECTORY "${HONEYCOMB_ROOT}")
+  set(_HONEYCOMB_ROOT "${HONEYCOMB_ROOT}")
+  set(_HONEYCOMB_ROOT_EXPLICIT 1)
+else()
+  set(_ENV_HONEYCOMB_ROOT "")
+  if(DEFINED ENV{HONEYCOMB_ROOT})
+    file(TO_CMAKE_PATH "$ENV{HONEYCOMB_ROOT}" _ENV_HONEYCOMB_ROOT)
+  endif()
+  if(_ENV_HONEYCOMB_ROOT AND IS_DIRECTORY "${_ENV_HONEYCOMB_ROOT}")
+    set(_HONEYCOMB_ROOT "${_ENV_HONEYCOMB_ROOT}")
+    set(_HONEYCOMB_ROOT_EXPLICIT 1)
+  endif()
+  unset(_ENV_HONEYCOMB_ROOT)
+endif()
+
+if(NOT DEFINED _HONEYCOMB_ROOT_EXPLICIT)
+  message(FATAL_ERROR "Must specify a HONEYCOMB_ROOT value via CMake or environment variable.")
+endif()
+
+if(NOT IS_DIRECTORY "${_HONEYCOMB_ROOT}/cmake")
+  message(FATAL_ERROR "No CMake bootstrap found for Honeycomb binary distribution at: ${HONEYCOMB_ROOT}.")
+endif()
+
+# Execute additional cmake files from the Honeycomb binary distribution.
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${_HONEYCOMB_ROOT}/cmake")
+include("honey_variables")
+include("honey_macros")

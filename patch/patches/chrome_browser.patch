@@ -6,7 +6,7 @@ index 1a9bff4a3efb7..883534be3c975 100644
  import("//build/config/features.gni")
  import("//build/config/python.gni")
  import("//build/config/ui.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/browser/buildflags.gni")
  import("//chrome/browser/downgrade/buildflags.gni")
  import("//chrome/common/features.gni")
@@ -14,7 +14,7 @@ index 1a9bff4a3efb7..883534be3c975 100644
      "//build/config/chromebox_for_meetings:buildflags",
      "//build/config/compiler:compiler_buildflags",
      "//cc",
-+    "//cef/libcef/features",
++    "//honey/libhoneycomb/features",
      "//chrome:extra_resources",
      "//chrome:resources",
      "//chrome:strings",
@@ -22,8 +22,8 @@ index 1a9bff4a3efb7..883534be3c975 100644
      ]
    }
  
-+  if (enable_cef) {
-+    configs += [ "//cef/libcef/features:config" ]
++  if (enable_honey) {
++    configs += [ "//honey/libhoneycomb/features:config" ]
 +  }
 +
    if (is_android) {

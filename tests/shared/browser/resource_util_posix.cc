@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -50,7 +50,7 @@ bool LoadBinaryResource(const char* resource_name, std::string& resource_data) {
   return ReadFileToString(path.c_str(), resource_data);
 }
 
-CefRefPtr<CefStreamReader> GetBinaryResourceReader(const char* resource_name) {
+HoneycombRefPtr<HoneycombStreamReader> GetBinaryResourceReader(const char* resource_name) {
   std::string path;
   if (!GetResourceDir(path)) {
     return nullptr;
@@ -63,7 +63,7 @@ CefRefPtr<CefStreamReader> GetBinaryResourceReader(const char* resource_name) {
     return nullptr;
   }
 
-  return CefStreamReader::CreateForFile(path);
+  return HoneycombStreamReader::CreateForFile(path);
 }
 
 }  // namespace client

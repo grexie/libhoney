@@ -1,15 +1,15 @@
-// Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2015 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_
-#define CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_
+#ifndef HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_
+#define HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_
 #pragma once
 
 #include <memory>
 
-#include "include/base/cef_callback.h"
-#include "include/cef_task.h"
+#include "include/base/honey_callback.h"
+#include "include/honey_task.h"
 
 #if defined(OS_WIN)
 #include <windows.h>
@@ -18,7 +18,7 @@
 namespace client {
 
 // Represents the message loop running on the main application thread in the
-// browser process. This will be the same as the CEF UI thread on Linux, OS X
+// browser process. This will be the same as the Honeycomb UI thread on Linux, OS X
 // and Windows when not using multi-threaded message loop mode. The methods of
 // this class are thread-safe unless otherwise indicated.
 class MainMessageLoop {
@@ -34,7 +34,7 @@ class MainMessageLoop {
   virtual void Quit() = 0;
 
   // Post a task for execution on the main message loop.
-  virtual void PostTask(CefRefPtr<CefTask> task) = 0;
+  virtual void PostTask(HoneycombRefPtr<HoneycombTask> task) = 0;
 
   // Returns true if this message loop runs tasks on the current thread.
   virtual bool RunsTasksOnCurrentThread() const = 0;
@@ -106,4 +106,4 @@ struct DeleteOnMainThread {
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_
+#endif  // HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_H_

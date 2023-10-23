@@ -1,23 +1,23 @@
-// Copyright (c) 2016 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2016 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_
-#define CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_
+#ifndef HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_
+#define HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_
 #pragma once
 
 #include "tests/shared/browser/main_message_loop_std.h"
 
 namespace client {
 
-// This MessageLoop implementation simulates the embedding of CEF into an
+// This MessageLoop implementation simulates the embedding of Honeycomb into an
 // existing host application that runs its own message loop. The scheduling
 // implementation provided by this class is very simplistic and does not handle
 // all cases (for example, nested message loops on Windows will not function
 // correctly). See comments in Chromium's platform-specific
 // base/message_loop/message_pump_* source files for additional guidance when
-// implementing CefBrowserProcessHandler::OnScheduleMessagePumpWork() in your
-// application. Run cefclient or ceftests with the
+// implementing HoneycombBrowserProcessHandler::OnScheduleMessagePumpWork() in your
+// application. Run honeyclient or honeytests with the
 // "--external-message-pump" command-line flag to test this mode.
 class MainMessageLoopExternalPump : public MainMessageLoopStd {
  public:
@@ -29,7 +29,7 @@ class MainMessageLoopExternalPump : public MainMessageLoopStd {
   // thread.
   static MainMessageLoopExternalPump* Get();
 
-  // Called from CefBrowserProcessHandler::OnScheduleMessagePumpWork() on any
+  // Called from HoneycombBrowserProcessHandler::OnScheduleMessagePumpWork() on any
   // thread. The platform subclass must implement this method and schedule a
   // call to OnScheduleWork() on the main application thread.
   virtual void OnScheduleMessagePumpWork(int64_t delay_ms) = 0;
@@ -67,4 +67,4 @@ class MainMessageLoopExternalPump : public MainMessageLoopStd {
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_
+#endif  // HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_EXTERNAL_PUMP_H_

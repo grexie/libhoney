@@ -1,0 +1,135 @@
+// Copyright 2020 The Honeycomb Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef HONEYCOMB_LIBHONEYCOMB_BROWSER_CHROME_CHROME_BROWSER_DELEGATE_H_
+#define HONEYCOMB_LIBHONEYCOMB_BROWSER_CHROME_CHROME_BROWSER_DELEGATE_H_
+#pragma once
+
+#include <memory>
+
+#include "libhoneycomb/browser/browser_host_base.h"
+#include "libhoneycomb/browser/browser_info.h"
+#include "libhoneycomb/browser/chrome/browser_delegate.h"
+
+#include "third_party/abseil-cpp/absl/types/optional.h"
+
+class HoneycombBrowserContentsDelegate;
+class HoneycombRequestContextImpl;
+class ChromeBrowserHostImpl;
+
+// Implementation of the honey::BrowserDelegate interface. Lifespan is controlled
+// by the Browser object. Only accessed on the UI thread.
+//
+// The Browser object represents the top-level Chrome browser window. One or
+// more tabs (WebContents) are then owned by the Browser object via
+// TabStripModel. A new Browser object can be created programmatically using
+// "new Browser" or Browser::Create, or as a result of user action such as
+// dragging a tab out of an existing window. New or existing tabs can also be
+// added to an already existing Browser object.
+//
+// The Browser object acts as the WebContentsDelegate for all attached tabs. Honeycomb
+// integration requires WebContentsDelegate callbacks and notification of tab
+// attach/detach. To support this integration a honey::BrowserDelegate
+// (ChromeBrowserDelegate) member is created in the Browser constructor and
+// receives delegation for the Browser callbacks. ChromeBrowserDelegate creates
+// a new ChromeBrowserHostImpl when a tab is added to a Browser for the first
+// time, and that ChromeBrowserHostImpl continues to exist until the tab's
+// WebContents is destroyed. The associated WebContents object does not change,
+// but the Browser object will change when the tab is dragged between windows.
+class ChromeBrowserDelegate : public honey::BrowserDelegate {
+ public:
+  ChromeBrowserDelegate(Browser* browser,
+                        const HoneycombBrowserCreateParams& create_params,
+                        const Browser* opener);
+
+  ChromeBrowserDelegate(const ChromeBrowserDelegate&) = delete;
+  ChromeBrowserDelegate& operator=(const ChromeBrowserDelegate&) = delete;
+
+  ~ChromeBrowserDelegate() override;
+
+  // honey::BrowserDelegate methods:
+  std::unique_ptr<content::WebContents> AddWebContents(
+      std::unique_ptr<content::WebContents> new_contents) override;
+  void OnWebContentsCreated(content::WebContents* new_contents) override;
+  void SetAsDelegate(content::WebContents* web_contents,
+                     bool set_delegate) override;
+  bool ShowStatusBubble(bool show_by_default) override;
+  bool HandleCommand(int command_id,
+                     WindowOpenDisposition disposition) override;
+  bool IsAppMenuItemVisible(int command_id) override;
+  bool IsAppMenuItemEnabled(int command_id) override;
+  bool IsPageActionIconVisible(PageActionIconType icon_type) override;
+  bool IsToolbarButtonVisible(ToolbarButtonType button_type) override;
+  void UpdateFindBarBoundingBox(gfx::Rect* bounds) override;
+  [[nodiscard]] content::MediaResponseCallback RequestMediaAccessPermissionEx(
+      content::WebContents* web_contents,
+      const content::MediaStreamRequest& request,
+      content::MediaResponseCallback callback) override;
+  absl::optional<bool> SupportsWindowFeature(int feature) const override;
+  bool SupportsDraggableRegion() const override;
+  const absl::optional<SkRegion> GetDraggableRegion() const override;
+  void UpdateDraggableRegion(const SkRegion& region) override;
+  void WindowFullscreenStateChanged() override;
+
+  // WebContentsDelegate methods:
+  void WebContentsCreated(content::WebContents* source_contents,
+                          int opener_render_process_id,
+                          int opener_render_frame_id,
+                          const std::string& frame_name,
+                          const GURL& target_url,
+                          content::WebContents* new_contents) override;
+  content::WebContents* OpenURLFromTab(
+      content::WebContents* source,
+      const content::OpenURLParams& params) override;
+  void LoadingStateChanged(content::WebContents* source,
+                           bool should_show_loading_ui) override;
+  void UpdateTargetURL(content::WebContents* source, const GURL& url) override;
+  bool DidAddMessageToConsole(content::WebContents* source,
+                              blink::mojom::ConsoleMessageLevel log_level,
+                              const std::u16string& message,
+                              int32_t line_no,
+                              const std::u16string& source_id) override;
+  void EnterFullscreenModeForTab(
+      content::RenderFrameHost* requesting_frame,
+      const blink::mojom::FullscreenOptions& options) override;
+  void ExitFullscreenModeForTab(content::WebContents* web_contents) override;
+  void CanDownload(const GURL& url,
+                   const std::string& request_method,
+                   base::OnceCallback<void(bool)> callback) override;
+  content::KeyboardEventProcessingResult PreHandleKeyboardEvent(
+      content::WebContents* source,
+      const content::NativeWebKeyboardEvent& event) override;
+  bool HandleKeyboardEvent(
+      content::WebContents* source,
+      const content::NativeWebKeyboardEvent& event) override;
+
+  Browser* browser() const { return browser_; }
+
+ private:
+  void CreateBrowser(
+      content::WebContents* web_contents,
+      HoneycombBrowserSettings settings,
+      HoneycombRefPtr<HoneycombClient> client,
+      std::unique_ptr<HoneycombBrowserPlatformDelegate> platform_delegate,
+      scoped_refptr<HoneycombBrowserInfo> browser_info,
+      HoneycombRefPtr<ChromeBrowserHostImpl> opener,
+      HoneycombRefPtr<HoneycombRequestContextImpl> request_context_impl);
+
+  HoneycombBrowserContentsDelegate* GetDelegateForWebContents(
+      content::WebContents* web_contents);
+
+  bool SupportsFramelessPictureInPicture() const;
+
+  Browser* const browser_;
+  base::WeakPtr<ChromeBrowserHostImpl> opener_host_;
+
+  // Used when creating a new browser host.
+  const HoneycombBrowserCreateParams create_params_;
+
+  absl::optional<bool> show_status_bubble_;
+  absl::optional<SkRegion> draggable_region_;
+  mutable absl::optional<bool> frameless_pip_;
+};
+
+#endif  // HONEYCOMB_LIBHONEYCOMB_BROWSER_CHROME_CHROME_BROWSER_DELEGATE_H_

@@ -1,5 +1,5 @@
 @echo off
-:: Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+:: Copyright (c) 2013 The Honeycomb Authors. All rights
 :: reserved. Use of this source code is governed by a BSD-style license
 :: that can be found in the LICENSE file.
 
@@ -25,7 +25,7 @@ if "%1" == "win32" (
 )
 
 :: Check if vcvars is already provided via the environment.
-set vcvars="%CEF_VCVARS%"
+set vcvars="%HONEYCOMB_VCVARS%"
 if %vcvars% == "none" goto found_vcvars
 if exist %vcvars% goto found_vcvars
 

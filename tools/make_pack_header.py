@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2012 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2012 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license
 # that can be found in the LICENSE file.
 """
@@ -116,7 +116,7 @@ def MakeFile(output, input):
   result = result.replace('$YEAR$', get_year())
   # add the guard string
   filename = os.path.split(output)[1]
-  guard = 'CEF_INCLUDE_' + filename.replace('.', '_').upper() + '_'
+  guard = 'HONEYCOMB_INCLUDE_' + filename.replace('.', '_').upper() + '_'
   result = result.replace('$GUARD$', guard)
 
   write_file_if_changed(output, result)

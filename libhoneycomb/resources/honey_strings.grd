@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file contains definitions of resources that will be translated for
+each locale. Specifically, these are UI strings that are used by Honeycomb that
+need to be translated for each locale.-->
+<grit base_dir="." latest_public_release="0" current_release="1"
+      source_lang_id="en" enc_check="möl">
+  <outputs>
+    <!-- Note that all output references are relative to the output directory
+    which is specified at build time. -->
+    <output filename="grit/honey_strings.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+
+    <output filename="honey_strings_af.pak" type="data_package" lang="af" />
+    <output filename="honey_strings_am.pak" type="data_package" lang="am" />
+    <output filename="honey_strings_ar.pak" type="data_package" lang="ar" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_ast.pak" type="data_package" lang="ast" />
+    </if>
+    <output filename="honey_strings_bg.pak" type="data_package" lang="bg" />
+    <output filename="honey_strings_bn.pak" type="data_package" lang="bn" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_bs.pak" type="data_package" lang="bs" />
+    </if>
+    <output filename="honey_strings_ca.pak" type="data_package" lang="ca" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_ca@valencia.pak" type="data_package" lang="ca@valencia" />
+    </if>
+    <output filename="honey_strings_cs.pak" type="data_package" lang="cs" />
+    <output filename="honey_strings_da.pak" type="data_package" lang="da" />
+    <output filename="honey_strings_de.pak" type="data_package" lang="de" />
+    <output filename="honey_strings_el.pak" type="data_package" lang="el" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_en-AU.pak" type="data_package" lang="en-AU" />
+    </if>
+    <output filename="honey_strings_en-GB.pak" type="data_package" lang="en-GB" />
+    <output filename="honey_strings_en-US.pak" type="data_package" lang="en" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_eo.pak" type="data_package" lang="eo" />
+    </if>
+    <output filename="honey_strings_es.pak" type="data_package" lang="es" />
+    <output filename="honey_strings_es-419.pak" type="data_package" lang="es-419" />
+    <output filename="honey_strings_et.pak" type="data_package" lang="et" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_eu.pak" type="data_package" lang="eu" />
+    </if>
+    <output filename="honey_strings_fa.pak" type="data_package" lang="fa" />
+    <output filename="honey_strings_fake-bidi.pak" type="data_package" lang="fake-bidi" />
+    <output filename="honey_strings_fi.pak" type="data_package" lang="fi" />
+    <output filename="honey_strings_fil.pak" type="data_package" lang="fil" />
+    <output filename="honey_strings_fr.pak" type="data_package" lang="fr" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_gl.pak" type="data_package" lang="gl" />
+    </if>
+    <output filename="honey_strings_gu.pak" type="data_package" lang="gu" />
+    <output filename="honey_strings_he.pak" type="data_package" lang="he" />
+    <output filename="honey_strings_hi.pak" type="data_package" lang="hi" />
+    <output filename="honey_strings_hr.pak" type="data_package" lang="hr" />
+    <output filename="honey_strings_hu.pak" type="data_package" lang="hu" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_hy.pak" type="data_package" lang="hy" />
+      <output filename="honey_strings_ia.pak" type="data_package" lang="ia" />
+    </if>
+    <output filename="honey_strings_id.pak" type="data_package" lang="id" />
+    <output filename="honey_strings_it.pak" type="data_package" lang="it" />
+    <output filename="honey_strings_ja.pak" type="data_package" lang="ja" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_ka.pak" type="data_package" lang="ka" />
+    </if>
+    <output filename="honey_strings_kn.pak" type="data_package" lang="kn" />
+    <output filename="honey_strings_ko.pak" type="data_package" lang="ko" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_ku.pak" type="data_package" lang="ku" />
+      <output filename="honey_strings_kw.pak" type="data_package" lang="kw" />
+    </if>
+    <output filename="honey_strings_lt.pak" type="data_package" lang="lt" />
+    <output filename="honey_strings_lv.pak" type="data_package" lang="lv" />
+    <output filename="honey_strings_ml.pak" type="data_package" lang="ml" />
+    <output filename="honey_strings_mr.pak" type="data_package" lang="mr" />
+    <output filename="honey_strings_ms.pak" type="data_package" lang="ms" />
+    <output filename="honey_strings_nl.pak" type="data_package" lang="nl" />
+    <!-- The translation console uses 'no' for Norwegian Bokmål. It should
+         be 'nb'. -->
+    <output filename="honey_strings_nb.pak" type="data_package" lang="no" />
+    <output filename="honey_strings_pl.pak" type="data_package" lang="pl" />
+    <output filename="honey_strings_pt-BR.pak" type="data_package" lang="pt-BR" />
+    <output filename="honey_strings_pt-PT.pak" type="data_package" lang="pt-PT" />
+    <output filename="honey_strings_ro.pak" type="data_package" lang="ro" />
+    <output filename="honey_strings_ru.pak" type="data_package" lang="ru" />
+    <output filename="honey_strings_sk.pak" type="data_package" lang="sk" />
+    <output filename="honey_strings_sl.pak" type="data_package" lang="sl" />
+    <output filename="honey_strings_sr.pak" type="data_package" lang="sr" />
+    <output filename="honey_strings_sv.pak" type="data_package" lang="sv" />
+    <output filename="honey_strings_sw.pak" type="data_package" lang="sw" />
+    <output filename="honey_strings_ta.pak" type="data_package" lang="ta" />
+    <output filename="honey_strings_te.pak" type="data_package" lang="te" />
+    <output filename="honey_strings_th.pak" type="data_package" lang="th" />
+    <output filename="honey_strings_tr.pak" type="data_package" lang="tr" />
+    <if expr="pp_ifdef('use_third_party_translations')">
+      <output filename="honey_strings_ug.pak" type="data_package" lang="ug" />
+    </if>
+    <output filename="honey_strings_uk.pak" type="data_package" lang="uk" />
+    <output filename="honey_strings_ur.pak" type="data_package" lang="ur" />
+    <output filename="honey_strings_vi.pak" type="data_package" lang="vi" />
+    <output filename="honey_strings_zh-CN.pak" type="data_package" lang="zh-CN" />
+    <output filename="honey_strings_zh-TW.pak" type="data_package" lang="zh-TW" />
+    <if expr="enable_pseudolocales">
+      <output filename="honey_strings_ar-XB.pak" type="data_package" lang="ar-XB" />
+      <output filename="honey_strings_en-XA.pak" type="data_package" lang="en-XA" />
+    </if>
+  </outputs>
+  <release seq="1" allow_pseudo="false">
+    <messages fallback_to_english="true">
+      <!-- TODO add all of your "string table" messages here.  Remember to
+      change nontranslateable parts of the messages into placeholders (using the
+      <ph> element).  You can also use the 'grit add' tool to help you identify
+      nontranslateable parts and create placeholders for them. -->
+
+      <!-- Other values come from chrome/app/generated_resources.grd -->
+      <message name="IDS_TEXT_FILES" desc="The description of the text file extensions in the select file dialog.">
+        Text Files
+      </message>
+      <message name="IDS_CONTENT_CONTEXT_NO_SPELLING_SUGGESTIONS" desc="The name of the No Spelling Suggestions display in the content area context menu">
+        &amp;No spelling suggestions
+      </message>
+    </messages>
+  </release>
+</grit>

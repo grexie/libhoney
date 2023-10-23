@@ -75,7 +75,7 @@ index 1b0bfc81ebda9..fb5b9f1c1fc1a 100644
    }
  
    configs += [
-+    "//cef/libcef/features:config",
++    "//honey/libhoneycomb/features:config",
      "//third_party/blink/renderer:config",
      "//third_party/blink/renderer:inside_blink",
      "//third_party/blink/renderer:non_test_config",
@@ -83,8 +83,8 @@ index 1b0bfc81ebda9..fb5b9f1c1fc1a 100644
      "performance_manager/v8_detailed_memory_reporter_impl.h",
      "performance_manager/v8_worker_memory_reporter.cc",
      "performance_manager/v8_worker_memory_reporter.h",
-+    "//cef/libcef/renderer/blink_glue.cc",
-+    "//cef/libcef/renderer/blink_glue.h",
++    "//honey/libhoneycomb/renderer/blink_glue.cc",
++    "//honey/libhoneycomb/renderer/blink_glue.h",
    ]
  
    if (is_linux || is_chromeos) {

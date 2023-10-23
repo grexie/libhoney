@@ -14,9 +14,9 @@ index db31ee0b50746..2f3aebdcb6101 100644
    DCHECK(command_updater_.IsCommandEnabled(id))
        << "Invalid/disabled command " << id;
  
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser_->cef_delegate() &&
-+      browser_->cef_delegate()->HandleCommand(id, disposition)) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser_->honey_delegate() &&
++      browser_->honey_delegate()->HandleCommand(id, disposition)) {
 +    return true;
 +  }
 +#endif
@@ -48,7 +48,7 @@ index 2f7825a3bdf38..8553f4293c576 100644
    }
  }
  
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +using IsVisibleCallback = base::RepeatingCallback<bool(int)>;
 +
 +void FilterMenuModel(ui::SimpleMenuModel* model,
@@ -97,7 +97,7 @@ index 2f7825a3bdf38..8553f4293c576 100644
 +    model->RemoveItemAt(*last_separator);
 +  }
 +}
-+#endif  // BUILDFLAG(ENABLE_CEF)
++#endif  // BUILDFLAG(ENABLE_HONEYCOMB)
 +
  }  // namespace
  
@@ -120,9 +120,9 @@ index 2f7825a3bdf38..8553f4293c576 100644
 +    return false;
 +  }
 +
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser_->cef_delegate()) {
-+    return browser_->cef_delegate()->IsAppMenuItemEnabled(command_id);
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser_->honey_delegate()) {
++    return browser_->honey_delegate()->IsAppMenuItemEnabled(command_id);
 +  }
 +#endif
 +
@@ -130,9 +130,9 @@ index 2f7825a3bdf38..8553f4293c576 100644
 +}
 +
 +bool AppMenuModel::IsCommandIdVisible(int command_id) const {
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser_->cef_delegate()) {
-+    return browser_->cef_delegate()->IsAppMenuItemVisible(command_id);
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser_->honey_delegate()) {
++    return browser_->honey_delegate()->IsAppMenuItemVisible(command_id);
 +  }
 +#endif
 +
@@ -184,7 +184,7 @@ index 2f7825a3bdf38..8553f4293c576 100644
      SetCommandIcon(this, IDC_EXIT, kExitMenuIcon);
    }
  
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  FilterMenuModel(this, base::BindRepeating(&AppMenuModel::IsCommandIdVisible,
 +                                            base::Unretained(this)));
 +#endif
@@ -222,9 +222,9 @@ index 59024587ef6b7..0c30aa71768cf 100644
    // positioning relative to, so we ask it to tell us where we should go.
    *bounds = browser_view()->GetFindBarBoundingBox();
 +
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser_view()->browser() && browser_view()->browser()->cef_delegate()) {
-+    browser_view()->browser()->cef_delegate()->UpdateFindBarBoundingBox(bounds);
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser_view()->browser() && browser_view()->browser()->honey_delegate()) {
++    browser_view()->browser()->honey_delegate()->UpdateFindBarBoundingBox(bounds);
 +  }
 +#endif
  }
@@ -265,7 +265,7 @@ index c3b5d07643806..761cc6306363f 100644
  
  int BrowserFrame::GetTopInset() const {
 +  if (!browser_frame_view_) {
-+    // With CEF the browser may already be part of a larger Views layout. Zero
++    // With Honeycomb the browser may already be part of a larger Views layout. Zero
 +    // out the adjustment in BrowserView::GetTopInsetInBrowserView() so that
 +    // the browser isn't shifted to the top of the window.
 +    return browser_view_->y();
@@ -508,7 +508,7 @@ index 2c4cb9a1e892c..2e38fc9d32d98 100644
  bool BrowserView::ShouldDescendIntoChildForEventHandling(
      gfx::NativeView child,
      const gfx::Point& location) {
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  const bool frameless_pip =
 +      GetIsPictureInPictureType() &&
 +      !browser_->SupportsWindowFeature(Browser::FEATURE_TITLEBAR);
@@ -534,10 +534,10 @@ index 2c4cb9a1e892c..2e38fc9d32d98 100644
 +    draggable_region = controller->draggable_region();
 +  }
 +
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  // Match logic in PictureInPictureBrowserFrameView::NonClientHitTest.
 +  if (!draggable_region.has_value() && frameless_pip) {
-+    draggable_region = browser_->cef_delegate()->GetDraggableRegion();
++    draggable_region = browser_->honey_delegate()->GetDraggableRegion();
 +  }
 +#endif
 +
@@ -662,8 +662,8 @@ index 36831f71eeb95..24e0f9e70781b 100644
  #include "ui/views/window/client_view.h"
  #include "ui/views/window/hit_test_utils.h"
  
-+#if BUILDFLAG(ENABLE_CEF)
-+#include "cef/libcef/browser/chrome/views/chrome_views_util.h"
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++#include "honey/libhoneycomb/browser/chrome/views/chrome_views_util.h"
 +#endif
 +
  using views::View;
@@ -673,9 +673,9 @@ index 36831f71eeb95..24e0f9e70781b 100644
  
  int BrowserViewLayout::LayoutToolbar(int top) {
    TRACE_EVENT0("ui", "BrowserViewLayout::LayoutToolbar");
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (cef::IsCefView(toolbar_)) {
-+    // CEF may take ownership of the toolbar. Early exit to avoid the DCHECK
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (honey::IsHoneycombView(toolbar_)) {
++    // Honeycomb may take ownership of the toolbar. Early exit to avoid the DCHECK
 +    // in LayoutManager::SetViewVisibility().
 +    return top;
 +  }
@@ -749,11 +749,11 @@ index f1d303e9b7fd8..8a5935e8f10da 100644
    if (window_component != HTNOWHERE)
      return window_component;
  
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  if (frameless) {
 +    // Match logic in BrowserView::ShouldDescendIntoChildForEventHandling.
 +    const auto draggable_region =
-+        browser_view()->browser()->cef_delegate()->GetDraggableRegion();
++        browser_view()->browser()->honey_delegate()->GetDraggableRegion();
 +    if (draggable_region.has_value()) {
 +      // Draggable regions are defined relative to the web contents.
 +      gfx::Point point_in_contents_web_view_coords(point);
@@ -768,7 +768,7 @@ index f1d303e9b7fd8..8a5935e8f10da 100644
 +      }
 +    }
 +  }
-+#endif  // BUILDFLAG(ENABLE_CEF)
++#endif  // BUILDFLAG(ENABLE_HONEYCOMB)
 +
    // Allow interacting with the web contents.
    int frame_component = frame()->client_view()->NonClientHitTest(point);
@@ -801,9 +801,9 @@ index 723a2840bd988..975152c988917 100644
    };
  
    for (PageActionIconType type : params.types_enabled) {
-+#if BUILDFLAG(ENABLE_CEF)
-+    if (params.browser && params.browser->cef_delegate() &&
-+        !params.browser->cef_delegate()->IsPageActionIconVisible(type)) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++    if (params.browser && params.browser->honey_delegate() &&
++        !params.browser->honey_delegate()->IsPageActionIconVisible(type)) {
 +      continue;
 +    }
 +#endif
@@ -889,11 +889,11 @@ index 2ea09fd7e8cc0..d5afd2bcb0e3c 100644
  }
  
  void ToolbarView::Init() {
-+#if BUILDFLAG(ENABLE_CEF)
-+  using ToolbarButtonType = cef::BrowserDelegate::ToolbarButtonType;
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  using ToolbarButtonType = honey::BrowserDelegate::ToolbarButtonType;
 +  auto button_visible = [this](ToolbarButtonType type) {
-+    if (this->browser_->cef_delegate()) {
-+      return this->browser_->cef_delegate()->IsToolbarButtonVisible(type);
++    if (this->browser_->honey_delegate()) {
++      return this->browser_->honey_delegate()->IsToolbarButtonVisible(type);
 +    }
 +    return true;
 +  };
@@ -980,9 +980,9 @@ index 460a2b08f964b..cb1b67d8b1213 100644
 +  if (web_app::AppBrowserController::IsWebApp(browser))
 +    return true;
 +
-+#if BUILDFLAG(ENABLE_CEF)
-+  if (browser->cef_delegate() &&
-+      browser->cef_delegate()->SupportsDraggableRegion()) {
++#if BUILDFLAG(ENABLE_HONEYCOMB)
++  if (browser->honey_delegate() &&
++      browser->honey_delegate()->SupportsDraggableRegion()) {
 +    return true;
 +  }
 +#endif
@@ -1021,9 +1021,9 @@ index 460a2b08f964b..cb1b67d8b1213 100644
 +  if (app_browser_controller) {
 +    app_browser_controller->UpdateDraggableRegion(sk_region);
 +  }
-+#if BUILDFLAG(ENABLE_CEF)
++#if BUILDFLAG(ENABLE_HONEYCOMB)
 +  else {
-+    browser->cef_delegate()->UpdateDraggableRegion(sk_region);
++    browser->honey_delegate()->UpdateDraggableRegion(sk_region);
 +  }
 +#endif
  }

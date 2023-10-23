@@ -1,14 +1,14 @@
 CONTENTS
 --------
 
-Debug       Contains the Debug build of cef_sandbox.a.
+Debug       Contains the Debug build of honey_sandbox.a.
 
-Release     Contains the Release build of cef_sandbox.a.
+Release     Contains the Release build of honey_sandbox.a.
 
 
 USAGE
 -----
 
-Please visit the CEF Website for usage information.
+Please visit the Honeycomb Website for usage information.
 
-https://bitbucket.org/chromiumembedded/cef/
+https://bitbucket.org/chromiumembedded/honey/

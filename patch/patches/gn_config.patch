@@ -6,7 +6,7 @@ index 628071cb9a464..1595a4283e134 100644
        "//chrome/android/webapk/shell_apk/prepare_upload_dir/BUILD.gn",
        "//chrome/version.gni",
  
-+      "//cef/BUILD.gn",
++      "//honey/BUILD.gn",
 +
        # TODO(dgn): Layer violation but breaks the build otherwise, see
        # https://crbug.com/474506.
@@ -19,7 +19,7 @@ index e8c8a8450ff83..065f99491a2cb 100644
  import("//build/config/ui.gni")
  import("//build/gn_logs.gni")
  import("//build/util/generate_wrapper.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/browser/buildflags.gni")
  import("//components/nacl/features.gni")
  import("//device/vr/buildflags/buildflags.gni")
@@ -27,8 +27,8 @@ index e8c8a8450ff83..065f99491a2cb 100644
  
      deps += root_extra_deps
  
-+    if (enable_cef) {
-+      deps += [ "//cef" ]
++    if (enable_honey) {
++      deps += [ "//honey" ]
 +    }
 +
      if (enable_printing || enable_printing_unittests) {
@@ -83,7 +83,7 @@ index 353fdabb937ca..4e09414bc211f 100644
  import("//build/config/chromebox_for_meetings/buildflags.gni")
  import("//build/config/chromeos/ui_mode.gni")
  import("//build/config/locales.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/browser/buildflags.gni")
  import("//chrome/common/features.gni")
  import("//components/signin/features.gni")
@@ -91,9 +91,9 @@ index 353fdabb937ca..4e09414bc211f 100644
          "//ui/chromeos/resources",
        ]
      }
-+    if (enable_cef) {
-+      sources += [ "$root_gen_dir/cef/cef_resources.pak" ]
-+      deps += [ "//cef:cef_resources" ]
++    if (enable_honey) {
++      sources += [ "$root_gen_dir/honey/honey_resources.pak" ]
++      deps += [ "//honey:honey_resources" ]
 +    }
      if (enable_extensions) {
        sources += [ "$root_gen_dir/extensions/extensions_browser_resources_${percent}_percent.pak" ]
@@ -106,7 +106,7 @@ index 7aa8989a0f471..7c93cbd96b362 100644
  import("//build/config/chromeos/ui_mode.gni")
  import("//build/config/features.gni")
  import("//build/config/ui.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//extensions/buildflags/buildflags.gni")
  import("//tools/grit/repack.gni")
  
@@ -114,9 +114,9 @@ index 7aa8989a0f471..7c93cbd96b362 100644
            [ "${root_gen_dir}/chromeos/strings/chromeos_strings_" ]
        deps += [ "//chromeos/strings" ]
      }
-+    if (enable_cef) {
-+      source_patterns += [ "${root_gen_dir}/cef/cef_strings_" ]
-+      deps += [ "//cef:cef_strings" ]
++    if (enable_honey) {
++      source_patterns += [ "${root_gen_dir}/honey/honey_strings_" ]
++      deps += [ "//honey:honey_strings" ]
 +    }
      if (enable_extensions) {
        source_patterns +=
@@ -129,7 +129,7 @@ index 71803adcfbe02..80543d0aa58c8 100644
  import("//build/config/features.gni")
  import("//build/config/python.gni")
  import("//build/config/ui.gni")
-+import("//cef/libcef/features/features.gni")
++import("//honey/libhoneycomb/features/features.gni")
  import("//chrome/process_version_rc_template.gni")
  import("//components/nacl/features.gni")
  import("//third_party/dawn/scripts/dawn_features.gni")
@@ -142,7 +142,7 @@ index 71803adcfbe02..80543d0aa58c8 100644
      "//chrome/tools/build/win/makecab.py",
      release_file,
    ]
-+  if (!enable_cef) {
++  if (!enable_honey) {
 +    inputs += [ "$root_out_dir/locales/en-US.pak" ]
 +  }
  

@@ -11,7 +11,7 @@ index 70be25ddddf1d..8aa1b6f33d7fb 100644
  #include "build/branding_buildflags.h"
  #include "build/build_config.h"
  #include "build/chromeos_buildflags.h"
-+#include "cef/libcef/features/runtime.h"
++#include "honey/libhoneycomb/features/runtime.h"
  #include "chrome/browser/browser_process.h"
  #include "chrome/browser/extensions/chrome_content_browser_client_extensions_part.h"
  #include "chrome/browser/google/google_brand.h"
@@ -20,7 +20,7 @@ index 70be25ddddf1d..8aa1b6f33d7fb 100644
  #endif
  
 -  PopulateSyncLogs(response.get());
-+  if (!cef::IsAlloyRuntimeEnabled()) {
++  if (!honey::IsAlloyRuntimeEnabled()) {
 +    // Avoid loading ProfileSyncServiceFactory which depends on a lot of
 +    // unnecessary Chrome-specific factories.
 +    PopulateSyncLogs(response.get());
@@ -32,7 +32,7 @@ index 70be25ddddf1d..8aa1b6f33d7fb 100644
    if (!profile)
      return;
  
-+  // May be nullptr if using CEF Alloy with extensions disabled.
++  // May be nullptr if using Honeycomb Alloy with extensions disabled.
    extensions::ExtensionRegistry* extension_registry =
        extensions::ExtensionRegistry::Get(profile);
 +  if (!extension_registry)
@@ -59,7 +59,7 @@ index 1cf8e8840a22b..79be0f2825288 100644
        content::BrowserContext* context =
            render_process_host->GetBrowserContext();
 +
-+      // May be nullptr if using CEF Alloy with extensions disabled.
++      // May be nullptr if using Honeycomb Alloy with extensions disabled.
        extensions::ExtensionRegistry* extension_registry =
            extensions::ExtensionRegistry::Get(context);
 -      DCHECK(extension_registry);

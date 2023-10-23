@@ -1,10 +1,10 @@
-# Copyright (c) 2011 The Chromium Embedded Framework Authors. All rights
+# Copyright (c) 2011 The Honeycomb Authors. All rights
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
 from __future__ import absolute_import
 from __future__ import print_function
-from cef_version import VersionFormatter
+from honey_version import VersionFormatter
 from date_util import *
 from exec_util import exec_cmd
 from file_util import *
@@ -54,10 +54,10 @@ def create_tar_archive(input_dir, format):
 
 def create_7z_archive(input_dir, format):
   """ Creates a 7z archive of the specified input directory. """
-  # CEF_COMMAND_7ZIP might be "c:\Program Files (x86)\7Zip\7z.exe" or /usr/bin/7za
+  # HONEYCOMB_COMMAND_7ZIP might be "c:\Program Files (x86)\7Zip\7z.exe" or /usr/bin/7za
   # or simply 7z if the user knows that it's in the PATH var. Supported formats
   # depend on the 7za version -- check the 7-zip documentation for details.
-  command = os.environ['CEF_COMMAND_7ZIP']
+  command = os.environ['HONEYCOMB_COMMAND_7ZIP']
   working_dir = os.path.abspath(os.path.join(input_dir, os.pardir))
 
   tar_file = None
@@ -125,9 +125,9 @@ def create_readme():
   if mode != 'sandbox':
     data += '\n\n' + redistrib_data
   data += '\n\n' + footer_data
-  data = data.replace('$CEF_URL$', cef_url)
-  data = data.replace('$CEF_REV$', cef_rev)
-  data = data.replace('$CEF_VER$', cef_ver)
+  data = data.replace('$HONEYCOMB_URL$', honey_url)
+  data = data.replace('$HONEYCOMB_REV$', honey_rev)
+  data = data.replace('$HONEYCOMB_VER$', honey_ver)
   data = data.replace('$CHROMIUM_URL$', chromium_url)
   data = data.replace('$CHROMIUM_REV$', chromium_rev)
   data = data.replace('$CHROMIUM_VER$', chromium_ver)
@@ -145,25 +145,25 @@ def create_readme():
   if mode == 'standard':
     distrib_type = 'Standard'
     distrib_desc = 'This distribution contains all components necessary to build and distribute an\n' \
-                   'application using CEF on the ' + platform_str + ' platform. Please see the LICENSING\n' \
+                   'application using Honeycomb on the ' + platform_str + ' platform. Please see the LICENSING\n' \
                    'section of this document for licensing terms and conditions.'
   elif mode == 'minimal':
     distrib_type = 'Minimal'
     distrib_desc = 'This distribution contains the minimial components necessary to build and\n' \
-                   'distribute an application using CEF on the ' + platform_str + ' platform. Please see\n' \
+                   'distribute an application using Honeycomb on the ' + platform_str + ' platform. Please see\n' \
                    'the LICENSING section of this document for licensing terms and conditions.'
   elif mode == 'client':
     distrib_type = 'Client'
     if platform == 'linux':
-      client_app = 'cefsimple'
+      client_app = 'honeysimple'
     else:
-      client_app = 'cefclient'
+      client_app = 'honeyclient'
     distrib_desc = 'This distribution contains a release build of the ' + client_app + ' sample application\n' \
                    'for the ' + platform_str + ' platform. Please see the LICENSING section of this document for\n' \
                    'licensing terms and conditions.'
   elif mode == 'sandbox':
     distrib_type = 'Sandbox'
-    distrib_desc = 'This distribution contains only the cef_sandbox static library. Please see\n' \
+    distrib_desc = 'This distribution contains only the honey_sandbox static library. Please see\n' \
                    'the LICENSING section of this document for licensing terms and conditions.'
 
   data = data.replace('$DISTRIB_TYPE$', distrib_type)
@@ -179,7 +179,7 @@ def copy_gtest(tests_dir):
   if not options.quiet:
     sys.stdout.write('Building gtest directory structure.\n')
 
-  src_gtest_dir = os.path.join(cef_dir, 'tools', 'distrib', 'gtest')
+  src_gtest_dir = os.path.join(honey_dir, 'tools', 'distrib', 'gtest')
   target_gtest_dir = os.path.join(tests_dir, 'gtest')
 
   # gtest header file at tests/gtest/include/gtest/gtest.h
@@ -200,23 +200,23 @@ def copy_gtest(tests_dir):
   copy_file(
       os.path.join(src_gtest_dir, 'LICENSE'), target_gtest_dir, options.quiet)
 
-  # CEF README file at tests/gtest/README.cef
+  # Honeycomb README file at tests/gtest/README.honey
   copy_file(
-      os.path.join(src_gtest_dir, 'README.cef'),
-      os.path.join(target_gtest_dir, 'README.cef'), options.quiet)
+      os.path.join(src_gtest_dir, 'README.honey'),
+      os.path.join(target_gtest_dir, 'README.honey'), options.quiet)
 
   # Copy tests/gtest/teamcity files
   copy_dir(
-      os.path.join(cef_dir, 'tests', 'gtest', 'teamcity'),
+      os.path.join(honey_dir, 'tests', 'gtest', 'teamcity'),
       os.path.join(target_gtest_dir, 'teamcity'), options.quiet)
 
 
 def transfer_doxyfile(dst_dir, quiet):
   """ Transfer and post-process the Doxyfile. """
-  src_file = os.path.join(cef_dir, 'Doxyfile')
+  src_file = os.path.join(honey_dir, 'Doxyfile')
   if os.path.isfile(src_file):
     data = read_file(src_file)
-    data = data.replace("$(PROJECT_NUMBER)", cef_ver)
+    data = data.replace("$(PROJECT_NUMBER)", honey_ver)
     write_file(os.path.join(dst_dir, 'Doxyfile'), data)
     if not quiet:
       sys.stdout.write('Creating Doxyfile file.\n')
@@ -237,11 +237,11 @@ def normalize_headers(file, new_path=''):
       project include directives. """
   data = read_file(file)
   data = re.sub(r'''#include \"(?!include\/)[a-zA-Z0-9_\/]+\/+([a-zA-Z0-9_\.]+)\"''', \
-                "// Include path modified for CEF Binary Distribution.\n#include \""+new_path+"\\1\"", data)
+                "// Include path modified for Honeycomb Binary Distribution.\n#include \""+new_path+"\\1\"", data)
   write_file(file, data)
 
 
-def eval_transfer_file(cef_dir, script_dir, transfer_cfg, output_dir, quiet):
+def eval_transfer_file(honey_dir, script_dir, transfer_cfg, output_dir, quiet):
   """ Transfer files based on the specified configuration. """
   if not path_exists(transfer_cfg):
     return
@@ -252,7 +252,7 @@ def eval_transfer_file(cef_dir, script_dir, transfer_cfg, output_dir, quiet):
 
     # perform a copy if source is specified
     if not cfg['source'] is None:
-      src = os.path.join(cef_dir, cfg['source'])
+      src = os.path.join(honey_dir, cfg['source'])
       dst_path = os.path.dirname(dst)
       make_dir(dst_path, quiet)
       copy_file(src, dst, quiet)
@@ -280,14 +280,14 @@ def eval_transfer_file(cef_dir, script_dir, transfer_cfg, output_dir, quiet):
         normalize_headers(dst, new_path)
 
 
-def transfer_files(cef_dir, script_dir, transfer_cfg_dir, mode, output_dir,
+def transfer_files(honey_dir, script_dir, transfer_cfg_dir, mode, output_dir,
                    quiet):
   # Non-mode-specific transfers.
   transfer_cfg = os.path.join(transfer_cfg_dir, 'transfer.cfg')
-  eval_transfer_file(cef_dir, script_dir, transfer_cfg, output_dir, quiet)
+  eval_transfer_file(honey_dir, script_dir, transfer_cfg, output_dir, quiet)
   # Mode-specific transfers.
   transfer_cfg = os.path.join(transfer_cfg_dir, 'transfer_%s.cfg' % mode)
-  eval_transfer_file(cef_dir, script_dir, transfer_cfg, output_dir, quiet)
+  eval_transfer_file(honey_dir, script_dir, transfer_cfg, output_dir, quiet)
 
 
 # |paths| is a list of dictionary values with the following keys:
@@ -330,9 +330,9 @@ def get_exported_symbols(file):
   symbols = []
 
   # Each symbol line has a value like:
-  # 0000000000000000 T _cef_sandbox_initialize
+  # 0000000000000000 T _honey_sandbox_initialize
   cmdline = 'nm -g -U %s' % file
-  result = exec_cmd(cmdline, os.path.join(cef_dir, 'tools'))
+  result = exec_cmd(cmdline, os.path.join(honey_dir, 'tools'))
   if len(result['err']) > 0:
     raise Exception('ERROR: nm failed: %s' % result['err'])
   for line in result['out'].split('\n'):
@@ -349,9 +349,9 @@ def get_undefined_symbols(file):
   symbols = []
 
   # Each symbol line has a value like:
-  # cef_sandbox.a:cef_sandbox.o: _memcpy
+  # honey_sandbox.a:honey_sandbox.o: _memcpy
   cmdline = 'nm -u -A %s' % file
-  result = exec_cmd(cmdline, os.path.join(cef_dir, 'tools'))
+  result = exec_cmd(cmdline, os.path.join(honey_dir, 'tools'))
   if len(result['err']) > 0:
     raise Exception('ERROR: nm failed: %s' % result['err'])
   for line in result['out'].split('\n'):
@@ -370,15 +370,15 @@ def combine_libs(platform, build_dir, libs, dest_lib):
     cmdline = 'msvs_env.bat win%s "%s" combine_libs.py -b "%s" -o "%s"' % (
         platform_arch, sys.executable, build_dir, dest_lib)
   elif platform == 'mac':
-    # Find CEF_EXPORT symbols from libcef_sandbox.a (include/cef_sandbox_mac.h)
+    # Find HONEYCOMB_EXPORT symbols from libhoneycomb_sandbox.a (include/honey_sandbox_mac.h)
     # Export only symbols that include these strings.
     symbol_match = [
-        '_cef_',  # C symbols
-        'Cef',  # C++ symbols
+        '_honey_',  # C symbols
+        'Honeycomb',  # C++ symbols
     ]
 
     print('Finding exported symbols...')
-    assert 'libcef_sandbox.a' in libs[0], libs[0]
+    assert 'libhoneycomb_sandbox.a' in libs[0], libs[0]
     symbols = []
     for symbol in get_exported_symbols(os.path.join(build_dir, libs[0])):
       for match in symbol_match:
@@ -403,12 +403,12 @@ def combine_libs(platform, build_dir, libs, dest_lib):
       if platform == 'windows':
         path = os.path.relpath(path, build_dir)
       cmdline += ' "%s"' % path
-  run(cmdline, os.path.join(cef_dir, 'tools'))
+  run(cmdline, os.path.join(honey_dir, 'tools'))
 
   if not intermediate_obj is None:
     # Create an archive file containing the new object file.
     cmdline = 'libtool -static -o "%s" "%s"' % (dest_lib, intermediate_obj)
-    run(cmdline, os.path.join(cef_dir, 'tools'))
+    run(cmdline, os.path.join(honey_dir, 'tools'))
     remove_file(intermediate_obj)
 
     # Verify that only the expected symbols are exported from the archive file.
@@ -422,10 +422,10 @@ def combine_libs(platform, build_dir, libs, dest_lib):
     # Verify that no C++ symbols are imported by the archive file. If the
     # archive imports C++ symbols and the client app links an incompatible C++
     # library, the result will be undefined behavior.
-    # For example, to avoid importing libc++ symbols the cef_sandbox target
+    # For example, to avoid importing libc++ symbols the honey_sandbox target
     # should have a dependency on libc++abi. This dependency can be verified
     # with the following command:
-    # gn path out/[config] //cef:cef_sandbox //buildtools/third_party/libc++abi
+    # gn path out/[config] //honey:honey_sandbox //buildtools/third_party/libc++abi
     print('Verifying imported (undefined) symbols...')
     undefined_symbols = get_undefined_symbols(dest_lib)
     cpp_symbols = list(
@@ -455,7 +455,7 @@ if __name__ != "__main__":
 
 # parse command-line options
 disc = """
-This utility builds the CEF Binary Distribution.
+This utility builds the Honeycomb Binary Distribution.
 """
 
 parser = OptionParser(description=disc)
@@ -539,7 +539,7 @@ parser.add_option(
     action='store_true',
     dest='sandbox',
     default=False,
-    help='include only the cef_sandbox static library (macOS and Windows only)')
+    help='include only the honey_sandbox static library (macOS and Windows only)')
 parser.add_option(
     '--ozone',
     action='store_true',
@@ -596,19 +596,19 @@ if options.ozone and platform != 'linux':
 # script directory
 script_dir = os.path.dirname(__file__)
 
-# CEF root directory
-cef_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+# Honeycomb root directory
+honey_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
 
 # src directory
-src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
 
-if not git.is_checkout(cef_dir):
-  raise Exception('Not a valid checkout: %s' % (cef_dir))
+if not git.is_checkout(honey_dir):
+  raise Exception('Not a valid checkout: %s' % (honey_dir))
 
-# retrieve information for CEF
-cef_url = git.get_url(cef_dir)
-cef_rev = git.get_hash(cef_dir)
-cef_commit_number = git.get_commit_number(cef_dir)
+# retrieve information for Honeycomb
+honey_url = git.get_url(honey_dir)
+honey_rev = git.get_hash(honey_dir)
+honey_commit_number = git.get_commit_number(honey_dir)
 
 if not git.is_checkout(src_dir):
   raise Exception('Not a valid checkout: %s' % (src_dir))
@@ -621,7 +621,7 @@ date = get_date()
 
 # format version strings
 formatter = VersionFormatter()
-cef_ver = formatter.get_version_string()
+honey_ver = formatter.get_version_string()
 chromium_ver = formatter.get_chromium_version_string()
 
 # list of output directories to be archived
@@ -641,7 +641,7 @@ else:
   binary_arch = 'x86'
 
 # output directory
-output_dir_base = 'cef_binary_' + cef_ver
+output_dir_base = 'honey_binary_' + honey_ver
 
 if options.distribsubdir == '':
   if platform == 'mac':
@@ -677,17 +677,17 @@ output_dir = create_output_dir(output_dir_name, options.outputdir)
 create_readme()
 
 # transfer the LICENSE.txt file
-copy_file(os.path.join(cef_dir, 'LICENSE.txt'), output_dir, options.quiet)
+copy_file(os.path.join(honey_dir, 'LICENSE.txt'), output_dir, options.quiet)
 
-# read the variables list from the autogenerated cef_paths.gypi file
-cef_paths = eval_file(os.path.join(cef_dir, 'cef_paths.gypi'))
-cef_paths = cef_paths['variables']
+# read the variables list from the autogenerated honey_paths.gypi file
+honey_paths = eval_file(os.path.join(honey_dir, 'honey_paths.gypi'))
+honey_paths = honey_paths['variables']
 
-# read the variables list from the manually edited cef_paths2.gypi file
-cef_paths2 = eval_file(os.path.join(cef_dir, 'cef_paths2.gypi'))
-cef_paths2 = cef_paths2['variables']
+# read the variables list from the manually edited honey_paths2.gypi file
+honey_paths2 = eval_file(os.path.join(honey_dir, 'honey_paths2.gypi'))
+honey_paths2 = honey_paths2['variables']
 
-# Determine the build directory suffix. CEF uses a consistent directory naming
+# Determine the build directory suffix. Honeycomb uses a consistent directory naming
 # scheme for GN via GetAllPlatformConfigs in gn_args.py.
 if options.x64build:
   build_dir_suffix = '_GN_x64'
@@ -712,30 +712,30 @@ if mode == 'standard' or mode == 'minimal':
   cmake_dir = os.path.join(output_dir, 'cmake')
   make_dir(cmake_dir, options.quiet)
 
-  # create the libcef_dll_wrapper directory
-  libcef_dll_dir = os.path.join(output_dir, 'libcef_dll')
-  make_dir(libcef_dll_dir, options.quiet)
+  # create the libhoneycomb_dll_wrapper directory
+  libhoneycomb_dll_dir = os.path.join(output_dir, 'libhoneycomb_dll')
+  make_dir(libhoneycomb_dll_dir, options.quiet)
 
   # transfer common include files
-  transfer_gypi_files(cef_dir, cef_paths2['includes_common'], \
+  transfer_gypi_files(honey_dir, honey_paths2['includes_common'], \
                       'include/', include_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['includes_common_capi'], \
+  transfer_gypi_files(honey_dir, honey_paths2['includes_common_capi'], \
                       'include/', include_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['includes_capi'], \
+  transfer_gypi_files(honey_dir, honey_paths2['includes_capi'], \
                       'include/', include_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['includes_wrapper'], \
+  transfer_gypi_files(honey_dir, honey_paths2['includes_wrapper'], \
                       'include/', include_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths['autogen_cpp_includes'], \
+  transfer_gypi_files(honey_dir, honey_paths['autogen_cpp_includes'], \
                       'include/', include_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths['autogen_capi_includes'], \
+  transfer_gypi_files(honey_dir, honey_paths['autogen_capi_includes'], \
                       'include/', include_dir, options.quiet)
 
   # Transfer generated include files.
   generated_includes = [
-      'cef_command_ids.h',
-      'cef_config.h',
-      'cef_pack_resources.h',
-      'cef_pack_strings.h',
+      'honey_command_ids.h',
+      'honey_config.h',
+      'honey_pack_resources.h',
+      'honey_pack_strings.h',
   ]
   for include in generated_includes:
     # Debug and Release build should be the same so grab whichever exists.
@@ -746,36 +746,36 @@ if mode == 'standard' or mode == 'minimal':
         raise Exception('Missing generated header file: %s' % include)
     copy_file(src_path, os.path.join(include_dir, include), options.quiet)
 
-  # transfer common libcef_dll_wrapper files
-  transfer_gypi_files(cef_dir, cef_paths2['libcef_dll_wrapper_sources_base'], \
-                      'libcef_dll/', libcef_dll_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['libcef_dll_wrapper_sources_common'], \
-                      'libcef_dll/', libcef_dll_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths['autogen_client_side'], \
-                      'libcef_dll/', libcef_dll_dir, options.quiet)
+  # transfer common libhoneycomb_dll_wrapper files
+  transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_base'], \
+                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
+  transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_common'], \
+                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
+  transfer_gypi_files(honey_dir, honey_paths['autogen_client_side'], \
+                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
 
   if mode == 'standard' or mode == 'minimal':
     # transfer additional files
-    transfer_files(cef_dir, script_dir, os.path.join(script_dir, 'distrib'), \
+    transfer_files(honey_dir, script_dir, os.path.join(script_dir, 'distrib'), \
                    mode, output_dir, options.quiet)
 
   # process cmake templates
-  variables = cef_paths.copy()
-  variables.update(cef_paths2)
-  process_cmake_template(os.path.join(cef_dir, 'CMakeLists.txt.in'), \
+  variables = honey_paths.copy()
+  variables.update(honey_paths2)
+  process_cmake_template(os.path.join(honey_dir, 'CMakeLists.txt.in'), \
                          os.path.join(output_dir, 'CMakeLists.txt'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'cmake', 'cef_macros.cmake.in'), \
-                         os.path.join(cmake_dir, 'cef_macros.cmake'), \
+  process_cmake_template(os.path.join(honey_dir, 'cmake', 'honey_macros.cmake.in'), \
+                         os.path.join(cmake_dir, 'honey_macros.cmake'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'cmake', 'cef_variables.cmake.in'), \
-                         os.path.join(cmake_dir, 'cef_variables.cmake'), \
+  process_cmake_template(os.path.join(honey_dir, 'cmake', 'honey_variables.cmake.in'), \
+                         os.path.join(cmake_dir, 'honey_variables.cmake'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'cmake', 'FindCEF.cmake.in'), \
-                         os.path.join(cmake_dir, 'FindCEF.cmake'), \
+  process_cmake_template(os.path.join(honey_dir, 'cmake', 'FindHoneycomb.cmake.in'), \
+                         os.path.join(cmake_dir, 'FindHoneycomb.cmake'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'libcef_dll', 'CMakeLists.txt.in'), \
-                         os.path.join(libcef_dll_dir, 'CMakeLists.txt'), \
+  process_cmake_template(os.path.join(honey_dir, 'libhoneycomb_dll', 'CMakeLists.txt.in'), \
+                         os.path.join(libhoneycomb_dll_dir, 'CMakeLists.txt'), \
                          variables, options.quiet)
 
 if mode == 'standard':
@@ -788,78 +788,78 @@ if mode == 'standard':
   make_dir(shared_dir, options.quiet)
 
   if not options.ozone:
-    # create the tests/cefclient directory
-    cefclient_dir = os.path.join(tests_dir, 'cefclient')
-    make_dir(cefclient_dir, options.quiet)
+    # create the tests/honeyclient directory
+    honeyclient_dir = os.path.join(tests_dir, 'honeyclient')
+    make_dir(honeyclient_dir, options.quiet)
 
-  # create the tests/cefsimple directory
-  cefsimple_dir = os.path.join(tests_dir, 'cefsimple')
-  make_dir(cefsimple_dir, options.quiet)
+  # create the tests/honeysimple directory
+  honeysimple_dir = os.path.join(tests_dir, 'honeysimple')
+  make_dir(honeysimple_dir, options.quiet)
 
-  # create the tests/ceftests directory
-  ceftests_dir = os.path.join(tests_dir, 'ceftests')
-  make_dir(ceftests_dir, options.quiet)
+  # create the tests/honeytests directory
+  honeytests_dir = os.path.join(tests_dir, 'honeytests')
+  make_dir(honeytests_dir, options.quiet)
 
   # transfer common shared files
-  transfer_gypi_files(cef_dir, cef_paths2['shared_sources_browser'], \
+  transfer_gypi_files(honey_dir, honey_paths2['shared_sources_browser'], \
                       'tests/shared/', shared_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['shared_sources_common'], \
+  transfer_gypi_files(honey_dir, honey_paths2['shared_sources_common'], \
                       'tests/shared/', shared_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['shared_sources_renderer'], \
+  transfer_gypi_files(honey_dir, honey_paths2['shared_sources_renderer'], \
                       'tests/shared/', shared_dir, options.quiet)
-  transfer_gypi_files(cef_dir, cef_paths2['shared_sources_resources'], \
+  transfer_gypi_files(honey_dir, honey_paths2['shared_sources_resources'], \
                       'tests/shared/', shared_dir, options.quiet)
 
   if not options.ozone:
-    # transfer common cefclient files
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_browser'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_common'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_renderer'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_resources'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_resources_extensions_set_page_color'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
+    # transfer common honeyclient files
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_browser'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_common'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_renderer'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_resources'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_resources_extensions_set_page_color'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
 
-  # transfer common cefsimple files
-  transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_common'], \
-                      'tests/cefsimple/', cefsimple_dir, options.quiet)
+  # transfer common honeysimple files
+  transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_common'], \
+                      'tests/honeysimple/', honeysimple_dir, options.quiet)
 
-  # transfer common ceftests files
-  transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_common'], \
-                      'tests/ceftests/', ceftests_dir, options.quiet)
+  # transfer common honeytests files
+  transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_common'], \
+                      'tests/honeytests/', honeytests_dir, options.quiet)
 
   # copy GTest files
   copy_gtest(tests_dir)
 
   # process cmake templates
   if not options.ozone:
-    process_cmake_template(os.path.join(cef_dir, 'tests', 'cefclient', 'CMakeLists.txt.in'), \
-                           os.path.join(cefclient_dir, 'CMakeLists.txt'), \
+    process_cmake_template(os.path.join(honey_dir, 'tests', 'honeyclient', 'CMakeLists.txt.in'), \
+                           os.path.join(honeyclient_dir, 'CMakeLists.txt'), \
                            variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'tests', 'cefsimple', 'CMakeLists.txt.in'), \
-                         os.path.join(cefsimple_dir, 'CMakeLists.txt'), \
+  process_cmake_template(os.path.join(honey_dir, 'tests', 'honeysimple', 'CMakeLists.txt.in'), \
+                         os.path.join(honeysimple_dir, 'CMakeLists.txt'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'tests', 'gtest', 'CMakeLists.txt.in'), \
+  process_cmake_template(os.path.join(honey_dir, 'tests', 'gtest', 'CMakeLists.txt.in'), \
                          os.path.join(tests_dir, 'gtest', 'CMakeLists.txt'), \
                          variables, options.quiet)
-  process_cmake_template(os.path.join(cef_dir, 'tests', 'ceftests', 'CMakeLists.txt.in'), \
-                         os.path.join(ceftests_dir, 'CMakeLists.txt'), \
+  process_cmake_template(os.path.join(honey_dir, 'tests', 'honeytests', 'CMakeLists.txt.in'), \
+                         os.path.join(honeytests_dir, 'CMakeLists.txt'), \
                          variables, options.quiet)
 
   # transfer gypi files
-  copy_file(os.path.join(cef_dir, 'cef_paths.gypi'), \
-            os.path.join(output_dir, 'cef_paths.gypi'), options.quiet)
-  copy_file(os.path.join(cef_dir, 'cef_paths2.gypi'), \
-            os.path.join(output_dir, 'cef_paths2.gypi'), options.quiet)
+  copy_file(os.path.join(honey_dir, 'honey_paths.gypi'), \
+            os.path.join(output_dir, 'honey_paths.gypi'), options.quiet)
+  copy_file(os.path.join(honey_dir, 'honey_paths2.gypi'), \
+            os.path.join(output_dir, 'honey_paths2.gypi'), options.quiet)
 
   # transfer Doxyfile
   transfer_doxyfile(output_dir, options.quiet)
 
   # transfer README.md
-  copy_file(os.path.join(cef_dir, 'README.md'), \
+  copy_file(os.path.join(honey_dir, 'README.md'), \
             os.path.join(output_dir, 'README.md'), options.quiet)
 
 if not options.nodocs:
@@ -867,12 +867,12 @@ if not options.nodocs:
   sys.stdout.write("Generating docs...\n")
   result = exec_cmd(
       os.path.join('tools', 'make_cppdocs.%s' %
-                   ('bat' if platform == 'windows' else 'sh')), cef_dir)
+                   ('bat' if platform == 'windows' else 'sh')), honey_dir)
   if (len(result['err']) > 0):
     sys.stdout.write(result['err'])
   sys.stdout.write(result['out'])
 
-  src_dir = os.path.join(cef_dir, 'docs')
+  src_dir = os.path.join(honey_dir, 'docs')
   if path_exists(src_dir):
     # create the docs output directory
     docs_output_dir = create_output_dir(output_dir_base + '_docs',
@@ -883,14 +883,14 @@ if not options.nodocs:
     sys.stdout.write("ERROR: No docs generated.\n")
 
 if platform == 'windows':
-  libcef_dll = 'libcef.dll'
-  libcef_dll_lib = '%s.lib' % libcef_dll
-  libcef_dll_pdb = '%s.pdb' % libcef_dll
+  libhoneycomb_dll = 'libhoneycomb.dll'
+  libhoneycomb_dll_lib = '%s.lib' % libhoneycomb_dll
+  libhoneycomb_dll_pdb = '%s.pdb' % libhoneycomb_dll
   # yapf: disable
   binaries = [
       {'path': 'chrome_elf.dll'},
       {'path': 'd3dcompiler_47.dll'},
-      {'path': libcef_dll},
+      {'path': libhoneycomb_dll},
       {'path': 'libEGL.dll'},
       {'path': 'libGLESv2.dll'},
       {'path': 'snapshot_blob.bin', 'conditional': True},
@@ -903,10 +903,10 @@ if platform == 'windows':
 
   if mode == 'client':
     binaries.append({
-        'path': 'cefsimple.exe' if platform_arch == 'arm64' else 'cefclient.exe'
+        'path': 'honeysimple.exe' if platform_arch == 'arm64' else 'honeyclient.exe'
     })
   else:
-    binaries.append({'path': libcef_dll_lib, 'out_path': 'libcef.lib'})
+    binaries.append({'path': libhoneycomb_dll_lib, 'out_path': 'libhoneycomb.lib'})
 
   # yapf: disable
   resources = [
@@ -918,14 +918,14 @@ if platform == 'windows':
   ]
   # yapf: enable
 
-  cef_sandbox_lib = 'obj\\cef\\cef_sandbox.lib'
+  honey_sandbox_lib = 'obj\\honey\\honey_sandbox.lib'
   sandbox_libs = [
       'obj\\base\\base.lib',
       'obj\\base\\base_static.lib',
       'obj\\base\\third_party\\double_conversion\\double_conversion.lib',
       'obj\\base\\third_party\\dynamic_annotations\\dynamic_annotations.lib',
       'obj\\base\\win\\pe_image.lib',
-      cef_sandbox_lib,
+      honey_sandbox_lib,
       'obj\\sandbox\\common\\*.obj',
       'obj\\sandbox\\win\\sandbox.lib',
       'obj\\sandbox\\win\\service_resolver\\*.obj',
@@ -937,7 +937,7 @@ if platform == 'windows':
       'obj\\third_party\\abseil-cpp\\absl\\types\\**\\*.obj',
   ]
 
-  # Generate the cef_sandbox.lib merged library. A separate *_sandbox build
+  # Generate the honey_sandbox.lib merged library. A separate *_sandbox build
   # should exist when GN is_official_build=true.
   if mode in ('standard', 'minimal', 'sandbox'):
     dirs = {
@@ -946,11 +946,11 @@ if platform == 'windows':
     }
     for dir_name in dirs.keys():
       for src_dir in dirs[dir_name]:
-        if path_exists(os.path.join(src_dir, cef_sandbox_lib)):
+        if path_exists(os.path.join(src_dir, honey_sandbox_lib)):
           dst_dir = os.path.join(output_dir, dir_name)
           make_dir(dst_dir, options.quiet)
           combine_libs(platform, src_dir, sandbox_libs,
-                       os.path.join(dst_dir, 'cef_sandbox.lib'))
+                       os.path.join(dst_dir, 'honey_sandbox.lib'))
           break
 
   valid_build_dir = None
@@ -959,7 +959,7 @@ if platform == 'windows':
     # transfer Debug files
     build_dir = build_dir_debug
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, libcef_dll)):
+        os.path.join(build_dir, libhoneycomb_dll)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Debug')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -970,7 +970,7 @@ if platform == 'windows':
             output_dir_name + '_debug_symbols', options.outputdir)
         # transfer contents
         copy_file(
-            os.path.join(build_dir, libcef_dll_pdb), symbol_output_dir,
+            os.path.join(build_dir, libhoneycomb_dll_pdb), symbol_output_dir,
             options.quiet)
     else:
       sys.stdout.write("No Debug build files.\n")
@@ -979,7 +979,7 @@ if platform == 'windows':
     # transfer Release files
     build_dir = build_dir_release
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, libcef_dll)):
+        os.path.join(build_dir, libhoneycomb_dll)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Release')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -990,7 +990,7 @@ if platform == 'windows':
             output_dir_name + '_release_symbols', options.outputdir)
         # transfer contents
         copy_file(
-            os.path.join(build_dir, libcef_dll_pdb), symbol_output_dir,
+            os.path.join(build_dir, libhoneycomb_dll_pdb), symbol_output_dir,
             options.quiet)
     else:
       sys.stdout.write("No Release build files.\n")
@@ -1006,46 +1006,46 @@ if platform == 'windows':
 
   if mode == 'standard' or mode == 'minimal':
     # transfer include files
-    transfer_gypi_files(cef_dir, cef_paths2['includes_win'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_win'], \
                         'include/', include_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['includes_win_capi'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_win_capi'], \
                         'include/', include_dir, options.quiet)
 
     # transfer additional files, if any
-    transfer_files(cef_dir, script_dir, os.path.join(script_dir, 'distrib', 'win'), \
+    transfer_files(honey_dir, script_dir, os.path.join(script_dir, 'distrib', 'win'), \
                    mode, output_dir, options.quiet)
 
   if mode == 'standard':
     # transfer shared files
-    transfer_gypi_files(cef_dir, cef_paths2['shared_sources_win'], \
+    transfer_gypi_files(honey_dir, honey_paths2['shared_sources_win'], \
                         'tests/shared/', shared_dir, options.quiet)
 
-    # transfer cefclient files
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_win'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_resources_win'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
+    # transfer honeyclient files
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_win'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_resources_win'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
 
-    # transfer cefsimple files
-    transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_win'], \
-                        'tests/cefsimple/', cefsimple_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_resources_win'], \
-                        'tests/cefsimple/', cefsimple_dir, options.quiet)
+    # transfer honeysimple files
+    transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_win'], \
+                        'tests/honeysimple/', honeysimple_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_resources_win'], \
+                        'tests/honeysimple/', honeysimple_dir, options.quiet)
 
-    # transfer ceftests files
-    transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_win'], \
-                        'tests/ceftests/', ceftests_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_resources_win'], \
-                        'tests/ceftests/', ceftests_dir, options.quiet)
+    # transfer honeytests files
+    transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_win'], \
+                        'tests/honeytests/', honeytests_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_resources_win'], \
+                        'tests/honeytests/', honeytests_dir, options.quiet)
 
 elif platform == 'mac':
-  framework_name = 'Chromium Embedded Framework'
+  framework_name = 'Honeycomb'
   framework_dsym = '%s.dSYM' % framework_name
-  cefclient_app = 'cefclient.app'
+  honeyclient_app = 'honeyclient.app'
 
-  cef_sandbox_lib = 'obj/cef/libcef_sandbox.a'
+  honey_sandbox_lib = 'obj/honey/libhoneycomb_sandbox.a'
   sandbox_libs = [
-      cef_sandbox_lib,
+      honey_sandbox_lib,
       'obj/sandbox/mac/libseatbelt.a',
       'obj/sandbox/mac/libseatbelt_proto.a',
       'obj/third_party/protobuf/libprotobuf_lite.a',
@@ -1053,7 +1053,7 @@ elif platform == 'mac':
       'obj/buildtools/third_party/libc++abi/libc++abi/*.o',
   ]
 
-  # Generate the cef_sandbox.a merged library. A separate *_sandbox build
+  # Generate the honey_sandbox.a merged library. A separate *_sandbox build
   # should exist when GN is_official_build=true.
   if mode in ('standard', 'minimal', 'sandbox'):
     dirs = {
@@ -1062,11 +1062,11 @@ elif platform == 'mac':
     }
     for dir_name in dirs.keys():
       for src_dir in dirs[dir_name]:
-        if path_exists(os.path.join(src_dir, cef_sandbox_lib)):
+        if path_exists(os.path.join(src_dir, honey_sandbox_lib)):
           dst_dir = os.path.join(output_dir, dir_name)
           make_dir(dst_dir, options.quiet)
           combine_libs(platform, src_dir, sandbox_libs,
-                       os.path.join(dst_dir, 'cef_sandbox.a'))
+                       os.path.join(dst_dir, 'honey_sandbox.a'))
           break
 
   valid_build_dir = None
@@ -1075,13 +1075,13 @@ elif platform == 'mac':
     # transfer Debug files
     build_dir = build_dir_debug
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, cefclient_app)):
+        os.path.join(build_dir, honeyclient_app)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Debug')
       make_dir(dst_dir, options.quiet)
       framework_src_dir = os.path.join(
           build_dir, '%s/Contents/Frameworks/%s.framework/Versions/A' %
-          (cefclient_app, framework_name))
+          (honeyclient_app, framework_name))
       framework_dst_dir = os.path.join(dst_dir, '%s.framework' % framework_name)
       copy_dir(framework_src_dir, framework_dst_dir, options.quiet)
 
@@ -1103,23 +1103,23 @@ elif platform == 'mac':
     # transfer Release files
     build_dir = build_dir_release
     if not options.allowpartial or path_exists(
-        os.path.join(build_dir, cefclient_app)):
+        os.path.join(build_dir, honeyclient_app)):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Release')
       make_dir(dst_dir, options.quiet)
       framework_src_dir = os.path.join(
           build_dir, '%s/Contents/Frameworks/%s.framework/Versions/A' %
-          (cefclient_app, framework_name))
+          (honeyclient_app, framework_name))
       if mode != 'client':
         framework_dst_dir = os.path.join(dst_dir,
                                          '%s.framework' % framework_name)
       else:
         copy_dir(
-            os.path.join(build_dir, cefclient_app),
-            os.path.join(dst_dir, cefclient_app), options.quiet)
+            os.path.join(build_dir, honeyclient_app),
+            os.path.join(dst_dir, honeyclient_app), options.quiet)
         # Replace the versioned framework with an unversioned framework in the sample app.
         framework_dst_dir = os.path.join(
-            dst_dir, '%s/Contents/Frameworks/%s.framework' % (cefclient_app,
+            dst_dir, '%s/Contents/Frameworks/%s.framework' % (honeyclient_app,
                                                               framework_name))
         remove_dir(framework_dst_dir, options.quiet)
       copy_dir(framework_src_dir, framework_dst_dir, options.quiet)
@@ -1140,65 +1140,65 @@ elif platform == 'mac':
 
   if mode == 'standard' or mode == 'minimal':
     # transfer include files
-    transfer_gypi_files(cef_dir, cef_paths2['includes_mac'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_mac'], \
                         'include/', include_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['includes_mac_capi'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_mac_capi'], \
                         'include/', include_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['includes_wrapper_mac'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_wrapper_mac'], \
                         'include/', include_dir, options.quiet)
 
-    # transfer libcef_dll_wrapper files
-    transfer_gypi_files(cef_dir, cef_paths2['libcef_dll_wrapper_sources_mac'], \
-                      'libcef_dll/', libcef_dll_dir, options.quiet)
+    # transfer libhoneycomb_dll_wrapper files
+    transfer_gypi_files(honey_dir, honey_paths2['libhoneycomb_dll_wrapper_sources_mac'], \
+                      'libhoneycomb_dll/', libhoneycomb_dll_dir, options.quiet)
 
     # transfer additional files, if any
-    transfer_files(cef_dir, script_dir, os.path.join(script_dir, 'distrib', 'mac'), \
+    transfer_files(honey_dir, script_dir, os.path.join(script_dir, 'distrib', 'mac'), \
                    mode, output_dir, options.quiet)
 
   if mode == 'standard':
     # transfer shared files
-    transfer_gypi_files(cef_dir, cef_paths2['shared_sources_mac'], \
+    transfer_gypi_files(honey_dir, honey_paths2['shared_sources_mac'], \
                         'tests/shared/', shared_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['shared_sources_mac_helper'], \
+    transfer_gypi_files(honey_dir, honey_paths2['shared_sources_mac_helper'], \
                         'tests/shared/', shared_dir, options.quiet)
 
-    # transfer cefclient files
-    transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_mac'], \
-                        'tests/cefclient/', cefclient_dir, options.quiet)
+    # transfer honeyclient files
+    transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_mac'], \
+                        'tests/honeyclient/', honeyclient_dir, options.quiet)
 
-    # transfer cefclient/resources/mac files
-    copy_dir(os.path.join(cef_dir, 'tests/cefclient/resources/mac'), \
-             os.path.join(cefclient_dir, 'resources/mac'), \
+    # transfer honeyclient/resources/mac files
+    copy_dir(os.path.join(honey_dir, 'tests/honeyclient/resources/mac'), \
+             os.path.join(honeyclient_dir, 'resources/mac'), \
              options.quiet)
 
-    # transfer cefsimple files
-    transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_mac'], \
-                        'tests/cefsimple/', cefsimple_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_mac_helper'], \
-                        'tests/cefsimple/', cefsimple_dir, options.quiet)
+    # transfer honeysimple files
+    transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_mac'], \
+                        'tests/honeysimple/', honeysimple_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_mac_helper'], \
+                        'tests/honeysimple/', honeysimple_dir, options.quiet)
 
-    # transfer cefsimple/mac files
-    copy_dir(os.path.join(cef_dir, 'tests/cefsimple/mac'), \
-             os.path.join(cefsimple_dir, 'mac'), \
+    # transfer honeysimple/mac files
+    copy_dir(os.path.join(honey_dir, 'tests/honeysimple/mac'), \
+             os.path.join(honeysimple_dir, 'mac'), \
              options.quiet)
 
-    # transfer ceftests files
-    transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_mac'], \
-                        'tests/ceftests/', ceftests_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_mac_helper'], \
-                        'tests/ceftests/', ceftests_dir, options.quiet)
+    # transfer honeytests files
+    transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_mac'], \
+                        'tests/honeytests/', honeytests_dir, options.quiet)
+    transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_mac_helper'], \
+                        'tests/honeytests/', honeytests_dir, options.quiet)
 
-    # transfer ceftests/resources/mac files
-    copy_dir(os.path.join(cef_dir, 'tests/ceftests/resources/mac'), \
-             os.path.join(ceftests_dir, 'resources/mac'), \
+    # transfer honeytests/resources/mac files
+    copy_dir(os.path.join(honey_dir, 'tests/honeytests/resources/mac'), \
+             os.path.join(honeytests_dir, 'resources/mac'), \
              options.quiet)
 
 elif platform == 'linux':
-  libcef_so = 'libcef.so'
+  libhoneycomb_so = 'libhoneycomb.so'
   # yapf: disable
   binaries = [
       {'path': 'chrome_sandbox', 'out_path': 'chrome-sandbox'},
-      {'path': libcef_so},
+      {'path': libhoneycomb_so},
       {'path': 'libEGL.so'},
       {'path': 'libGLESv2.so'},
       {'path': 'libvk_swiftshader.so'},
@@ -1212,7 +1212,7 @@ elif platform == 'linux':
     binaries.append({'path': 'libminigbm.so', 'conditional': True})
 
   if mode == 'client':
-    binaries.append({'path': 'cefsimple'})
+    binaries.append({'path': 'honeysimple'})
 
   # yapf: disable
   resources = [
@@ -1229,8 +1229,8 @@ elif platform == 'linux':
   if mode == 'standard':
     # transfer Debug files
     build_dir = build_dir_debug
-    libcef_path = os.path.join(build_dir, libcef_so)
-    if not options.allowpartial or path_exists(libcef_path):
+    libhoneycomb_path = os.path.join(build_dir, libhoneycomb_so)
+    if not options.allowpartial or path_exists(libhoneycomb_path):
       valid_build_dir = build_dir
       dst_dir = os.path.join(output_dir, 'Debug')
       copy_files_list(build_dir, dst_dir, binaries)
@@ -1239,8 +1239,8 @@ elif platform == 'linux':
 
   # transfer Release files
   build_dir = build_dir_release
-  libcef_path = os.path.join(build_dir, libcef_so)
-  if not options.allowpartial or path_exists(libcef_path):
+  libhoneycomb_path = os.path.join(build_dir, libhoneycomb_so)
+  if not options.allowpartial or path_exists(libhoneycomb_path):
     valid_build_dir = build_dir
     dst_dir = os.path.join(output_dir, 'Release')
     copy_files_list(build_dir, dst_dir, binaries)
@@ -1258,41 +1258,41 @@ elif platform == 'linux':
 
   if mode == 'standard' or mode == 'minimal':
     # transfer include files
-    transfer_gypi_files(cef_dir, cef_paths2['includes_linux'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_linux'], \
                         'include/', include_dir, options.quiet)
-    transfer_gypi_files(cef_dir, cef_paths2['includes_linux_capi'], \
+    transfer_gypi_files(honey_dir, honey_paths2['includes_linux_capi'], \
                         'include/', include_dir, options.quiet)
 
     # transfer additional files, if any
-    transfer_files(cef_dir, script_dir, os.path.join(script_dir, 'distrib', 'linux'), \
+    transfer_files(honey_dir, script_dir, os.path.join(script_dir, 'distrib', 'linux'), \
                    mode, output_dir, options.quiet)
 
   if mode == 'standard':
     # transfer shared files
-    transfer_gypi_files(cef_dir, cef_paths2['shared_sources_linux'], \
+    transfer_gypi_files(honey_dir, honey_paths2['shared_sources_linux'], \
                         'tests/shared/', shared_dir, options.quiet)
 
     if not options.ozone:
-      # transfer cefclient files
-      transfer_gypi_files(cef_dir, cef_paths2['cefclient_sources_linux'], \
-                          'tests/cefclient/', cefclient_dir, options.quiet)
+      # transfer honeyclient files
+      transfer_gypi_files(honey_dir, honey_paths2['honeyclient_sources_linux'], \
+                          'tests/honeyclient/', honeyclient_dir, options.quiet)
 
-    # transfer cefsimple files
-    transfer_gypi_files(cef_dir, cef_paths2['cefsimple_sources_linux'], \
-                        'tests/cefsimple/', cefsimple_dir, options.quiet)
+    # transfer honeysimple files
+    transfer_gypi_files(honey_dir, honey_paths2['honeysimple_sources_linux'], \
+                        'tests/honeysimple/', honeysimple_dir, options.quiet)
 
-    # transfer ceftests files
-    transfer_gypi_files(cef_dir, cef_paths2['ceftests_sources_linux'], \
-                        'tests/ceftests/', ceftests_dir, options.quiet)
+    # transfer honeytests files
+    transfer_gypi_files(honey_dir, honey_paths2['honeytests_sources_linux'], \
+                        'tests/honeytests/', honeytests_dir, options.quiet)
 
 if not options.noarchive:
   # create an archive for each output directory
-  archive_format = os.getenv('CEF_ARCHIVE_FORMAT', 'zip')
+  archive_format = os.getenv('HONEYCOMB_ARCHIVE_FORMAT', 'zip')
   if archive_format not in ('zip', 'tar.gz', 'tar.bz2'):
     raise Exception('Unsupported archive format: %s' % archive_format)
 
-  if os.getenv('CEF_COMMAND_7ZIP', '') != '':
-    archive_format = os.getenv('CEF_COMMAND_7ZIP_FORMAT', '7z')
+  if os.getenv('HONEYCOMB_COMMAND_7ZIP', '') != '':
+    archive_format = os.getenv('HONEYCOMB_COMMAND_7ZIP_FORMAT', '7z')
 
   for dir in archive_dirs:
     if not options.quiet:

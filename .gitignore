@@ -47,10 +47,10 @@ Thumbs.db
 .vs/
 .kdev4/
 *.kdev4
-# CEF generated directories
+# Honeycomb generated directories
 /binary_distrib
 /docs
-# CEF generated files
-/include/cef_config.h
-/include/cef_version.h
+# Honeycomb generated files
+/include/honey_config.h
+/include/honey_version.h
 .ccls-cache/

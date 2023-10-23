@@ -1,19 +1,19 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_COMMON_CLIENT_APP_H_
-#define CEF_TESTS_SHARED_COMMON_CLIENT_APP_H_
+#ifndef HONEYCOMB_TESTS_SHARED_COMMON_CLIENT_APP_H_
+#define HONEYCOMB_TESTS_SHARED_COMMON_CLIENT_APP_H_
 #pragma once
 
 #include <vector>
 
-#include "include/cef_app.h"
+#include "include/honey_app.h"
 
 namespace client {
 
 // Base class for customizing process-type-based behavior.
-class ClientApp : public CefApp {
+class ClientApp : public HoneycombApp {
  public:
   ClientApp();
 
@@ -25,20 +25,20 @@ class ClientApp : public CefApp {
   };
 
   // Determine the process type based on command-line arguments.
-  static ProcessType GetProcessType(CefRefPtr<CefCommandLine> command_line);
+  static ProcessType GetProcessType(HoneycombRefPtr<HoneycombCommandLine> command_line);
 
  private:
-  // Registers custom schemes. Implemented by cefclient in
+  // Registers custom schemes. Implemented by honeyclient in
   // client_app_delegates_common.cc
-  static void RegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar);
+  static void RegisterCustomSchemes(HoneycombRawPtr<HoneycombSchemeRegistrar> registrar);
 
-  // CefApp methods.
+  // HoneycombApp methods.
   void OnRegisterCustomSchemes(
-      CefRawPtr<CefSchemeRegistrar> registrar) override;
+      HoneycombRawPtr<HoneycombSchemeRegistrar> registrar) override;
 
   DISALLOW_COPY_AND_ASSIGN(ClientApp);
 };
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_COMMON_CLIENT_APP_H_
+#endif  // HONEYCOMB_TESTS_SHARED_COMMON_CLIENT_APP_H_

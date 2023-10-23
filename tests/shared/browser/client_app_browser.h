@@ -1,9 +1,9 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2013 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_
-#define CEF_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_
+#ifndef HONEYCOMB_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_
+#define HONEYCOMB_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_
 #pragma once
 
 #include <set>
@@ -13,70 +13,70 @@
 namespace client {
 
 // Client app implementation for the browser process.
-class ClientAppBrowser : public ClientApp, public CefBrowserProcessHandler {
+class ClientAppBrowser : public ClientApp, public HoneycombBrowserProcessHandler {
  public:
   // Interface for browser delegates. All Delegates must be returned via
   // CreateDelegates. Do not perform work in the Delegate
-  // constructor. See CefBrowserProcessHandler for documentation.
-  class Delegate : public virtual CefBaseRefCounted {
+  // constructor. See HoneycombBrowserProcessHandler for documentation.
+  class Delegate : public virtual HoneycombBaseRefCounted {
    public:
     virtual void OnBeforeCommandLineProcessing(
-        CefRefPtr<ClientAppBrowser> app,
-        CefRefPtr<CefCommandLine> command_line) {}
+        HoneycombRefPtr<ClientAppBrowser> app,
+        HoneycombRefPtr<HoneycombCommandLine> command_line) {}
 
     virtual void OnRegisterCustomPreferences(
-        CefRefPtr<ClientAppBrowser> app,
-        cef_preferences_type_t type,
-        CefRawPtr<CefPreferenceRegistrar> registrar) {}
+        HoneycombRefPtr<ClientAppBrowser> app,
+        honey_preferences_type_t type,
+        HoneycombRawPtr<HoneycombPreferenceRegistrar> registrar) {}
 
-    virtual void OnContextInitialized(CefRefPtr<ClientAppBrowser> app) {}
+    virtual void OnContextInitialized(HoneycombRefPtr<ClientAppBrowser> app) {}
 
     virtual void OnBeforeChildProcessLaunch(
-        CefRefPtr<ClientAppBrowser> app,
-        CefRefPtr<CefCommandLine> command_line) {}
+        HoneycombRefPtr<ClientAppBrowser> app,
+        HoneycombRefPtr<HoneycombCommandLine> command_line) {}
 
-    virtual CefRefPtr<CefClient> GetDefaultClient(
-        CefRefPtr<ClientAppBrowser> app) {
+    virtual HoneycombRefPtr<HoneycombClient> GetDefaultClient(
+        HoneycombRefPtr<ClientAppBrowser> app) {
       return nullptr;
     }
   };
 
-  typedef std::set<CefRefPtr<Delegate>> DelegateSet;
+  typedef std::set<HoneycombRefPtr<Delegate>> DelegateSet;
 
   ClientAppBrowser();
 
   // Called to populate |settings| based on |command_line| and other global
   // state.
-  static void PopulateSettings(CefRefPtr<CefCommandLine> command_line,
-                               CefSettings& settings);
+  static void PopulateSettings(HoneycombRefPtr<HoneycombCommandLine> command_line,
+                               HoneycombSettings& settings);
 
  private:
-  // Registers cookieable schemes. Implemented by cefclient in
+  // Registers cookieable schemes. Implemented by honeyclient in
   // client_app_delegates_browser.cc
   static void RegisterCookieableSchemes(
       std::vector<std::string>& cookieable_schemes);
 
-  // Creates all of the Delegate objects. Implemented by cefclient in
+  // Creates all of the Delegate objects. Implemented by honeyclient in
   // client_app_delegates_browser.cc
   static void CreateDelegates(DelegateSet& delegates);
 
-  // CefApp methods.
+  // HoneycombApp methods.
   void OnBeforeCommandLineProcessing(
-      const CefString& process_type,
-      CefRefPtr<CefCommandLine> command_line) override;
-  CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() override {
+      const HoneycombString& process_type,
+      HoneycombRefPtr<HoneycombCommandLine> command_line) override;
+  HoneycombRefPtr<HoneycombBrowserProcessHandler> GetBrowserProcessHandler() override {
     return this;
   }
 
-  // CefBrowserProcessHandler methods.
+  // HoneycombBrowserProcessHandler methods.
   void OnRegisterCustomPreferences(
-      cef_preferences_type_t type,
-      CefRawPtr<CefPreferenceRegistrar> registrar) override;
+      honey_preferences_type_t type,
+      HoneycombRawPtr<HoneycombPreferenceRegistrar> registrar) override;
   void OnContextInitialized() override;
   void OnBeforeChildProcessLaunch(
-      CefRefPtr<CefCommandLine> command_line) override;
+      HoneycombRefPtr<HoneycombCommandLine> command_line) override;
   void OnScheduleMessagePumpWork(int64_t delay) override;
-  CefRefPtr<CefClient> GetDefaultClient() override;
+  HoneycombRefPtr<HoneycombClient> GetDefaultClient() override;
 
   // Set of supported Delegates.
   DelegateSet delegates_;
@@ -87,4 +87,4 @@ class ClientAppBrowser : public ClientApp, public CefBrowserProcessHandler {
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_
+#endif  // HONEYCOMB_TESTS_SHARED_BROWSER_CLIENT_APP_BROWSER_H_

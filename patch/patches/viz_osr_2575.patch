@@ -87,8 +87,8 @@ index 72d9d594a9370..f95511fc9ca89 100644
      "transitions/transferable_resource_tracker.cc",
      "transitions/transferable_resource_tracker.h",
      "viz_service_export.h",
-+    "//cef/libcef/browser/osr/software_output_device_proxy.cc",
-+    "//cef/libcef/browser/osr/software_output_device_proxy.h",
++    "//honey/libhoneycomb/browser/osr/software_output_device_proxy.cc",
++    "//honey/libhoneycomb/browser/osr/software_output_device_proxy.h",
    ]
  
    defines = [ "VIZ_SERVICE_IMPLEMENTATION" ]
@@ -100,7 +100,7 @@ index 0bc450ca4faf2..bdbdca76246c6 100644
  #include "build/chromecast_buildflags.h"
  #include "build/chromeos_buildflags.h"
  #include "cc/base/switches.h"
-+#include "cef/libcef/browser/osr/software_output_device_proxy.h"
++#include "honey/libhoneycomb/browser/osr/software_output_device_proxy.h"
  #include "components/viz/common/display/renderer_settings.h"
  #include "components/viz/common/frame_sinks/begin_frame_source.h"
  #include "components/viz/service/display/display_compositor_memory_and_task_controller.h"
@@ -212,7 +212,7 @@ index 29936bca703b8..8ffe0f5509475 100644
  
    // Sends the created child window to the browser process so that it can be
 diff --git services/viz/privileged/mojom/compositing/layered_window_updater.mojom services/viz/privileged/mojom/compositing/layered_window_updater.mojom
-index 2f462f0deb5fc..695869b83cefa 100644
+index 2f462f0deb5fc..695869b83honeya 100644
 --- services/viz/privileged/mojom/compositing/layered_window_updater.mojom
 +++ services/viz/privileged/mojom/compositing/layered_window_updater.mojom
 @@ -26,5 +26,5 @@ interface LayeredWindowUpdater {

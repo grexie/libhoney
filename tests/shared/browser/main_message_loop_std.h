@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2015 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_
-#define CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_
+#ifndef HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_
+#define HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_
 #pragma once
 
 #include "tests/shared/browser/main_message_loop.h"
@@ -19,7 +19,7 @@ class MainMessageLoopStd : public MainMessageLoop {
   // MainMessageLoop methods.
   int Run() override;
   void Quit() override;
-  void PostTask(CefRefPtr<CefTask> task) override;
+  void PostTask(HoneycombRefPtr<HoneycombTask> task) override;
   bool RunsTasksOnCurrentThread() const override;
 
 #if defined(OS_WIN)
@@ -32,4 +32,4 @@ class MainMessageLoopStd : public MainMessageLoop {
 
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_
+#endif  // HONEYCOMB_TESTS_SHARED_BROWSER_MAIN_MESSAGE_LOOP_STD_H_

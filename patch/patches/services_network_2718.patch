@@ -30,7 +30,7 @@ index 421063895a58f..9d43a6f76a4dd 100644
      return;
    }
  
-+  // CEF always returns false for IsOffTheRecord(), so also check the path.
++  // Honeycomb always returns false for IsOffTheRecord(), so also check the path.
 +  const bool is_incognito = browser_context_->IsOffTheRecord() ||
 +                            browser_context_->GetPath().empty();
 +

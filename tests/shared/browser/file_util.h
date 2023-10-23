@@ -1,9 +1,9 @@
-// Copyright 2016 The Chromium Embedded Framework Authors. Portions copyright
-// 2012 The Chromium Authors. All rights reserved. Use of this source code is
+// Copyright (C) 2023 Grexie. Portions copyright
+// 2012 The Chromium Authors and 2016 the CEF Authors. All rights reserved. Use of this source code is
 // governed by a BSD-style license that can be found in the LICENSE file.
 
-#ifndef CEF_TESTS_SHARED_BROWSER_FILE_UTIL_H_
-#define CEF_TESTS_SHARED_BROWSER_FILE_UTIL_H_
+#ifndef HONEYCOMB_TESTS_SHARED_BROWSER_FILE_UTIL_H_
+#define HONEYCOMB_TESTS_SHARED_BROWSER_FILE_UTIL_H_
 #pragma once
 
 #include <limits>
@@ -42,4 +42,4 @@ std::string GetFileExtension(const std::string& path);
 }  // namespace file_util
 }  // namespace client
 
-#endif  // CEF_TESTS_SHARED_BROWSER_FILE_UTIL_H_
+#endif  // HONEYCOMB_TESTS_SHARED_BROWSER_FILE_UTIL_H_

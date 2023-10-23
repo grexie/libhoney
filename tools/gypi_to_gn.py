@@ -1,4 +1,4 @@
-# Copyright 2014 The Chromium Authors. All rights reserved.
+# Copyright 2014 The Chromium Authors and 2016 the CEF Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 # Deleted from Chromium in https://crrev.com/097f64c631.
@@ -104,8 +104,8 @@ try:
   import gn_helpers
 except ImportError as e:
   # Add src/build to import path.
-  cef_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-  src_dir = os.path.abspath(os.path.join(cef_dir, os.pardir))
+  honey_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+  src_dir = os.path.abspath(os.path.join(honey_dir, os.pardir))
   sys.path.append(os.path.join(src_dir, 'build'))
   import gn_helpers
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Chromium Embedded Framework Authors. All rights
+// Copyright (c) 2015 The Honeycomb Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -13,8 +13,8 @@ int LogicalToDevice(int value, float device_scale_factor) {
   return static_cast<int>(std::floor(scaled_val));
 }
 
-CefRect LogicalToDevice(const CefRect& value, float device_scale_factor) {
-  return CefRect(LogicalToDevice(value.x, device_scale_factor),
+HoneycombRect LogicalToDevice(const HoneycombRect& value, float device_scale_factor) {
+  return HoneycombRect(LogicalToDevice(value.x, device_scale_factor),
                  LogicalToDevice(value.y, device_scale_factor),
                  LogicalToDevice(value.width, device_scale_factor),
                  LogicalToDevice(value.height, device_scale_factor));
@@ -25,19 +25,19 @@ int DeviceToLogical(int value, float device_scale_factor) {
   return static_cast<int>(std::floor(scaled_val));
 }
 
-CefRect DeviceToLogical(const CefRect& value, float device_scale_factor) {
-  return CefRect(DeviceToLogical(value.x, device_scale_factor),
+HoneycombRect DeviceToLogical(const HoneycombRect& value, float device_scale_factor) {
+  return HoneycombRect(DeviceToLogical(value.x, device_scale_factor),
                  DeviceToLogical(value.y, device_scale_factor),
                  DeviceToLogical(value.width, device_scale_factor),
                  DeviceToLogical(value.height, device_scale_factor));
 }
 
-void DeviceToLogical(CefMouseEvent& value, float device_scale_factor) {
+void DeviceToLogical(HoneycombMouseEvent& value, float device_scale_factor) {
   value.x = DeviceToLogical(value.x, device_scale_factor);
   value.y = DeviceToLogical(value.y, device_scale_factor);
 }
 
-void DeviceToLogical(CefTouchEvent& value, float device_scale_factor) {
+void DeviceToLogical(HoneycombTouchEvent& value, float device_scale_factor) {
   value.x = DeviceToLogical(value.x, device_scale_factor);
   value.y = DeviceToLogical(value.y, device_scale_factor);
 }
